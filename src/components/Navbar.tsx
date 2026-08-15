@@ -8,7 +8,7 @@ interface NavbarProps {
 
 export const Navbar: React.FC<NavbarProps> = ({
   onNavigateToRegister,
-  onNavigateToAdmin,
+  onNavigateToAdmin: _onNavigateToAdmin,
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);

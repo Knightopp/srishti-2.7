@@ -10,11 +10,9 @@ import {
   Building2, 
   BarChart3, 
   Edit3, 
-  Globe, 
   X, 
   ShieldCheck,
-  CreditCard,
-  QrCode
+  CreditCard
 } from 'lucide-react';
 import { useFest, type EventItem } from '../context/FestContext';
 

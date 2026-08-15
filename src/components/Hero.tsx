@@ -18,7 +18,7 @@ interface HeroProps {
   onNavigateToRegister?: () => void;
 }
 
-export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
+export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister: _onNavigateToRegister }) => {
   const heroRef = useRef<HTMLDivElement>(null);
   const titleContainerRef = useRef<HTMLDivElement>(null);
   const hudGridRef = useRef<HTMLDivElement>(null);

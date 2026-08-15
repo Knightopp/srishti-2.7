@@ -1,15 +1,10 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { 
   ArrowUpRight, 
   ChevronLeft, 
   ChevronRight, 
   Sparkles, 
-  Code, 
-  ShieldCheck, 
-  Zap, 
-  Layers, 
   Calendar, 
   MapPin 
 } from 'lucide-react';
@@ -63,8 +58,6 @@ export const CaseShowcase: React.FC<CaseShowcaseProps> = ({ onNavigateToRegister
   const RADIUS_X = isMobile ? 110 : 220; // Keeps side cards safely inside viewport width!
   const RADIUS_Y = isMobile ? 40 : 60;
   const RADIUS_Z = isMobile ? 160 : 260;
-
-  const rotationProxy = useRef({ angle: 0 });
 
   useEffect(() => {
     const checkMobile = () => {
