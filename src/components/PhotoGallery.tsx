@@ -8,7 +8,7 @@ gsap.registerPlugin(ScrollTrigger);
 export interface GalleryPhoto {
   id: string;
   title: string;
-  category: 'Keynote' | 'Hackathon' | 'Gala' | 'Exhibition' | 'Backstage';
+  category: 'Srishti 2.5' | 'Srishti 2.6' | 'Backstage' | 'Cultural' | 'Technical';
   date: string;
   location: string;
   url: string;
@@ -18,75 +18,75 @@ export interface GalleryPhoto {
 const GALLERY_PHOTOS: GalleryPhoto[] = [
   {
     id: 'photo-1',
-    title: 'Main Stage Keynote & Spatial Projections',
-    category: 'Keynote',
-    date: 'Dec 3, 2026',
-    location: 'Main Stage Alpha',
+    title: 'Srishti 2.6 — Grand Inaugural Ceremony',
+    category: 'Srishti 2.6',
+    date: 'Dec 2025',
+    location: 'Main Auditorium',
     url: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1200&q=80',
-    description: 'Elena Rostova unveiling the 2027 Scrollytelling & Dynamic UI paradigm on 8K LED surround displays.',
+    description: 'The grand opening of Srishti 2.6 with lamp lighting, keynote by chief guest, and the official theme reveal.',
   },
   {
     id: 'photo-2',
-    title: '24-Hour Scrollytelling Hackathon Arena',
-    category: 'Hackathon',
-    date: 'Dec 4, 2026',
-    location: 'Innovation Arena',
-    url: 'https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1200&q=80',
-    description: 'Over 400 developers and motion designers competing in the 3-hour rapid animation prototyping challenge.',
+    title: 'Srishti 2.6 — Hackathon Arena in Action',
+    category: 'Srishti 2.6',
+    date: 'Dec 2025',
+    location: 'Innovation Hub',
+    url: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1200&q=80',
+    description: 'Teams hustling through the 6-hour hackathon with mentors guiding them to build working prototypes.',
   },
   {
     id: 'photo-3',
-    title: 'VIP Skyline Terrace Opening Gala',
-    category: 'Gala',
-    date: 'Dec 3, 2026',
-    location: 'Skyline Terrace Lounge',
+    title: 'Srishti 2.5 — Cultural Night & DJ Set',
+    category: 'Srishti 2.5',
+    date: 'Dec 2024',
+    location: 'Open Air Stage',
     url: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1200&q=80',
-    description: 'Immersive light installations, live electronic synth sets, and networking over artisanal cocktails.',
+    description: 'The legendary Srishti 2.5 cultural night with live band performances, dance acts, and a rooftop DJ set.',
   },
   {
     id: 'photo-4',
-    title: 'Interactive WebGL Shader Workshop',
-    category: 'Keynote',
-    date: 'Dec 3, 2026',
-    location: 'Lab Room 04',
+    title: 'Srishti 2.5 — Coding Contest Finals',
+    category: 'Srishti 2.5',
+    date: 'Dec 2024',
+    location: 'CS Lab Complex',
     url: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80',
-    description: 'Alexandre V. demonstrating GPU-accelerated canvas animations and smooth inertia scroll synchronization.',
+    description: 'The intense final round of Code Clash where 60 students competed head-to-head on algorithmic challenges.',
   },
   {
     id: 'photo-5',
-    title: 'AI Product Design & Generative UI Panel',
-    category: 'Exhibition',
-    date: 'Dec 4, 2026',
-    location: 'Auditorium B',
-    url: 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=1200&q=80',
-    description: 'Industry pioneers debating the automated Figma-to-Code pipeline and human craftsmanship.',
+    title: 'Srishti 2.6 — AI Workshop Session',
+    category: 'Srishti 2.6',
+    date: 'Dec 2025',
+    location: 'Conference Room',
+    url: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1200&q=80',
+    description: 'Hands-on machine learning workshop where students trained their first classification models on Google Colab.',
   },
   {
     id: 'photo-6',
-    title: 'Grand After-Party & Laser Light Show',
-    category: 'Gala',
-    date: 'Dec 4, 2026',
-    location: 'Main Arena',
-    url: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1200&q=80',
-    description: 'Celebrating hackathon winners with audio-reactive visual projections and live synth performances.',
+    title: 'Srishti 2.5 — Prize Distribution Ceremony',
+    category: 'Srishti 2.5',
+    date: 'Dec 2024',
+    location: 'Main Auditorium',
+    url: 'https://images.unsplash.com/photo-1531058020387-3be344556be6?auto=format&fit=crop&w=1200&q=80',
+    description: 'Winners receiving trophies and cash prizes at the Srishti 2.5 valedictory ceremony.',
   },
   {
     id: 'photo-7',
-    title: 'Founders & Investor Roundtable Brunch',
-    category: 'Backstage',
-    date: 'Dec 5, 2026',
-    location: 'Executive Suite',
-    url: 'https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&w=1200&q=80',
-    description: 'Closed-door venture funding and creative agency scaling strategy session.',
+    title: 'Srishti 2.6 — Tech Quiz Buzzer Round',
+    category: 'Srishti 2.6',
+    date: 'Dec 2025',
+    location: 'Seminar Hall',
+    url: 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=1200&q=80',
+    description: 'The electrifying buzzer round finals of ByteBlitz tech quiz with audience cheering teams on.',
   },
   {
     id: 'photo-8',
-    title: 'Hackathon Award Trophy Handout',
-    category: 'Hackathon',
-    date: 'Dec 4, 2026',
-    location: 'Main Stage Alpha',
-    url: 'https://images.unsplash.com/photo-1531058020387-3be344556be6?auto=format&fit=crop&w=1200&q=80',
-    description: 'The $10,000 grand prize presentation for the winning motion design team.',
+    title: 'Srishti 2.6 — Backstage Team Huddle',
+    category: 'Backstage',
+    date: 'Dec 2025',
+    location: 'Green Room',
+    url: 'https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&w=1200&q=80',
+    description: 'The student organizing committee\'s behind-the-scenes planning and last-minute coordination.',
   },
 ];
 
@@ -183,25 +183,25 @@ export const PhotoGallery: React.FC = () => {
       className="relative w-full py-24 bg-[#0b0b0b] text-[#f5f5f7] border-t border-white/10 select-none overflow-hidden"
     >
       {/* Soft Ambient Background Lighting */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[450px] bg-[#635bff]/10 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[450px] bg-[#0077ff]/10 rounded-full blur-[150px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
         {/* Section Header */}
         <div className="gallery-header-content text-center max-w-3xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/12 text-xs font-mono text-[#635bff] tracking-widest uppercase mb-4">
-            <Camera className="w-3.5 h-3.5 text-[#635bff]" />
-            <span>04 / SUMMIT GALLERY & SNAPSHOTS</span>
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/12 text-xs font-mono text-[#0077ff] tracking-widest uppercase mb-4">
+            <Camera className="w-3.5 h-3.5 text-[#0077ff]" />
+            <span>04 / PAST EDITIONS GALLERY</span>
           </div>
 
           <h2 className="font-syne text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-white uppercase leading-[1.05]">
-            Event Highlights{' '}
-            <span className="font-serif-custom italic font-normal text-[#635bff] lowercase text-4xl sm:text-6xl md:text-8xl block sm:inline">
-              in photos
+            Relive The{' '}
+            <span className="font-serif-custom italic font-normal text-[#0077ff] lowercase text-4xl sm:text-6xl md:text-8xl block sm:inline">
+              memories
             </span>
           </h2>
 
           <p className="mt-3 text-base text-white/60 font-light max-w-lg mx-auto">
-            A glance at keynote moments, live hackathons, VIP galas, and design workshops.
+            Highlights from Srishti 2.5 & Srishti 2.6 — hackathons, cultural nights, workshops, and more.
           </p>
         </div>
 
@@ -214,7 +214,7 @@ export const PhotoGallery: React.FC = () => {
               <div
                 key={photo.id}
                 onClick={() => openLightbox(idx)}
-                className="gallery-compact-card group relative rounded-3xl overflow-hidden border border-white/15 bg-[#121217] cursor-pointer shadow-2xl h-[360px] sm:h-[420px] transition-all duration-500 hover:border-[#635bff]/60 hover:-translate-y-1.5"
+                className="gallery-compact-card group relative rounded-3xl overflow-hidden border border-white/15 bg-[#121217] cursor-pointer shadow-2xl h-[360px] sm:h-[420px] transition-all duration-500 hover:border-[#0077ff]/60 hover:-translate-y-1.5"
               >
                 {/* Photo Image */}
                 <img
@@ -243,24 +243,24 @@ export const PhotoGallery: React.FC = () => {
                   <span className="text-[10px] font-mono text-[#d4ff00] block">
                     {photo.date} • {photo.location}
                   </span>
-                  <h3 className="font-syne font-bold text-lg text-white group-hover:text-[#635bff] transition-colors leading-tight">
+                  <h3 className="font-syne font-bold text-lg text-white group-hover:text-[#0077ff] transition-colors leading-tight">
                     {photo.title}
                   </h3>
                 </div>
 
                 {/* OVERLAY ON THE 3RD CARD: "MORE / VIEW FULL GALLERY" */}
                 {isLastCard && (
-                  <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-[#635bff]/40 to-[#0b0b0b]/95 backdrop-blur-md flex flex-col items-center justify-center text-center p-6 z-20 group-hover:bg-[#635bff]/80 transition-all duration-500">
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-[#0077ff]/40 to-[#0b0b0b]/95 backdrop-blur-md flex flex-col items-center justify-center text-center p-6 z-20 group-hover:bg-[#0077ff]/80 transition-all duration-500">
                     <div className="w-14 h-14 rounded-full bg-white text-black flex items-center justify-center mb-3 shadow-2xl group-hover:scale-110 transition-transform">
-                      <Sparkles className="w-6 h-6 text-[#635bff]" />
+                      <Sparkles className="w-6 h-6 text-[#0077ff]" />
                     </div>
 
                     <span className="font-syne font-black text-2xl text-white uppercase tracking-tight">
-                      + 12 More Photos
+                      + More Photos
                     </span>
 
                     <p className="text-xs text-white/80 font-light mt-1 max-w-[200px]">
-                      Explore full high-res summit album & backstage moments
+                      Browse full gallery from Srishti 2.5 & 2.6
                     </p>
 
                     <button
@@ -289,9 +289,9 @@ export const PhotoGallery: React.FC = () => {
           {/* Modal Top Bar */}
           <div className="flex items-center justify-between border-b border-white/10 pb-4 relative z-20">
             <div className="flex items-center gap-3">
-              <Camera className="w-5 h-5 text-[#635bff]" />
+              <Camera className="w-5 h-5 text-[#0077ff]" />
               <span className="font-syne font-bold text-base text-white uppercase">
-                Summit Gallery Lightbox
+                Srishti Gallery
               </span>
               <span className="px-2.5 py-0.5 rounded-full bg-white/10 text-[10px] font-mono text-white/60">
                 {activePhotoIndex + 1} of {filteredModalPhotos.length}
@@ -300,7 +300,7 @@ export const PhotoGallery: React.FC = () => {
 
             {/* Category Filter Pills inside Modal */}
             <div className="hidden md:flex items-center gap-2">
-              {['All', 'Keynote', 'Hackathon', 'Gala', 'Backstage'].map((cat) => (
+              {['All', 'Srishti 2.5', 'Srishti 2.6', 'Backstage'].map((cat) => (
                 <button
                   key={cat}
                   onClick={() => {
@@ -309,7 +309,7 @@ export const PhotoGallery: React.FC = () => {
                   }}
                   className={`px-3 py-1 rounded-full text-xs font-mono transition-all ${
                     filterCategory === cat
-                      ? 'bg-[#635bff] text-white font-bold'
+                      ? 'bg-[#0077ff] text-white font-bold'
                       : 'text-white/50 hover:text-white hover:bg-white/5'
                   }`}
                 >
@@ -333,7 +333,7 @@ export const PhotoGallery: React.FC = () => {
             {/* Previous Arrow Button */}
             <button
               onClick={prevPhoto}
-              className="absolute left-2 sm:left-6 z-30 p-3 rounded-full bg-black/60 border border-white/20 text-white hover:bg-[#635bff] hover:border-[#635bff] transition-all backdrop-blur-md"
+              className="absolute left-2 sm:left-6 z-30 p-3 rounded-full bg-black/60 border border-white/20 text-white hover:bg-[#0077ff] hover:border-[#0077ff] transition-all backdrop-blur-md"
               aria-label="Previous Photo"
             >
               <ChevronLeft className="w-6 h-6" />
@@ -353,7 +353,7 @@ export const PhotoGallery: React.FC = () => {
             {/* Next Arrow Button */}
             <button
               onClick={nextPhoto}
-              className="absolute right-2 sm:right-6 z-30 p-3 rounded-full bg-black/60 border border-white/20 text-white hover:bg-[#635bff] hover:border-[#635bff] transition-all backdrop-blur-md"
+              className="absolute right-2 sm:right-6 z-30 p-3 rounded-full bg-black/60 border border-white/20 text-white hover:bg-[#0077ff] hover:border-[#0077ff] transition-all backdrop-blur-md"
               aria-label="Next Photo"
             >
               <ChevronRight className="w-6 h-6" />

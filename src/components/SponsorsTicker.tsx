@@ -15,60 +15,60 @@ export interface Sponsor {
 
 const SPONSORS: Sponsor[] = [
   {
-    name: 'Vercel',
-    category: 'Cloud & Edge Hosting',
-    badge: 'DIAMOND',
-    icon: <Globe className="w-5 h-5 text-white" />,
-    accentColor: '#ffffff',
+    name: 'IEEE',
+    category: 'Technical Society',
+    badge: 'TITLE',
+    icon: <Globe className="w-5 h-5 text-[#0077ff]" />,
+    accentColor: '#0077ff',
   },
   {
-    name: 'Supabase',
-    category: 'Backend & Realtime Data',
-    badge: 'DIAMOND',
-    icon: <Flame className="w-5 h-5 text-[#3ecf8e]" />,
-    accentColor: '#3ecf8e',
-  },
-  {
-    name: 'Stripe',
-    category: 'Financial Infrastructure',
+    name: 'Google DSC',
+    category: 'Developer Student Club',
     badge: 'PLATINUM',
-    icon: <Shield className="w-5 h-5 text-[#635bff]" />,
-    accentColor: '#635bff',
+    icon: <Flame className="w-5 h-5 text-[#34a853]" />,
+    accentColor: '#34a853',
   },
   {
-    name: 'Figma',
-    category: 'Design Systems',
-    badge: 'PLATINUM',
-    icon: <Layers className="w-5 h-5 text-[#ff7262]" />,
-    accentColor: '#ff7262',
-  },
-  {
-    name: 'OpenAI',
-    category: 'Generative Intelligence',
-    badge: 'TITANIUM',
-    icon: <Cpu className="w-5 h-5 text-[#10a37f]" />,
-    accentColor: '#10a37f',
-  },
-  {
-    name: 'Linear',
-    category: 'Product Engineering',
-    badge: 'GOLD',
-    icon: <Box className="w-5 h-5 text-[#5e6ad2]" />,
-    accentColor: '#5e6ad2',
-  },
-  {
-    name: 'GitHub',
+    name: 'GitHub Education',
     category: 'Developer Platform',
     badge: 'GOLD',
     icon: <Terminal className="w-5 h-5 text-[#d4ff00]" />,
     accentColor: '#d4ff00',
   },
   {
-    name: 'Spline 3D',
-    category: 'Spatial Design & WebGL',
-    badge: 'FEATURED',
-    icon: <Sparkles className="w-5 h-5 text-[#00e5ff]" />,
-    accentColor: '#00e5ff',
+    name: 'JetBrains',
+    category: 'Developer Tools',
+    badge: 'GOLD',
+    icon: <Layers className="w-5 h-5 text-[#ff7262]" />,
+    accentColor: '#ff7262',
+  },
+  {
+    name: 'AWS Educate',
+    category: 'Cloud Computing',
+    badge: 'SILVER',
+    icon: <Cpu className="w-5 h-5 text-[#ff9900]" />,
+    accentColor: '#ff9900',
+  },
+  {
+    name: 'Digital Ocean',
+    category: 'Cloud Infrastructure',
+    badge: 'SILVER',
+    icon: <Box className="w-5 h-5 text-[#0080ff]" />,
+    accentColor: '#0080ff',
+  },
+  {
+    name: 'Notion',
+    category: 'Productivity Suite',
+    badge: 'PARTNER',
+    icon: <Shield className="w-5 h-5 text-white" />,
+    accentColor: '#ffffff',
+  },
+  {
+    name: 'Canva',
+    category: 'Design Platform',
+    badge: 'PARTNER',
+    icon: <Sparkles className="w-5 h-5 text-[#00c4cc]" />,
+    accentColor: '#00c4cc',
   },
 ];
 
@@ -109,13 +109,13 @@ export const SponsorsTicker: React.FC = () => {
       className="relative w-full py-16 bg-[#09090c] border-t border-b border-white/10 overflow-hidden select-none"
     >
       {/* Ambient Lighting */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[150px] bg-[#635bff]/10 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[150px] bg-[#0077ff]/10 rounded-full blur-[100px] pointer-events-none" />
 
       {/* Header Tag */}
       <div className="sponsors-header-content text-center mb-8 relative z-10">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-white/60 tracking-widest uppercase">
           <Sparkles className="w-3.5 h-3.5 text-[#d4ff00]" />
-          <span>POWERED BY GLOBAL TECH PARTNERS & SPONSORS</span>
+          <span>POWERED BY OUR SPONSORS & PARTNERS</span>
         </div>
       </div>
 
@@ -140,7 +140,7 @@ export const SponsorsTicker: React.FC = () => {
 
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2">
-                  <span className="font-syne font-bold text-base text-white tracking-tight group-hover:text-[#635bff] transition-colors">
+                  <span className="font-syne font-bold text-base text-white tracking-tight group-hover:text-[#0077ff] transition-colors">
                     {sponsor.name}
                   </span>
                   <span

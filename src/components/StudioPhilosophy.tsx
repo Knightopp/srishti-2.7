@@ -82,62 +82,62 @@ export const StudioPhilosophy: React.FC = () => {
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         {/* Section Tag */}
         <div className="mb-12">
-          <span className="text-xs font-mono text-[#635bff] tracking-widest uppercase block mb-3 font-bold">
-            04 / OUR PHILOSOPHY
+          <span className="text-xs font-mono text-[#0077ff] tracking-widest uppercase block mb-3 font-bold">
+            05 / ABOUT SRISHTI
           </span>
         </div>
 
         {/* Main Quote Statement */}
         <div className="max-w-5xl space-y-6">
           <h2 className="font-syne text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight uppercase leading-[0.95] text-current">
-            <span className="philosophy-text-line block">Design is not just</span>
-            <span className="philosophy-text-line block font-serif-custom italic font-normal text-[#635bff] lowercase text-5xl sm:text-7xl md:text-8xl lg:text-9xl my-2">
-              what it looks like.
+            <span className="philosophy-text-line block">Where code meets</span>
+            <span className="philosophy-text-line block font-serif-custom italic font-normal text-[#0077ff] lowercase text-5xl sm:text-7xl md:text-8xl lg:text-9xl my-2">
+              creativity.
             </span>
-            <span className="philosophy-text-line block">Design is how it works.</span>
+            <span className="philosophy-text-line block">That is Srishti.</span>
           </h2>
 
           <p className="philosophy-text-line text-lg md:text-2xl font-light leading-relaxed max-w-3xl opacity-80 pt-6">
-            At Outcrowd, motion is not a decoration—it is a functional catalyst. We engineer interactive scrollytelling systems that retain focus, communicate complex product value instantly, and convert passive visitors into loyal users.
+            Srishti is the flagship techno-cultural fest of the Computer Science Department at St. Thomas College. Since its inception, Srishti has been a platform for students to showcase their technical brilliance, creative talent, and collaborative spirit through hackathons, coding contests, workshops, and cultural performances.
           </p>
         </div>
 
-        {/* Agency Metrics Grid */}
+        {/* Fest Metrics Grid */}
         <div className="mt-24 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 pt-12 border-t border-current/15">
           <div className="philosophy-metric-card space-y-2">
-            <div className="flex items-center gap-2 text-[#635bff]">
+            <div className="flex items-center gap-2 text-[#0077ff]">
               <Award className="w-5 h-5" />
-              <span className="text-xs font-mono font-bold tracking-widest uppercase">RECOGNITION</span>
+              <span className="text-xs font-mono font-bold tracking-widest uppercase">EDITIONS</span>
             </div>
-            <span className="font-syne font-black text-5xl md:text-6xl block">18+</span>
-            <span className="text-xs font-mono opacity-60 uppercase block">Global Design Awards</span>
+            <span className="font-syne font-black text-5xl md:text-6xl block">7th</span>
+            <span className="text-xs font-mono opacity-60 uppercase block">Year of Srishti</span>
           </div>
 
           <div className="philosophy-metric-card space-y-2">
-            <div className="flex items-center gap-2 text-[#635bff]">
+            <div className="flex items-center gap-2 text-[#0077ff]">
               <Zap className="w-5 h-5" />
-              <span className="text-xs font-mono font-bold tracking-widest uppercase">RETENTION RATE</span>
+              <span className="text-xs font-mono font-bold tracking-widest uppercase">EVENTS</span>
             </div>
-            <span className="font-syne font-black text-5xl md:text-6xl block">98%</span>
-            <span className="text-xs font-mono opacity-60 uppercase block">Client Partnership Retention</span>
+            <span className="font-syne font-black text-5xl md:text-6xl block">15+</span>
+            <span className="text-xs font-mono opacity-60 uppercase block">Technical & Cultural Events</span>
           </div>
 
           <div className="philosophy-metric-card space-y-2">
-            <div className="flex items-center gap-2 text-[#635bff]">
+            <div className="flex items-center gap-2 text-[#0077ff]">
               <Users className="w-5 h-5" />
               <span className="text-xs font-mono font-bold tracking-widest uppercase">REACH</span>
             </div>
-            <span className="font-syne font-black text-5xl md:text-6xl block">4.2M</span>
-            <span className="text-xs font-mono opacity-60 uppercase block">End Users Reached Daily</span>
+            <span className="font-syne font-black text-5xl md:text-6xl block">500+</span>
+            <span className="text-xs font-mono opacity-60 uppercase block">Expected Participants</span>
           </div>
 
           <div className="philosophy-metric-card space-y-2">
-            <div className="flex items-center gap-2 text-[#635bff]">
+            <div className="flex items-center gap-2 text-[#0077ff]">
               <ShieldCheck className="w-5 h-5" />
-              <span className="text-xs font-mono font-bold tracking-widest uppercase">ACCELERATION</span>
+              <span className="text-xs font-mono font-bold tracking-widest uppercase">PRIZES</span>
             </div>
-            <span className="font-syne font-black text-5xl md:text-6xl block">3.5x</span>
-            <span className="text-xs font-mono opacity-60 uppercase block">Average Conversion Lift</span>
+            <span className="font-syne font-black text-5xl md:text-6xl block">₹50K+</span>
+            <span className="text-xs font-mono opacity-60 uppercase block">Total Prize Pool</span>
           </div>
         </div>
       </div>

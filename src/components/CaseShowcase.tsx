@@ -19,37 +19,37 @@ interface CaseStudy {
 
 const CASES: CaseStudy[] = [
   {
-    id: 'neural-ai',
+    id: 'hackathon',
     number: '01',
-    title: 'Neural AI Operating System',
-    category: 'Branding & Scrollytelling Product Platform',
-    tags: ['AI Platform', '3D Scrollytelling', 'Design System'],
-    description: 'A revolutionary AI interface designed to turn complex neural workflows into seamless interactive experiences.',
-    color: '#635bff',
-    bgGradient: 'from-[#121026] via-[#1a1738] to-[#0b0b0b]',
-    image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80',
+    title: 'BuildBlitz Hackathon',
+    category: '6-Hour Rapid Prototyping Challenge',
+    tags: ['Hackathon', 'Full Stack', 'Team Event'],
+    description: 'Teams of 3-4 race against the clock to build a working prototype from scratch. Industry mentors, live demos, and a ₹25,000 grand prize await.',
+    color: '#0077ff',
+    bgGradient: 'from-[#0a1526] via-[#0e1a2f] to-[#0b0b0b]',
+    image: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1200&q=80',
   },
   {
-    id: 'fintech-ultra',
+    id: 'ctf',
     number: '02',
-    title: 'Fintech Ultra Banking',
-    category: 'Next-Gen Financial Interface & Motion',
-    tags: ['Fintech', 'Web App', 'Motion System'],
-    description: 'Cinematic digital banking dashboard engineered for high performance, ultra-fast transfers, and real-time analytics.',
+    title: 'CyberSec CTF Challenge',
+    category: 'Capture The Flag — Offensive Security',
+    tags: ['Cybersecurity', 'CTF', 'Forensics'],
+    description: 'Crack ciphers, exploit web vulnerabilities, and race through digital forensics puzzles in this adrenaline-pumping team-based CTF showdown.',
+    color: '#00d4ff',
+    bgGradient: 'from-[#0a1e28] via-[#09151c] to-[#0b0b0b]',
+    image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1200&q=80',
+  },
+  {
+    id: 'ai-workshop',
+    number: '03',
+    title: 'AI & ML Workshop',
+    category: 'Hands-on Machine Learning with Python',
+    tags: ['AI/ML', 'Python', 'Workshop'],
+    description: 'Build your first machine learning model in a beginner-friendly, hands-on workshop using scikit-learn and Google Colab with real-world datasets.',
     color: '#d4ff00',
     bgGradient: 'from-[#1b2410] via-[#141a0b] to-[#0b0b0b]',
-    image: 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=1200&q=80',
-  },
-  {
-    id: 'quantum-studio',
-    number: '03',
-    title: 'Quantum Spatial Sound',
-    category: 'Immersive Audio & Spatial Web Experience',
-    tags: ['Spatial Web', 'Audio Engine', 'WebGL'],
-    description: 'Immersive spatial audio website featuring 3D interactive soundwaves, real-time node generation, and dynamic physics.',
-    color: '#00e5ff',
-    bgGradient: 'from-[#0a1e28] via-[#09151c] to-[#0b0b0b]',
-    image: 'https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1200&q=80',
   },
 ];
 
@@ -161,22 +161,22 @@ export const CaseShowcase: React.FC = () => {
           transform: `translate3d(${cursorPos.x}px, ${cursorPos.y}px, 0) scale(${cursorActive ? 1 : 0})`,
         }}
       >
-        <span>View Case →</span>
+        <span>Explore →</span>
       </div>
 
       {/* Section Header */}
       <div className="cases-header-content max-w-7xl mx-auto px-6 md:px-12 w-full flex items-end justify-between z-20">
         <div>
-          <span className="text-xs font-mono text-[#635bff] tracking-widest uppercase block mb-2 font-semibold">
-            02 / SELECTED CASES
+          <span className="text-xs font-mono text-[#0077ff] tracking-widest uppercase block mb-2 font-semibold">
+            03 / EVENT HIGHLIGHTS
           </span>
           <h2 className="font-syne text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight text-white uppercase">
-            Crafted With <span className="font-serif-custom italic font-normal text-[#635bff] lowercase">precision</span>
+            Featured <span className="font-serif-custom italic font-normal text-[#0077ff] lowercase">events</span>
           </h2>
         </div>
 
         <div className="hidden md:flex items-center gap-3 text-xs font-mono text-white/50">
-          <span>SCROLL TO SCRUB CASES</span>
+          <span>SCROLL TO EXPLORE EVENTS</span>
           <div className="w-12 h-[1px] bg-white/20" />
         </div>
       </div>
@@ -231,11 +231,11 @@ export const CaseShowcase: React.FC = () => {
 
                   {/* Bottom Text & Meta with Typewriter Scroll Reveal */}
                   <div className="space-y-4 max-w-2xl">
-                    <span className="text-xs font-mono text-[#635bff] tracking-widest uppercase block font-semibold">
+                    <span className="text-xs font-mono text-[#0077ff] tracking-widest uppercase block font-semibold">
                       {item.category}
                     </span>
 
-                    <h3 className="case-title-typewriter font-syne text-3xl sm:text-4xl md:text-6xl font-bold tracking-tight text-white uppercase group-hover:text-[#635bff] transition-colors duration-300">
+                    <h3 className="case-title-typewriter font-syne text-3xl sm:text-4xl md:text-6xl font-bold tracking-tight text-white uppercase group-hover:text-[#0077ff] transition-colors duration-300">
                       {item.title}
                     </h3>
 
@@ -245,10 +245,10 @@ export const CaseShowcase: React.FC = () => {
 
                     <div className="pt-3 flex items-center gap-4">
                       <a
-                        href="#"
-                        className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-black font-syne text-xs font-bold uppercase tracking-wider hover:bg-[#635bff] hover:text-white transition-colors duration-300 shadow-lg"
+                        href="#cta"
+                        className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-black font-syne text-xs font-bold uppercase tracking-wider hover:bg-[#0077ff] hover:text-white transition-colors duration-300 shadow-lg"
                       >
-                        <span>View Project</span>
+                        <span>Register Now</span>
                         <ArrowUpRight className="w-4 h-4" />
                       </a>
                     </div>
@@ -262,8 +262,8 @@ export const CaseShowcase: React.FC = () => {
 
       {/* Progress Indicator Bar */}
       <div className="max-w-7xl mx-auto px-6 md:px-12 w-full flex items-center justify-between z-20 text-xs font-mono text-white/40">
-        <span>03 SELECTED WORKS</span>
-        <span>SEAMLESS UNPIN AT CARD 03</span>
+        <span>03 FEATURED EVENTS</span>
+        <span>SRISHTI 2.7 • CS DEPARTMENT</span>
       </div>
     </section>
   );

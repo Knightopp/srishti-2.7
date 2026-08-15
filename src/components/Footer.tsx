@@ -9,37 +9,37 @@ export const Footer: React.FC = () => {
   return (
     <footer className="w-full bg-[#070709] text-[#f5f5f7] border-t border-white/10 py-16 select-none">
       <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col gap-12">
-        {/* Top Row: Brand & Locations */}
+        {/* Top Row: Brand & Info */}
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 pb-12 border-b border-white/10">
           <div className="space-y-2">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-[#635bff] flex items-center justify-center text-white font-syne font-black text-xs">
-                O
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#00d4ff] to-[#0044ff] flex items-center justify-center text-white font-syne font-black text-xs">
+                S
               </div>
               <span className="font-syne font-bold text-xl tracking-tight text-white">
-                outcrowd<span className="text-[#635bff]">.</span>
+                srishti<span className="text-[#00d4ff]">2.7</span>
               </span>
             </div>
             <p className="text-xs text-white/50 font-light">
-              Creative branding, web design & development agency for startups.
+              Techno-Cultural Fest • CS Department • St. Thomas College
             </p>
           </div>
 
-          {/* Locations */}
+          {/* Event Details */}
           <div className="flex flex-wrap gap-6 text-xs font-mono text-white/60">
             <div className="flex items-center gap-2">
-              <Globe className="w-3.5 h-3.5 text-[#635bff]" />
-              <span>SAN FRANCISCO</span>
+              <Globe className="w-3.5 h-3.5 text-[#0077ff]" />
+              <span>ST. THOMAS COLLEGE</span>
             </div>
             <span>•</span>
             <div className="flex items-center gap-2">
               <Globe className="w-3.5 h-3.5 text-[#d4ff00]" />
-              <span>LONDON</span>
+              <span>DECEMBER 4-5, 2026</span>
             </div>
             <span>•</span>
             <div className="flex items-center gap-2">
               <Globe className="w-3.5 h-3.5 text-[#00e5ff]" />
-              <span>KYIV</span>
+              <span>CS DEPARTMENT</span>
             </div>
           </div>
         </div>
@@ -47,31 +47,32 @@ export const Footer: React.FC = () => {
         {/* Middle Row: Navigation & Social Links */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-xs font-syne font-semibold uppercase tracking-wider text-white/60">
           <div className="space-y-3">
-            <span className="text-[10px] font-mono text-[#635bff] tracking-widest block font-bold">NAVIGATION</span>
-            <a href="#cases" className="block hover:text-white transition-colors">Cases</a>
-            <a href="#services" className="block hover:text-white transition-colors">Services</a>
-            <a href="#philosophy" className="block hover:text-white transition-colors">About us</a>
+            <span className="text-[10px] font-mono text-[#0077ff] tracking-widest block font-bold">NAVIGATION</span>
+            <a href="#roadmap" className="block hover:text-white transition-colors">Schedule</a>
+            <a href="#cases" className="block hover:text-white transition-colors">Events</a>
+            <a href="#gallery" className="block hover:text-white transition-colors">Gallery</a>
+            <a href="#philosophy" className="block hover:text-white transition-colors">About</a>
           </div>
 
           <div className="space-y-3">
-            <span className="text-[10px] font-mono text-[#635bff] tracking-widest block font-bold">SOCIAL</span>
-            <a href="https://dribbble.com/outcrowd" target="_blank" rel="noreferrer" className="block hover:text-white transition-colors">Dribbble</a>
-            <a href="https://behance.net/outcrowd" target="_blank" rel="noreferrer" className="block hover:text-white transition-colors">Behance</a>
-            <a href="https://instagram.com/outcrowd.io" target="_blank" rel="noreferrer" className="block hover:text-white transition-colors">Instagram</a>
+            <span className="text-[10px] font-mono text-[#0077ff] tracking-widest block font-bold">SOCIAL</span>
+            <a href="https://instagram.com/srishti_stthomas" target="_blank" rel="noreferrer" className="block hover:text-white transition-colors">Instagram</a>
+            <a href="https://youtube.com" target="_blank" rel="noreferrer" className="block hover:text-white transition-colors">YouTube</a>
+            <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="block hover:text-white transition-colors">LinkedIn</a>
           </div>
 
           <div className="space-y-3">
-            <span className="text-[10px] font-mono text-[#635bff] tracking-widest block font-bold">CONNECT</span>
-            <a href="https://twitter.com/outcrowd_io" target="_blank" rel="noreferrer" className="block hover:text-white transition-colors">X / Twitter</a>
-            <a href="https://linkedin.com/company/outcrowd" target="_blank" rel="noreferrer" className="block hover:text-white transition-colors">LinkedIn</a>
+            <span className="text-[10px] font-mono text-[#0077ff] tracking-widest block font-bold">CONNECT</span>
+            <a href="mailto:srishti@stthomas.ac.in" className="block hover:text-white transition-colors">Email Us</a>
+            <a href="#cta" className="block hover:text-white transition-colors">Register</a>
           </div>
 
           <div className="space-y-3 flex flex-col justify-between">
             <div>
-              <span className="text-[10px] font-mono text-[#635bff] tracking-widest block font-bold mb-3">BACK TO TOP</span>
+              <span className="text-[10px] font-mono text-[#0077ff] tracking-widest block font-bold mb-3">BACK TO TOP</span>
               <button
                 onClick={scrollToTop}
-                className="p-3 rounded-full bg-white/5 border border-white/10 hover:bg-[#635bff] hover:border-[#635bff] text-white transition-all group"
+                className="p-3 rounded-full bg-white/5 border border-white/10 hover:bg-[#0077ff] hover:border-[#0077ff] text-white transition-all group"
                 aria-label="Back to top"
               >
                 <ArrowUp className="w-4 h-4 group-hover:-translate-y-1 transition-transform" />
@@ -82,8 +83,8 @@ export const Footer: React.FC = () => {
 
         {/* Bottom Bar: Copyright */}
         <div className="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between text-[11px] font-mono text-white/40 gap-4">
-          <span>© {new Date().getFullYear()} OUTCROWD. ALL RIGHTS RESERVED.</span>
-          <span>FEEL & MECHANICS RECREATION SYSTEM</span>
+          <span>© {new Date().getFullYear()} SRISHTI 2.7 • CS DEPARTMENT • ST. THOMAS COLLEGE. ALL RIGHTS RESERVED.</span>
+          <span>DESIGNED WITH ❤ BY THE SRISHTI TEAM</span>
         </div>
       </div>
     </footer>
