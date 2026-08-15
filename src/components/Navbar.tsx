@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowUpRight, Menu, X, Sparkles, Calendar, Compass, Mail, Camera } from 'lucide-react';
 
-export const Navbar: React.FC = () => {
+interface NavbarProps {
+  onNavigateToRegister?: () => void;
+  onNavigateToAdmin?: () => void;
+}
+
+export const Navbar: React.FC<NavbarProps> = ({
+  onNavigateToRegister,
+  onNavigateToAdmin,
+}) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -42,35 +50,46 @@ export const Navbar: React.FC = () => {
   const navLinks = [
     { href: '#roadmap', label: 'Schedule', number: '01', icon: <Calendar className="w-5 h-5 text-[#0077ff]" /> },
     { href: '#cases', label: 'Highlights', number: '02', icon: <Sparkles className="w-5 h-5 text-[#00d4ff]" /> },
-    { href: '#gallery', label: 'Gallery', number: '03', icon: <Camera className="w-5 h-5 text-[#d4ff00]" /> },
+    { href: '#gallery', label: 'Gallery', number: '03', icon: <Camera className="w-5 h-5 text-[#00e5ff]" /> },
     { href: '#philosophy', label: 'About', number: '04', icon: <Compass className="w-5 h-5 text-[#00e5ff]" /> },
-    { href: '#cta', label: 'Register', number: '05', icon: <Mail className="w-5 h-5 text-[#0055ff]" /> },
+    { href: '#register', label: 'Register', number: '05', icon: <Mail className="w-5 h-5 text-[#0055ff]" />, onClick: onNavigateToRegister },
   ];
 
   return (
     <>
       <header
-        className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
+        className={`global-navbar fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
           isScrolled
             ? 'py-3.5 bg-[#0b0b0b]/85 backdrop-blur-xl border-b border-white/10 shadow-2xl'
             : 'py-5 md:py-6 bg-transparent'
         }`}
       >
+
         <div className="max-w-7xl mx-auto px-5 sm:px-8 md:px-12 flex items-center justify-between">
           {/* Srishti 2.7 Brand Logo */}
           <a href="#" className="flex items-center gap-3 group relative z-50">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#00d4ff] to-[#0044ff] flex items-center justify-center font-syne font-black text-white text-lg tracking-tighter group-hover:rotate-12 transition-transform duration-300 shadow-lg shadow-[#0077ff]/20">
-              S
+            <div className="w-9 h-9 rounded-xl bg-white/5 border border-white/15 p-1 flex items-center justify-center group-hover:rotate-6 transition-transform duration-300 shadow-lg shadow-[#0077ff]/20">
+              <img src="/srishti-logo-transparent.png" alt="Srishti 2.7 Logo" className="w-full h-full object-contain" />
             </div>
             <span className="font-syne font-bold text-lg md:text-xl tracking-tight text-white group-hover:text-[#0077ff] transition-colors">
-              srishti<span className="text-[#00d4ff]">2.7</span>
+              srishti <span className="font-orbitron font-extrabold text-[#00d4ff]">2.7</span>
             </span>
           </a>
 
           {/* Desktop Navigation Links */}
           <nav className="hidden md:flex items-center gap-8 text-xs font-syne font-semibold tracking-widest uppercase text-white/70">
             {navLinks.map((link) => (
-              <a key={link.href} href={link.href} className="text-flip-wrap">
+              <a 
+                key={link.href} 
+                href={link.href} 
+                onClick={(e) => {
+                  if (link.onClick) {
+                    e.preventDefault();
+                    link.onClick();
+                  }
+                }}
+                className="text-flip-wrap"
+              >
                 <span className="text-default">{link.label}</span>
                 <span className="text-hover">{link.label}</span>
               </a>
@@ -80,19 +99,25 @@ export const Navbar: React.FC = () => {
           {/* CTA Buttons with Liquid Explode Hover Effect (Desktop) */}
           <div className="hidden md:flex items-center gap-4">
             <a
-              href="#cta"
+              href="#cases"
               onMouseMove={handleExplodeMove}
               className="btn-outcrowd px-5 py-2.5 border border-white/20 text-white font-syne text-xs font-semibold tracking-wider uppercase"
             >
               <div className="explode" />
               <div className="btn-content">
-                <span>Event Info</span>
-                <ArrowUpRight className="w-3.5 h-3.5" />
+                <span>Event Highlights</span>
+                <ArrowUpRight className="w-3.5 h-3.5 text-[#00e5ff]" />
               </div>
             </a>
 
             <a
-              href="#cta"
+              href="#register"
+              onClick={(e) => {
+                if (onNavigateToRegister) {
+                  e.preventDefault();
+                  onNavigateToRegister();
+                }
+              }}
               onMouseMove={handleExplodeMove}
               className="btn-outcrowd px-5 py-2.5 bg-[#0077ff] text-white border border-[#0077ff] font-syne text-xs font-semibold tracking-wider uppercase shadow-lg shadow-[#0077ff]/20"
             >

@@ -5,7 +5,11 @@ import { ArrowUpRight, Mail, Calendar } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export const CTA: React.FC = () => {
+interface CTAProps {
+  onNavigateToRegister?: () => void;
+}
+
+export const CTA: React.FC<CTAProps> = ({ onNavigateToRegister }) => {
   const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -74,14 +78,20 @@ export const CTA: React.FC = () => {
         {/* Buttons Group */}
         <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-6">
           <a
-            href="mailto:srishti@stthomas.ac.in"
+            href="#register"
+            onClick={(e) => {
+              if (onNavigateToRegister) {
+                e.preventDefault();
+                onNavigateToRegister();
+              }
+            }}
             onMouseMove={handleExplodeMove}
             className="btn-outcrowd px-8 py-4 bg-[#0077ff] text-white font-syne text-sm font-bold tracking-wider uppercase border border-[#0077ff] shadow-2xl shadow-[#0077ff]/30"
           >
             <div className="explode" />
             <div className="btn-content">
               <Mail className="w-4 h-4" />
-              <span>srishti@stthomas.ac.in</span>
+              <span>Official Event Registration</span>
               <ArrowUpRight className="w-4 h-4" />
             </div>
           </a>

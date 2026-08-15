@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@800;900&family=Space+Grotesk:wght@700;800&display=swap');
 @import "tailwindcss";
 
 @layer base {
@@ -24,6 +25,10 @@
 /* Custom Typography Utilities */
 .font-syne {
   font-family: 'Syne', sans-serif;
+}
+
+.font-orbitron {
+  font-family: 'Orbitron', 'Space Grotesk', sans-serif;
 }
 
 .font-serif-custom {
@@ -182,3 +187,46 @@ html.lenis, html.lenis body {
 .animate-infinite-marquee:hover {
   animation-play-state: paused;
 }
+
+/* Fade in animation keyframe */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Mobile Phone Performance Optimizations */
+@media (max-width: 768px) {
+  * {
+    /* Reduce layer compositing costs on mobile GPUs */
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Disable heavy GPU-taxing backdrop blurs on mobile phones */
+  .backdrop-blur-md,
+  .backdrop-blur-xl,
+  .backdrop-blur-2xl,
+  .backdrop-blur-sm {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* Enable hardware acceleration for smooth touch scrolling */
+  .case-card,
+  section {
+    will-change: transform;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+}
+
+

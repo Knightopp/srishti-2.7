@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useLenis } from './hooks/useLenis';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -8,54 +9,123 @@ import PhotoGallery from './components/PhotoGallery';
 import StudioPhilosophy from './components/StudioPhilosophy';
 import CTA from './components/CTA';
 import Footer from './components/Footer';
+import RegistrationPage from './components/RegistrationPage';
+import AdminPanel from './components/AdminPanel';
+import { FestProvider } from './context/FestContext';
 
-export function App() {
-  // Initialize Lenis smooth scroll synchronized with GSAP ticker & ScrollTrigger
+export function AppContent() {
   useLenis();
+
+  const [currentView, setCurrentView] = useState<'home' | 'register' | 'admin'>('home');
+
+  useEffect(() => {
+    const checkRoute = () => {
+      const hash = window.location.hash.toLowerCase();
+      const path = window.location.pathname.toLowerCase();
+      
+      if (hash.includes('register') || path.includes('register')) {
+        setCurrentView('register');
+        window.scrollTo({ top: 0, behavior: 'instant' });
+      } else if (hash.includes('admin') || path.includes('admin')) {
+        setCurrentView('admin');
+        window.scrollTo({ top: 0, behavior: 'instant' });
+      } else {
+        setCurrentView('home');
+      }
+    };
+
+    checkRoute();
+    window.addEventListener('hashchange', checkRoute);
+    window.addEventListener('popstate', checkRoute);
+    return () => {
+      window.removeEventListener('hashchange', checkRoute);
+      window.removeEventListener('popstate', checkRoute);
+    };
+  }, []);
+
+  const navigateTo = (view: 'home' | 'register' | 'admin') => {
+    if (view === 'home') {
+      window.location.hash = '';
+      setCurrentView('home');
+    } else if (view === 'admin') {
+      window.location.hash = 'adminodiyan';
+      setCurrentView('admin');
+    } else {
+      window.location.hash = view;
+      setCurrentView(view);
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  if (currentView === 'register') {
+    return (
+      <RegistrationPage
+        onBackToHome={() => navigateTo('home')}
+        onNavigateToAdmin={() => navigateTo('admin')}
+      />
+    );
+  }
+
+  if (currentView === 'admin') {
+    return (
+      <AdminPanel
+        onBackToHome={() => navigateTo('home')}
+        onNavigateToRegister={() => navigateTo('register')}
+      />
+    );
+  }
 
   return (
     <div className="relative w-full min-h-screen bg-[#0b0b0b] text-[#f5f5f7] antialiased overflow-x-hidden">
       {/* 1. Global Navigation */}
-      <Navbar />
+      <Navbar onNavigateToRegister={() => navigateTo('register')} onNavigateToAdmin={() => navigateTo('admin')} />
 
-      {/* 2. Main Outcrowd Hero Section with Floating Widgets & Pinned Zoom Motion */}
+      {/* 2. Main Outcrowd Hero Section with Floating Widgets */}
       <section className="relative w-full">
-        <Hero />
+        <Hero onNavigateToRegister={() => navigateTo('register')} />
       </section>
 
-      {/* 3. Continuous Infinite Moving Sponsors Ticker (Always moves independent of scroll) */}
+      {/* 3. Continuous Infinite Moving Sponsors Ticker */}
       <section className="relative w-full">
         <SponsorsTicker />
       </section>
 
-      {/* 4. Event Map & Timeline Roadmap Section (Bi-directional scrub animations) */}
+      {/* 4. Event Map & Timeline Roadmap Section */}
       <section className="relative w-full">
         <TimelineRoadmap />
       </section>
 
-      {/* 5. Selected Cases Section (Pinned Horizontal Scrub Animation - Zero Black Gap) */}
+      {/* 5. 3D Rotating Wheel Case Showcase */}
       <section className="relative w-full">
-        <CaseShowcase />
+        <CaseShowcase onNavigateToRegister={() => navigateTo('register')} />
       </section>
 
-      {/* 6. Compact Photo Gallery Section (3 Cards + "+12 More" Lightbox Modal) */}
+      {/* 6. Compact Photo Gallery Section */}
       <section className="relative w-full">
         <PhotoGallery />
       </section>
 
-      {/* 7. Studio Philosophy Section (Bi-directional scrub reveals & Theme Morphing) */}
+      {/* 7. Studio Philosophy Section */}
       <section className="relative w-full">
         <StudioPhilosophy />
       </section>
 
       {/* 8. Call To Action Section */}
       <section className="relative w-full">
-        <CTA />
+        <CTA onNavigateToRegister={() => navigateTo('register')} />
       </section>
 
-      {/* 9. Agency Footer */}
-      <Footer />
+      {/* 9. Footer */}
+      <Footer onNavigateToAdmin={() => navigateTo('admin')} />
     </div>
+  );
+}
+
+export function App() {
+  return (
+    <FestProvider>
+      <AppContent />
+    </FestProvider>
   );
 }
 

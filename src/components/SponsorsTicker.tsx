@@ -1,78 +1,13 @@
 import React, { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Sparkles, Shield, Cpu, Flame, Layers, Globe, Terminal, Box } from 'lucide-react';
+import { Sparkles, Globe } from 'lucide-react';
+import { useFest } from '../context/FestContext';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export interface Sponsor {
-  name: string;
-  category: string;
-  badge: string;
-  icon: React.ReactNode;
-  accentColor: string;
-}
-
-const SPONSORS: Sponsor[] = [
-  {
-    name: 'IEEE',
-    category: 'Technical Society',
-    badge: 'TITLE',
-    icon: <Globe className="w-5 h-5 text-[#0077ff]" />,
-    accentColor: '#0077ff',
-  },
-  {
-    name: 'Google DSC',
-    category: 'Developer Student Club',
-    badge: 'PLATINUM',
-    icon: <Flame className="w-5 h-5 text-[#34a853]" />,
-    accentColor: '#34a853',
-  },
-  {
-    name: 'GitHub Education',
-    category: 'Developer Platform',
-    badge: 'GOLD',
-    icon: <Terminal className="w-5 h-5 text-[#d4ff00]" />,
-    accentColor: '#d4ff00',
-  },
-  {
-    name: 'JetBrains',
-    category: 'Developer Tools',
-    badge: 'GOLD',
-    icon: <Layers className="w-5 h-5 text-[#ff7262]" />,
-    accentColor: '#ff7262',
-  },
-  {
-    name: 'AWS Educate',
-    category: 'Cloud Computing',
-    badge: 'SILVER',
-    icon: <Cpu className="w-5 h-5 text-[#ff9900]" />,
-    accentColor: '#ff9900',
-  },
-  {
-    name: 'Digital Ocean',
-    category: 'Cloud Infrastructure',
-    badge: 'SILVER',
-    icon: <Box className="w-5 h-5 text-[#0080ff]" />,
-    accentColor: '#0080ff',
-  },
-  {
-    name: 'Notion',
-    category: 'Productivity Suite',
-    badge: 'PARTNER',
-    icon: <Shield className="w-5 h-5 text-white" />,
-    accentColor: '#ffffff',
-  },
-  {
-    name: 'Canva',
-    category: 'Design Platform',
-    badge: 'PARTNER',
-    icon: <Sparkles className="w-5 h-5 text-[#00c4cc]" />,
-    accentColor: '#00c4cc',
-  },
-];
-
 export const SponsorsTicker: React.FC = () => {
+  const { sponsors } = useFest();
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -101,7 +36,7 @@ export const SponsorsTicker: React.FC = () => {
   }, []);
 
   // Double the sponsors list to create seamless 100% infinite marquee loop
-  const marqueeItems = [...SPONSORS, ...SPONSORS];
+  const marqueeItems = sponsors.length > 0 ? [...sponsors, ...sponsors] : [];
 
   return (
     <section
@@ -114,7 +49,7 @@ export const SponsorsTicker: React.FC = () => {
       {/* Header Tag */}
       <div className="sponsors-header-content text-center mb-8 relative z-10">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-white/60 tracking-widest uppercase">
-          <Sparkles className="w-3.5 h-3.5 text-[#d4ff00]" />
+          <Sparkles className="w-3.5 h-3.5 text-[#00e5ff]" />
           <span>POWERED BY OUR SPONSORS & PARTNERS</span>
         </div>
       </div>
@@ -132,10 +67,14 @@ export const SponsorsTicker: React.FC = () => {
               className="group flex items-center gap-4 px-6 py-4 rounded-2xl bg-[#121217]/90 border border-white/10 hover:border-white/30 backdrop-blur-xl shadow-xl transition-all duration-300 shrink-0 cursor-pointer"
             >
               <div
-                className="p-3 rounded-xl bg-white/5 border border-white/10 group-hover:scale-110 transition-transform duration-300"
-                style={{ borderColor: `${sponsor.accentColor}30` }}
+                className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center p-1.5 overflow-hidden shrink-0 group-hover:scale-110 transition-transform duration-300"
+                style={{ borderColor: `${sponsor.accentColor || '#0077ff'}30` }}
               >
-                {sponsor.icon}
+                {sponsor.logoUrl ? (
+                  <img src={sponsor.logoUrl} alt={sponsor.name} className="w-full h-full object-contain" />
+                ) : (
+                  <Globe className="w-5 h-5 text-[#0077ff]" />
+                )}
               </div>
 
               <div className="space-y-0.5">
@@ -146,8 +85,8 @@ export const SponsorsTicker: React.FC = () => {
                   <span
                     className="text-[9px] font-mono font-black tracking-wider px-2 py-0.5 rounded-full border bg-white/5 uppercase"
                     style={{
-                      color: sponsor.accentColor,
-                      borderColor: `${sponsor.accentColor}40`,
+                      color: sponsor.accentColor || '#00e5ff',
+                      borderColor: `${sponsor.accentColor || '#00e5ff'}40`,
                     }}
                   >
                     {sponsor.badge}

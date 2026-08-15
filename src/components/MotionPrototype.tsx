@@ -54,7 +54,7 @@ export const MotionPrototype: React.FC = () => {
         rotateY: 10,
         y: -30,
         borderRadius: '36px',
-        boxShadow: '0 40px 100px rgba(99, 91, 255, 0.35)',
+        boxShadow: '0 40px 100px rgba(0, 119, 255, 0.35)',
         ease: 'power1.inOut',
       }, 0);
 
@@ -113,7 +113,7 @@ export const MotionPrototype: React.FC = () => {
         ref={bgTextRef}
         className="absolute inset-0 flex items-center justify-center whitespace-nowrap opacity-05 pointer-events-none font-syne text-[18vw] font-extrabold tracking-tighter text-white/10 uppercase"
       >
-        OUT CROWD ✪ MOTION LAB
+        SRISHTI ✪ MOTION LAB
       </div>
 
       {/* Layer 2: Main Headline Typography */}
@@ -123,7 +123,7 @@ export const MotionPrototype: React.FC = () => {
           className="font-syne text-5xl md:text-7xl lg:text-9xl font-bold tracking-tight uppercase leading-none"
         >
           <span className="prototype-word-1 inline-block mr-4">Crafting</span>
-          <span className="font-serif-custom italic font-normal text-[#635bff] lowercase text-6xl md:text-8xl lg:text-[10rem] mx-2">
+          <span className="font-serif-custom italic font-normal text-[#0077ff] lowercase text-6xl md:text-8xl lg:text-[10rem] mx-2">
             digital
           </span>
           <span className="prototype-word-2 inline-block ml-4">Embodiments</span>
@@ -143,12 +143,12 @@ export const MotionPrototype: React.FC = () => {
         {/* Card Header */}
         <div className="flex items-center justify-between border-b border-white/10 pb-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-[#635bff]/20 border border-[#635bff]/40 flex items-center justify-center text-[#635bff]">
+            <div className="w-8 h-8 rounded-full bg-[#0077ff]/20 border border-[#0077ff]/40 flex items-center justify-center text-[#0077ff]">
               <Sparkles className="w-4 h-4" />
             </div>
             <div>
               <span className="block font-syne text-xs font-bold tracking-wider uppercase text-white">
-                Outcrowd Motion V1.0
+                Srishti Motion V1.0
               </span>
               <span className="block text-[10px] text-white/40 font-mono">
                 SCRUBBED TIMELINE • 300VH
@@ -162,10 +162,10 @@ export const MotionPrototype: React.FC = () => {
 
         {/* Card Center Visual Canvas */}
         <div className="my-auto py-4 flex items-center justify-center relative">
-          <div className="w-32 h-32 md:w-44 md:h-44 rounded-full bg-gradient-to-tr from-[#635bff] to-[#d4ff00]/60 opacity-20 blur-2xl absolute" />
+          <div className="w-32 h-32 md:w-44 md:h-44 rounded-full bg-gradient-to-tr from-[#0077ff] to-[#00e5ff]/60 opacity-20 blur-2xl absolute" />
           <div className="relative z-10 text-center">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/15 backdrop-blur-md mb-3">
-              <Cpu className="w-4 h-4 text-[#635bff]" />
+              <Cpu className="w-4 h-4 text-[#0077ff]" />
               <span className="text-xs font-syne font-semibold text-white/90">
                 Layered Composition Engine
               </span>
@@ -179,7 +179,7 @@ export const MotionPrototype: React.FC = () => {
         {/* Card Footer */}
         <div className="flex items-center justify-between pt-3 border-t border-white/10 text-[11px] text-white/50 font-mono">
           <div className="flex items-center gap-2">
-            <ShieldCheck className="w-3.5 h-3.5 text-[#635bff]" />
+            <ShieldCheck className="w-3.5 h-3.5 text-[#0077ff]" />
             <span>CINEMATIC SCROLL</span>
           </div>
           <span>01 / 05 SECTIONS</span>
@@ -187,13 +187,13 @@ export const MotionPrototype: React.FC = () => {
       </div>
 
       {/* Layer 4: Foreground Parallax Badges */}
-      <div className="proto-fg-badge-1 absolute top-[25%] right-[10%] z-40 px-4 py-2 rounded-full bg-[#635bff] text-white text-xs font-syne font-bold tracking-wider shadow-lg pointer-events-none flex items-center gap-2">
+      <div className="proto-fg-badge-1 absolute top-[25%] right-[10%] z-40 px-4 py-2 rounded-full bg-[#0077ff] text-white text-xs font-syne font-bold tracking-wider shadow-lg pointer-events-none flex items-center gap-2">
         <Globe className="w-3.5 h-3.5" />
         <span>PARALLAX FAST LAYER</span>
       </div>
 
       <div className="proto-fg-badge-2 absolute bottom-[22%] left-[10%] z-40 px-4 py-2 rounded-full bg-white/10 border border-white/20 backdrop-blur-md text-white text-xs font-mono tracking-wider shadow-lg pointer-events-none flex items-center gap-2">
-        <ArrowRight className="w-3.5 h-3.5 text-[#635bff]" />
+        <ArrowRight className="w-3.5 h-3.5 text-[#0077ff]" />
         <span>SCROLL CONTROLLED ROTATION</span>
       </div>
 

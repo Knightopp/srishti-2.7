@@ -1,7 +1,11 @@
 import React from 'react';
 import { ArrowUp, Globe } from 'lucide-react';
 
-export const Footer: React.FC = () => {
+interface FooterProps {
+  onNavigateToAdmin?: () => void;
+}
+
+export const Footer: React.FC<FooterProps> = ({ onNavigateToAdmin }) => {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -33,7 +37,7 @@ export const Footer: React.FC = () => {
             </div>
             <span>•</span>
             <div className="flex items-center gap-2">
-              <Globe className="w-3.5 h-3.5 text-[#d4ff00]" />
+              <Globe className="w-3.5 h-3.5 text-[#00e5ff]" />
               <span>DECEMBER 4-5, 2026</span>
             </div>
             <span>•</span>
@@ -81,10 +85,19 @@ export const Footer: React.FC = () => {
           </div>
         </div>
 
-        {/* Bottom Bar: Copyright */}
+        {/* Bottom Bar: Copyright (Secret click trigger for Admin Panel) */}
         <div className="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between text-[11px] font-mono text-white/40 gap-4">
           <span>© {new Date().getFullYear()} SRISHTI 2.7 • CS DEPARTMENT • ST. THOMAS COLLEGE. ALL RIGHTS RESERVED.</span>
-          <span>DESIGNED WITH ❤ BY THE SRISHTI TEAM</span>
+          <span 
+            onClick={() => {
+              if (onNavigateToAdmin) {
+                onNavigateToAdmin();
+              }
+            }}
+            className="cursor-pointer hover:text-white/70 transition-colors"
+          >
+            DESIGNED WITH ❤ BY THE SRISHTI TEAM
+          </span>
         </div>
       </div>
     </footer>

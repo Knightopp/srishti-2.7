@@ -81,7 +81,7 @@ const MAP_LOCATIONS: MapLocation[] = [
     capacity: '300 Seats',
     floor: 'Level 1 - Block B',
     coordinates: { x: 78, y: 48 },
-    color: '#d4ff00',
+    color: '#00d4ff',
     description: 'Modern seminar hall for technical talks, industry expert sessions, and interactive panel discussions.',
   },
   {
@@ -91,7 +91,7 @@ const MAP_LOCATIONS: MapLocation[] = [
     capacity: '1000+ Standing',
     floor: 'Campus Grounds',
     coordinates: { x: 50, y: 78 },
-    color: '#ff5e62',
+    color: '#0055ff',
     description: 'Outdoor stage area for cultural performances, band shows, DJ night, and the grand closing ceremony.',
   },
   {
@@ -101,7 +101,7 @@ const MAP_LOCATIONS: MapLocation[] = [
     capacity: '200 Hackers',
     floor: 'Level 2 - Block C',
     coordinates: { x: 26, y: 72 },
-    color: '#ff9900',
+    color: '#38bdf8',
     description: 'Dedicated space for the 6-hour hackathon with team desks, power strips, refreshment station, and mentor helpdesks.',
   },
   {
@@ -111,7 +111,7 @@ const MAP_LOCATIONS: MapLocation[] = [
     capacity: '80 Seats',
     floor: 'Level 3 - Block A',
     coordinates: { x: 74, y: 75 },
-    color: '#a855f7',
+    color: '#0077ff',
     description: 'Intimate conference room for exclusive workshops, product demos, and career guidance sessions.',
   },
 ];
@@ -178,7 +178,7 @@ const EVENTS_DATA: TimelineEvent[] = [
     description:
       'Teams of 2 receive a problem brief and must design a complete mobile app UI in Figma within 2 hours. Judged on creativity, usability, and visual appeal.',
     category: 'Competition',
-    categoryColor: 'border-[#d4ff00] text-[#d4ff00] bg-[#d4ff00]/10',
+    categoryColor: 'border-[#00d4ff] text-[#00d4ff] bg-[#00d4ff]/10',
     location: 'Seminar Hall',
     locationId: 'seminar-hall',
     speaker: {
@@ -191,7 +191,7 @@ const EVENTS_DATA: TimelineEvent[] = [
       'Best design wins goodies + certificate',
     ],
     side: 'left',
-    icon: <Zap className="w-5 h-5 text-[#d4ff00]" />,
+    icon: <Zap className="w-5 h-5 text-[#00d4ff]" />,
   },
   {
     id: 'ev-4',
@@ -203,7 +203,7 @@ const EVENTS_DATA: TimelineEvent[] = [
     description:
       'A beginner-friendly hands-on workshop where participants build and train a machine learning classification model using scikit-learn and Google Colab.',
     category: 'Workshop',
-    categoryColor: 'border-[#a855f7] text-[#a855f7] bg-[#a855f7]/10',
+    categoryColor: 'border-[#0077ff] text-[#0077ff] bg-[#0077ff]/10',
     location: 'Conference Room',
     locationId: 'conference-room',
     speaker: {
@@ -216,7 +216,7 @@ const EVENTS_DATA: TimelineEvent[] = [
       'Certificate for all participants',
     ],
     side: 'right',
-    icon: <Layers className="w-5 h-5 text-[#a855f7]" />,
+    icon: <Layers className="w-5 h-5 text-[#0077ff]" />,
   },
   {
     id: 'ev-5',
@@ -228,7 +228,7 @@ const EVENTS_DATA: TimelineEvent[] = [
     description:
       'A high-energy tech quiz in teams of 3 covering data structures, OS, DBMS, networking, current tech trends, and pop culture crossovers.',
     category: 'Competition',
-    categoryColor: 'border-[#ff9900] text-[#ff9900] bg-[#ff9900]/10',
+    categoryColor: 'border-[#38bdf8] text-[#38bdf8] bg-[#38bdf8]/10',
     location: 'Main Auditorium',
     locationId: 'main-auditorium',
     speaker: {
@@ -241,7 +241,7 @@ const EVENTS_DATA: TimelineEvent[] = [
       'Trophies for winning team',
     ],
     side: 'left',
-    icon: <Users className="w-5 h-5 text-[#ff9900]" />,
+    icon: <Users className="w-5 h-5 text-[#38bdf8]" />,
   },
   {
     id: 'ev-6',
@@ -253,7 +253,7 @@ const EVENTS_DATA: TimelineEvent[] = [
     description:
       'The Day 1 cultural evening featuring student band performances, western and classical dance, stand-up comedy, and a DJ set to close the night.',
     category: 'Cultural',
-    categoryColor: 'border-[#ff5e62] text-[#ff5e62] bg-[#ff5e62]/10',
+    categoryColor: 'border-[#00e5ff] text-[#00e5ff] bg-[#00e5ff]/10',
     location: 'Open Air Stage',
     locationId: 'open-stage',
     speaker: {
@@ -266,7 +266,7 @@ const EVENTS_DATA: TimelineEvent[] = [
       'DJ Night with Light Show',
     ],
     side: 'right',
-    icon: <Music className="w-5 h-5 text-[#ff5e62]" />,
+    icon: <Music className="w-5 h-5 text-[#00e5ff]" />,
   },
 
   // DECEMBER 5
@@ -305,7 +305,7 @@ const EVENTS_DATA: TimelineEvent[] = [
     description:
       'Teams of 3-4 build a functional web or mobile prototype in 6 hours based on a problem statement revealed at the start. All tech stacks allowed.',
     category: 'Hackathon',
-    categoryColor: 'border-[#ff9900] text-[#ff9900] bg-[#ff9900]/10',
+    categoryColor: 'border-[#00e5ff] text-[#00e5ff] bg-[#00e5ff]/10',
     location: 'Innovation Hub',
     locationId: 'innovation-lab',
     speaker: {
@@ -318,7 +318,7 @@ const EVENTS_DATA: TimelineEvent[] = [
       'Live Demo Pitches to judges',
     ],
     side: 'right',
-    icon: <Code className="w-5 h-5 text-[#ff9900]" />,
+    icon: <Code className="w-5 h-5 text-[#00e5ff]" />,
   },
   {
     id: 'ev-9',
@@ -330,7 +330,7 @@ const EVENTS_DATA: TimelineEvent[] = [
     description:
       'A keynote talk by an industry expert on the evolution of modern web development, serverless architectures, and AI-assisted coding tools.',
     category: 'Talk',
-    categoryColor: 'border-[#d4ff00] text-[#d4ff00] bg-[#d4ff00]/10',
+    categoryColor: 'border-[#00d4ff] text-[#00d4ff] bg-[#00d4ff]/10',
     location: 'Seminar Hall',
     locationId: 'seminar-hall',
     speaker: {
@@ -343,7 +343,7 @@ const EVENTS_DATA: TimelineEvent[] = [
       'Q&A and career advice',
     ],
     side: 'left',
-    icon: <Zap className="w-5 h-5 text-[#d4ff00]" />,
+    icon: <Zap className="w-5 h-5 text-[#00d4ff]" />,
   },
   {
     id: 'ev-10',
@@ -355,7 +355,7 @@ const EVENTS_DATA: TimelineEvent[] = [
     description:
       'The grand closing ceremony of Srishti 2.7 with hackathon results, competition prize distribution, best participant awards, and the official wrap-up address.',
     category: 'Awards',
-    categoryColor: 'border-[#ff5e62] text-[#ff5e62] bg-[#ff5e62]/10',
+    categoryColor: 'border-[#38bdf8] text-[#38bdf8] bg-[#38bdf8]/10',
     location: 'Main Auditorium',
     locationId: 'main-auditorium',
     speaker: {
@@ -368,7 +368,7 @@ const EVENTS_DATA: TimelineEvent[] = [
       'Srishti 2.8 Teaser Reveal',
     ],
     side: 'right',
-    icon: <Award className="w-5 h-5 text-[#ff5e62]" />,
+    icon: <Award className="w-5 h-5 text-[#38bdf8]" />,
   },
 ];
 
