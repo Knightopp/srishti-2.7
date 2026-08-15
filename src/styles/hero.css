@@ -1,0 +1,417 @@
+.hero {
+  position: relative;
+  height: 250vh;
+  min-height: 1400px;
+  overflow: visible;
+  color: #f4f7ff;
+}
+
+/* =========================================
+   FIXED PERSISTENT BACKGROUND SCENE
+   Initially hidden (opacity: 0 via GSAP)
+========================================= */
+
+.fixed-background-scene {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 50%, rgba(8, 127, 240, 0.16) 0%, rgba(2, 3, 10, 1) 75%);
+}
+
+.background-glow {
+  position: absolute;
+  width: 1100px;
+  height: 1100px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    circle,
+    rgba(0, 225, 255, 0.16),
+    rgba(20, 60, 255, 0.08) 35%,
+    transparent 70%
+  );
+  filter: blur(50px);
+  pointer-events: none;
+}
+
+/* =========================================
+   FIXED GLASSMOPHIC NAVBAR
+========================================= */
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 18px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 1000;
+  background: rgba(2, 3, 10, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(0, 229, 255, 0.15);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: #ffffff;
+}
+
+.navbar-logo img {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.6));
+}
+
+.navbar-brand-name {
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  color: #ffffff;
+}
+
+.navbar-brand-name span {
+  color: #00e5ff;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 36px;
+  margin-left: auto;
+  margin-right: 36px;
+}
+
+.navbar-links a {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+.navbar-links a:hover {
+  color: #00e5ff;
+  text-shadow: 0 0 10px rgba(0, 229, 255, 0.6);
+}
+
+.menu-button {
+  border: 1px solid rgba(0, 229, 255, 0.25);
+  background: rgba(8, 127, 240, 0.1);
+  padding: 8px 18px;
+  border-radius: 9999px;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.menu-button:hover {
+  background: rgba(0, 229, 255, 0.2);
+  border-color: rgba(0, 229, 255, 0.5);
+}
+
+/* =========================================
+   EYEBROW HEADER
+========================================= */
+
+.hero-eyebrow {
+  position: absolute;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  z-index: 10;
+  white-space: nowrap;
+  display: flex;
+  gap: 20px;
+}
+
+.hero-eyebrow span:last-child {
+  color: #00e5ff;
+}
+
+/* =========================================
+   GIANT HERO TITLE - NO TEXT CLIPPING!
+========================================= */
+
+.hero-title {
+  position: absolute;
+  top: 130px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  width: 100%;
+  text-align: center;
+  font-size: clamp(100px, 15vw, 230px);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.06em;
+  user-select: none;
+  white-space: nowrap;
+  overflow: visible;
+  padding-bottom: 0.3em;
+}
+
+.hero-title-main {
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #dbe4ff 50%,
+    #9eaece 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  padding-bottom: 0.15em;
+  display: block;
+}
+
+.hero-title-number {
+  margin-top: -10px;
+  color: transparent;
+  background: linear-gradient(
+    135deg,
+    #00e5ff 0%,
+    #087ff0 55%,
+    #1238f5 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  padding-bottom: 0.15em;
+  display: inline-block;
+}
+
+.hero-title-number .dot {
+  color: #00e5ff;
+}
+
+/* =========================================
+   ENLARGED ORBITAL RING SYSTEM
+========================================= */
+
+.ring-system {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 680px;
+  height: 680px;
+  transform: translate(-50%, -50%);
+  perspective: 1200px;
+  z-index: 15;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ring-logo-stage {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 440px;
+  height: 440px;
+  transform: translate(-50%, -50%);
+  z-index: 20;
+}
+
+.ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 580px;
+  height: 580px;
+  transform: translate(-50%, -50%) rotateX(65deg);
+  border-radius: 50%;
+  border: 10px solid #087ff0;
+  background: transparent;
+  box-shadow:
+    0 0 12px rgba(0, 229, 255, 0.85),
+    0 0 30px rgba(0, 140, 255, 0.55),
+    0 0 65px rgba(0, 70, 255, 0.25);
+  z-index: 3;
+}
+
+.ring::before {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 2px solid rgba(0, 229, 255, 0.4);
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.6);
+  pointer-events: none;
+}
+
+.orbit {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 620px;
+  height: 180px;
+  border: 1px solid rgba(0, 229, 255, 0.6);
+  border-radius: 50%;
+  transform-style: preserve-3d;
+  pointer-events: none;
+  z-index: 5;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+}
+
+.orbit-1 {
+  transform: translate(-50%, -50%) rotateX(65deg);
+}
+
+.orbit-2 {
+  width: 580px;
+  height: 160px;
+  transform: translate(-50%, -50%) rotateX(65deg) rotateZ(60deg);
+  opacity: 0.75;
+}
+
+.orbit-3 {
+  width: 540px;
+  height: 150px;
+  transform: translate(-50%, -50%) rotateX(65deg) rotateZ(-55deg);
+  opacity: 0.5;
+}
+
+.ring-light {
+  position: absolute;
+  left: 50%;
+  top: 85%;
+  width: 450px;
+  height: 90px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse, rgba(0, 229, 255, 0.25), transparent 70%);
+  filter: blur(25px);
+  opacity: 0.7;
+  z-index: 1;
+}
+
+/* =========================================
+   PLANET HORIZON ARC
+========================================= */
+
+.planet {
+  position: absolute;
+  left: 50%;
+  bottom: -460px;
+  width: 1200px;
+  height: 700px;
+  transform: translateX(-50%);
+  border-radius: 50% 50% 0 0;
+  background: radial-gradient(ellipse at 50% 0%, #10182d, #02030a 65%);
+  box-shadow: 0 -15px 60px rgba(0, 180, 255, 0.35);
+  z-index: 8;
+}
+
+.planet::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 85%;
+  height: 3px;
+  transform: translateX(-50%);
+  background: #00e5ff;
+  box-shadow:
+    0 0 15px #00e5ff,
+    0 0 50px #087ff0,
+    0 0 100px rgba(18, 56, 245, 0.8);
+}
+
+/* =========================================
+   HERO BOTTOM & SCROLL INDICATOR
+========================================= */
+
+.hero-bottom {
+  position: absolute;
+  z-index: 20;
+  bottom: 40px;
+  width: 100%;
+  text-align: center;
+}
+
+.hero-tagline {
+  font-size: 12px;
+  letter-spacing: 0.45em;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.hero-tagline span {
+  color: #00e5ff;
+  margin: 0 10px;
+}
+
+.scroll-indicator {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  margin-top: 16px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 9px;
+  letter-spacing: 0.3em;
+}
+
+.scroll-indicator span:last-child {
+  color: #00e5ff;
+  font-size: 16px;
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 800px) {
+  .navbar {
+    padding: 16px 24px;
+  }
+
+  .navbar-links {
+    display: none;
+  }
+
+  .hero-title {
+    font-size: 18vw;
+    top: 110px;
+  }
+
+  .ring-system {
+    width: 450px;
+    height: 450px;
+  }
+
+  .ring {
+    width: 380px;
+    height: 380px;
+  }
+
+  .ring-logo-stage {
+    width: 300px;
+    height: 300px;
+  }
+}
