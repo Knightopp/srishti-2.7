@@ -676,11 +676,15 @@ export const FestProvider: React.FC<{ children: React.ReactNode }> = ({ children
       id: `evt-${Date.now()}`,
       number: num,
     };
-    setEvents([...events, newEvent]);
+    const next = [...events, newEvent];
+    setEvents(next);
+    syncWithCloud({ events: next, sponsors, registrations, settings });
   };
 
   const updateEvent = (id: string, updatedFields: Partial<EventItem>) => {
-    setEvents(events.map((e) => (e.id === id ? { ...e, ...updatedFields } : e)));
+    const next = events.map((e) => (e.id === id ? { ...e, ...updatedFields } : e));
+    setEvents(next);
+    syncWithCloud({ events: next, sponsors, registrations, settings });
   };
 
   const deleteEvent = (id: string) => {
@@ -688,7 +692,9 @@ export const FestProvider: React.FC<{ children: React.ReactNode }> = ({ children
       alert('At least one event must remain on the festival schedule.');
       return;
     }
-    setEvents(events.filter((e) => e.id !== id));
+    const next = events.filter((e) => e.id !== id);
+    setEvents(next);
+    syncWithCloud({ events: next, sponsors, registrations, settings });
   };
 
   const addSponsor = (newSponsorData: Omit<SponsorItem, 'id'>) => {
@@ -696,11 +702,15 @@ export const FestProvider: React.FC<{ children: React.ReactNode }> = ({ children
       ...newSponsorData,
       id: `s-sp-${Date.now()}`,
     };
-    setSponsors([...sponsors, newSponsor]);
+    const next = [...sponsors, newSponsor];
+    setSponsors(next);
+    syncWithCloud({ events, sponsors: next, registrations, settings });
   };
 
   const deleteSponsor = (id: string) => {
-    setSponsors(sponsors.filter((s) => s.id !== id));
+    const next = sponsors.filter((s) => s.id !== id);
+    setSponsors(next);
+    syncWithCloud({ events, sponsors: next, registrations, settings });
   };
 
   const addRegistration = (regData: Omit<RegistrationRecord, 'id' | 'passId' | 'securityHash' | 'registeredAt' | 'paymentStatus' | 'checkInStatus'>) => {
@@ -721,7 +731,9 @@ export const FestProvider: React.FC<{ children: React.ReactNode }> = ({ children
       registeredAt: new Date().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }),
     };
 
-    setRegistrations([newRecord, ...registrations]);
+    const next = [newRecord, ...registrations];
+    setRegistrations(next);
+    syncWithCloud({ events, sponsors, registrations: next, settings });
     return newRecord;
   };
 
@@ -730,26 +742,30 @@ export const FestProvider: React.FC<{ children: React.ReactNode }> = ({ children
     paymentStatus: RegistrationRecord['paymentStatus'], 
     checkInStatus?: RegistrationRecord['checkInStatus']
   ) => {
-    setRegistrations(
-      registrations.map((r) => {
-        if (r.id === id) {
-          return {
-            ...r,
-            paymentStatus,
-            checkInStatus: checkInStatus || r.checkInStatus,
-          };
-        }
-        return r;
-      })
-    );
+    const next = registrations.map((r) => {
+      if (r.id === id) {
+        return {
+          ...r,
+          paymentStatus,
+          checkInStatus: checkInStatus || r.checkInStatus,
+        };
+      }
+      return r;
+    });
+    setRegistrations(next);
+    syncWithCloud({ events, sponsors, registrations: next, settings });
   };
 
   const deleteRegistration = (id: string) => {
-    setRegistrations(registrations.filter((r) => r.id !== id));
+    const next = registrations.filter((r) => r.id !== id);
+    setRegistrations(next);
+    syncWithCloud({ events, sponsors, registrations: next, settings });
   };
 
   const updateSettings = (newSettings: Partial<SystemSettings>) => {
-    setSettings({ ...settings, ...newSettings });
+    const next = { ...settings, ...newSettings };
+    setSettings(next);
+    syncWithCloud({ events, sponsors, registrations, settings: next });
   };
 
   return (
