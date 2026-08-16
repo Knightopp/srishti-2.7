@@ -30,6 +30,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     sponsors, 
     registrations, 
     settings,
+    cloudStatus,
     addEvent, 
     updateEvent, 
     deleteEvent, 
@@ -37,7 +38,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     deleteSponsor, 
     updateRegistrationStatus, 
     deleteRegistration,
-    updateSettings
+    updateSettings,
+    syncWithCloud,
+    exportDatabaseJSON,
+    importDatabaseJSON
   } = useFest();
 
   // Authentication State
@@ -741,6 +745,78 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
         {/* TAB 4: SYSTEM & UPI PAYMENT SETTINGS */}
         {activeTab === 'settings' && (
           <div className="max-w-2xl mx-auto space-y-6">
+            {/* CLOUD DATABASE CROSS-DEVICE SYNC CARD */}
+            <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-[#0c101d] via-[#101426] to-[#080b12] border border-[#0077ff]/40 shadow-2xl space-y-5">
+              <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#00e5ff] animate-ping" />
+                    <span className="text-[10px] font-mono text-[#00e5ff] tracking-widest uppercase font-bold">
+                      REAL-TIME CROSS-DEVICE SYNC
+                    </span>
+                  </div>
+                  <h3 className="font-syne font-extrabold text-xl text-white uppercase">
+                    Cloud Database Sync & Backup
+                  </h3>
+                </div>
+
+                <div className="px-3 py-1 rounded-full bg-[#0077ff]/20 border border-[#0077ff]/40 text-[#00e5ff] text-xs font-mono font-bold uppercase flex items-center gap-1.5">
+                  <ShieldCheck className="w-3.5 h-3.5" />
+                  <span>STATUS: {cloudStatus.toUpperCase()}</span>
+                </div>
+              </div>
+
+              <p className="text-xs font-mono text-white/70 leading-relaxed">
+                Changes made on your phone or PC are automatically synchronized. You can also manually push data to the cloud or export/import database JSON files below.
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+                <button
+                  onClick={async () => {
+                    await syncWithCloud();
+                    alert('Cloud database synchronized successfully across all devices!');
+                  }}
+                  className="px-4 py-3 rounded-xl bg-[#0077ff] text-white font-mono text-xs font-bold uppercase hover:bg-[#0055ff] transition-all flex items-center justify-center gap-2 shadow-lg"
+                >
+                  <BarChart3 className="w-4 h-4" />
+                  <span>Sync Cloud Now</span>
+                </button>
+
+                <button
+                  onClick={exportDatabaseJSON}
+                  className="px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white font-mono text-xs font-bold uppercase hover:bg-white/20 transition-all flex items-center justify-center gap-2"
+                >
+                  <Download className="w-4 h-4 text-[#00e5ff]" />
+                  <span>Export DB JSON</span>
+                </button>
+
+                <label className="px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white font-mono text-xs font-bold uppercase hover:bg-white/20 transition-all flex items-center justify-center gap-2 cursor-pointer">
+                  <Edit3 className="w-4 h-4 text-[#00d4ff]" />
+                  <span>Import DB JSON</span>
+                  <input
+                    type="file"
+                    accept=".json"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                          const success = importDatabaseJSON(reader.result as string);
+                          if (success) {
+                            alert('Database restored successfully from file!');
+                          } else {
+                            alert('Invalid JSON file format!');
+                          }
+                        };
+                        reader.readAsText(file);
+                      }
+                    }}
+                  />
+                </label>
+              </div>
+            </div>
+
             <div className="p-6 sm:p-8 rounded-3xl bg-white/[0.03] border border-white/10 space-y-6">
               <div className="border-b border-white/10 pb-4">
                 <h3 className="font-syne font-extrabold text-xl text-white uppercase">

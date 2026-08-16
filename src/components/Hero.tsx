@@ -269,133 +269,144 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister: _onNavigateToR
           </div>
         </div>
 
-        {/* ORGANIC FLOATING WIDGET 1: TOP-LEFT — REGISTRATIONS */}
+        {/* DYNAMIC FLOATING PARTICLES / LIGHT SPECKS BACKGROUND */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden z-10">
+          <div className="absolute top-[20%] left-[15%] w-2 h-2 rounded-full bg-[#0077ff] animate-particle" style={{ animationDelay: '0s' }} />
+          <div className="absolute top-[60%] left-[80%] w-1.5 h-1.5 rounded-full bg-[#00e5ff] animate-particle" style={{ animationDelay: '1.2s' }} />
+          <div className="absolute top-[40%] left-[70%] w-2 h-2 rounded-full bg-[#00d4ff] animate-particle" style={{ animationDelay: '2.4s' }} />
+          <div className="absolute top-[75%] left-[25%] w-1 h-1 rounded-full bg-[#d4ff00] animate-particle" style={{ animationDelay: '0.8s' }} />
+          <div className="absolute top-[15%] left-[85%] w-2.5 h-2.5 rounded-full bg-[#0077ff]/60 blur-[1px] animate-particle" style={{ animationDelay: '1.8s' }} />
+        </div>
+
+        {/* UNSTABLE ASYMMETRIC FLOATING WIDGET 1: TOP-LEFT — REGISTRATIONS */}
         <div
           ref={card1Ref}
-          className="hidden lg:flex absolute top-[6%] left-[1%] xl:left-[3%] z-40 p-3.5 bg-[#0e0e12]/90 border border-white/15 rounded-2xl backdrop-blur-xl shadow-2xl w-52 flex-col gap-2 -rotate-3 transition-transform duration-200"
+          className="hidden lg:flex absolute top-[3%] left-[-1%] xl:left-[1%] z-40 p-4 bg-[#0e0e14]/95 border border-[#0077ff]/40 rounded-2xl backdrop-blur-2xl shadow-[0_15px_40px_rgba(0,119,255,0.25)] w-56 flex-col gap-2.5 animate-float-1 hover:scale-105 hover:border-[#0077ff] hover:shadow-[0_20px_50px_rgba(0,119,255,0.5)] transition-all duration-300 group cursor-pointer"
           style={{
-            transform: `translate3d(${mousePos.x * -14}px, ${mousePos.y * -14}px, 0)`,
+            transform: `translate3d(${mousePos.x * -22}px, ${mousePos.y * -22}px, 0)`,
           }}
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-lg bg-[#0077ff]/20 border border-[#0077ff]/40 flex items-center justify-center text-[#0077ff]">
-                <Users className="w-3 h-3" />
+              <div className="w-7 h-7 rounded-xl bg-[#0077ff]/20 border border-[#0077ff]/60 flex items-center justify-center text-[#0077ff] group-hover:scale-110 transition-transform">
+                <Users className="w-3.5 h-3.5" />
               </div>
-              <span className="text-[10px] font-mono text-white/50 uppercase font-semibold">
+              <span className="text-[10px] font-mono text-white/70 uppercase font-bold tracking-wider">
                 REGISTRATIONS
               </span>
             </div>
-            <span className="w-2 h-2 rounded-full bg-[#0077ff] animate-pulse" />
+            <span className="w-2.5 h-2.5 rounded-full bg-[#0077ff] animate-ping" />
           </div>
 
           <div className="flex items-baseline justify-between pt-0.5">
-            <span className="font-syne font-extrabold text-xl text-white">500+</span>
-            <span className="text-[9px] font-mono text-white/60">STUDENTS</span>
+            <span className="font-syne font-black text-2xl text-white tracking-tight">500+</span>
+            <span className="text-[9px] font-mono text-[#00e5ff] font-bold uppercase tracking-widest">STUDENTS JOINED</span>
           </div>
 
-          <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
-            <div className="bg-gradient-to-r from-[#0077ff] to-[#00d4ff] h-full w-[82%]" />
+          <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden p-0.5 border border-white/10">
+            <div className="bg-gradient-to-r from-[#0077ff] via-[#00e5ff] to-[#d4ff00] h-full rounded-full w-[84%] animate-pulse" />
           </div>
         </div>
 
-        {/* ORGANIC FLOATING WIDGET 2: TOP-RIGHT — EVENT LINEUP */}
+        {/* UNSTABLE ASYMMETRIC FLOATING WIDGET 2: TOP-RIGHT — EVENT LINEUP */}
         <div
           ref={card2Ref}
-          className="hidden lg:flex absolute top-[14%] right-[1%] xl:right-[3%] z-40 p-3.5 bg-[#0e0e12]/90 border border-white/15 rounded-2xl backdrop-blur-xl shadow-2xl w-56 flex-col gap-2 rotate-2 transition-transform duration-200"
+          className="hidden lg:flex absolute top-[11%] right-[-1%] xl:right-[1%] z-40 p-4 bg-[#0e0e14]/95 border border-[#00e5ff]/40 rounded-2xl backdrop-blur-2xl shadow-[0_15px_40px_rgba(0,229,255,0.2)] w-60 flex-col gap-2.5 animate-float-2 hover:scale-105 hover:border-[#00e5ff] hover:shadow-[0_20px_50px_rgba(0,229,255,0.45)] transition-all duration-300 group cursor-pointer"
           style={{
-            transform: `translate3d(${mousePos.x * 14}px, ${mousePos.y * -14}px, 0)`,
+            transform: `translate3d(${mousePos.x * 24}px, ${mousePos.y * -20}px, 0)`,
           }}
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-lg bg-[#00e5ff]/20 border border-[#00e5ff]/40 flex items-center justify-center text-[#00e5ff]">
-                <Zap className="w-3 h-3" />
+              <div className="w-7 h-7 rounded-xl bg-[#00e5ff]/20 border border-[#00e5ff]/60 flex items-center justify-center text-[#00e5ff] group-hover:scale-110 transition-transform">
+                <Zap className="w-3.5 h-3.5" />
               </div>
-              <span className="text-[10px] font-mono text-white/50 uppercase font-semibold">
+              <span className="text-[10px] font-mono text-white/70 uppercase font-bold tracking-wider">
                 EVENT LINEUP
               </span>
             </div>
-            <span className="px-2 py-0.5 text-[8px] font-mono bg-[#00e5ff]/15 text-[#00e5ff] rounded-full border border-[#00e5ff]/30">
-              LIVE
+            <span className="px-2.5 py-0.5 text-[8px] font-mono font-bold bg-[#00e5ff]/20 text-[#00e5ff] rounded-full border border-[#00e5ff]/50 animate-pulse">
+              LIVE 2026
             </span>
           </div>
 
           <div className="flex items-baseline justify-between pt-0.5">
-            <span className="font-syne font-extrabold text-xl text-white">15+ EVENTS</span>
+            <span className="font-syne font-black text-2xl text-white tracking-tight">15+ EVENTS</span>
           </div>
 
-          <div className="flex items-center gap-1.5 pt-0.5">
-            <span className="px-2 py-0.5 text-[8px] font-mono rounded bg-white/10 text-white/70">
+          <div className="flex items-center gap-1.5 pt-0.5 flex-wrap">
+            <span className="px-2 py-0.5 text-[8px] font-mono font-bold rounded-md bg-[#0077ff]/20 text-[#0077ff] border border-[#0077ff]/40">
               HACKATHON
             </span>
-            <span className="px-2 py-0.5 text-[8px] font-mono rounded bg-white/10 text-white/70">
+            <span className="px-2 py-0.5 text-[8px] font-mono font-bold rounded-md bg-[#00e5ff]/20 text-[#00e5ff] border border-[#00e5ff]/40">
               CTF
             </span>
-            <span className="px-2 py-0.5 text-[8px] font-mono rounded bg-white/10 text-white/70">
+            <span className="px-2 py-0.5 text-[8px] font-mono font-bold rounded-md bg-white/10 text-white/80">
               CULTURAL
             </span>
           </div>
         </div>
 
-        {/* ORGANIC FLOATING WIDGET 3: BOTTOM-LEFT — PRIZE POOL */}
+        {/* UNSTABLE ASYMMETRIC FLOATING WIDGET 3: BOTTOM-LEFT — PRIZE POOL */}
         <div
           ref={card3Ref}
-          className="hidden lg:flex absolute bottom-[12%] left-[2%] xl:left-[4%] z-40 p-3.5 bg-[#0e0e12]/90 border border-white/15 rounded-2xl backdrop-blur-xl shadow-2xl w-52 flex-col gap-2 rotate-3 transition-transform duration-200"
+          className="hidden lg:flex absolute bottom-[9%] left-[0.5%] xl:left-[2%] z-40 p-4 bg-[#0e0e14]/95 border border-[#00d4ff]/40 rounded-2xl backdrop-blur-2xl shadow-[0_15px_40px_rgba(0,212,255,0.2)] w-56 flex-col gap-2.5 animate-float-3 hover:scale-105 hover:border-[#00d4ff] hover:shadow-[0_20px_50px_rgba(0,212,255,0.45)] transition-all duration-300 group cursor-pointer"
           style={{
-            transform: `translate3d(${mousePos.x * -14}px, ${mousePos.y * 14}px, 0)`,
+            transform: `translate3d(${mousePos.x * -20}px, ${mousePos.y * 22}px, 0)`,
           }}
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-lg bg-[#00d4ff]/20 border border-[#00d4ff]/40 flex items-center justify-center text-[#00d4ff]">
-                <Trophy className="w-3 h-3" />
+              <div className="w-7 h-7 rounded-xl bg-[#00d4ff]/20 border border-[#00d4ff]/60 flex items-center justify-center text-[#00d4ff] group-hover:rotate-12 transition-transform">
+                <Trophy className="w-3.5 h-3.5" />
               </div>
-              <span className="text-[10px] font-mono text-white/50 uppercase font-semibold">
+              <span className="text-[10px] font-mono text-white/70 uppercase font-bold tracking-wider">
                 PRIZE POOL
               </span>
             </div>
-            <Sparkles className="w-3 h-3 text-[#00d4ff]" />
+            <Sparkles className="w-4 h-4 text-[#d4ff00] animate-spin" style={{ animationDuration: '8s' }} />
           </div>
 
           <div className="flex items-baseline justify-between pt-0.5">
-            <span className="font-syne font-extrabold text-xl text-[#00d4ff]">₹50,000+</span>
+            <span className="font-syne font-black text-2xl text-[#00d4ff] drop-shadow-[0_0_15px_rgba(0,212,255,0.6)]">
+              ₹50,000+
+            </span>
           </div>
 
-          <p className="text-[9px] font-mono text-white/60">
+          <p className="text-[9px] font-mono font-bold text-white/70 uppercase tracking-wider">
             CASH PRIZES & CERTIFICATES
           </p>
         </div>
 
-        {/* ORGANIC FLOATING WIDGET 4: BOTTOM-RIGHT — WORKSHOPS */}
+        {/* UNSTABLE ASYMMETRIC FLOATING WIDGET 4: BOTTOM-RIGHT — WORKSHOPS */}
         <div
           ref={card4Ref}
-          className="hidden lg:flex absolute bottom-[6%] right-[2%] xl:right-[4%] z-40 p-3.5 bg-[#0e0e12]/90 border border-white/15 rounded-2xl backdrop-blur-xl shadow-2xl w-56 flex-col gap-2 -rotate-2 transition-transform duration-200"
+          className="hidden lg:flex absolute bottom-[4%] right-[0.5%] xl:right-[2%] z-40 p-4 bg-[#0e0e14]/95 border border-[#38bdf8]/40 rounded-2xl backdrop-blur-2xl shadow-[0_15px_40px_rgba(56,189,248,0.2)] w-60 flex-col gap-2.5 animate-float-4 hover:scale-105 hover:border-[#38bdf8] hover:shadow-[0_20px_50px_rgba(56,189,248,0.45)] transition-all duration-300 group cursor-pointer"
           style={{
-            transform: `translate3d(${mousePos.x * 14}px, ${mousePos.y * 14}px, 0)`,
+            transform: `translate3d(${mousePos.x * 22}px, ${mousePos.y * 22}px, 0)`,
           }}
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-lg bg-[#0077ff]/20 border border-[#0077ff]/40 flex items-center justify-center text-[#0077ff]">
-                <Code className="w-3 h-3" />
+              <div className="w-7 h-7 rounded-xl bg-[#38bdf8]/20 border border-[#38bdf8]/60 flex items-center justify-center text-[#38bdf8] group-hover:scale-110 transition-transform">
+                <Code className="w-3.5 h-3.5" />
               </div>
-              <span className="text-[10px] font-mono text-white/50 uppercase font-semibold">
+              <span className="text-[10px] font-mono text-white/70 uppercase font-bold tracking-wider">
                 WORKSHOPS
               </span>
             </div>
-            <Cpu className="w-3 h-3 text-[#0077ff]" />
+            <Cpu className="w-4 h-4 text-[#38bdf8] animate-pulse" />
           </div>
 
           <div className="flex items-baseline justify-between pt-0.5">
-            <span className="font-syne font-extrabold text-base text-white">AI • WEB • CYBER</span>
+            <span className="font-syne font-black text-lg text-white">AI • WEB • CYBER</span>
           </div>
 
           <div className="flex items-center gap-1.5 pt-0.5">
-            <span className="px-2 py-0.5 text-[8px] font-mono rounded bg-[#0077ff]/20 text-[#0077ff]">
+            <span className="px-2 py-0.5 text-[8px] font-mono font-bold rounded-md bg-[#38bdf8]/20 text-[#38bdf8] border border-[#38bdf8]/40">
               HANDS-ON
             </span>
-            <span className="px-2 py-0.5 text-[8px] font-mono rounded bg-white/10 text-white/70">
+            <span className="px-2 py-0.5 text-[8px] font-mono font-bold rounded-md bg-white/10 text-white/80">
               GPU COLAB
             </span>
           </div>
@@ -404,18 +415,18 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister: _onNavigateToR
         {/* ORGANIC FLOATING PILL 1: "2 DAYS" */}
         <div
           ref={pill1Ref}
-          className="hidden xl:flex absolute top-[48%] left-[0.5%] z-40 px-3 py-1 rounded-full bg-[#0077ff] text-white text-[10px] font-mono font-bold uppercase shadow-xl -rotate-6 items-center gap-1.5"
+          className="hidden xl:flex absolute top-[44%] left-[-1.5%] z-40 px-3.5 py-1.5 rounded-full bg-[#0077ff] text-white text-[10px] font-mono font-bold uppercase shadow-2xl shadow-[#0077ff]/50 -rotate-12 items-center gap-2 hover:rotate-0 hover:scale-110 transition-all duration-300 cursor-pointer"
         >
-          <Calendar className="w-3 h-3 text-white" />
+          <Calendar className="w-3.5 h-3.5 text-white animate-bounce" />
           <span>2 DAYS</span>
         </div>
 
         {/* ORGANIC FLOATING PILL 2: "DECEMBER 4 & 5" */}
         <div
           ref={pill2Ref}
-          className="hidden xl:flex absolute top-[50%] right-[0.5%] z-40 px-3 py-1 rounded-full bg-[#00e5ff]/15 border border-[#00e5ff]/30 text-[#00e5ff] text-[10px] font-mono font-bold uppercase backdrop-blur-md shadow-xl rotate-6 items-center gap-1.5"
+          className="hidden xl:flex absolute top-[52%] right-[-1.5%] z-40 px-3.5 py-1.5 rounded-full bg-[#00e5ff]/20 border border-[#00e5ff]/60 text-[#00e5ff] text-[10px] font-mono font-bold uppercase backdrop-blur-2xl shadow-2xl shadow-[#00e5ff]/40 rotate-12 items-center gap-2 hover:rotate-0 hover:scale-110 transition-all duration-300 cursor-pointer"
         >
-          <Sparkles className="w-3 h-3 text-[#00e5ff]" />
+          <Sparkles className="w-3.5 h-3.5 text-[#00e5ff] animate-pulse" />
           <span>DEC 4 & 5</span>
         </div>
 

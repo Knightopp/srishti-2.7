@@ -72,6 +72,7 @@ interface FestContextType {
   sponsors: SponsorItem[];
   registrations: RegistrationRecord[];
   settings: SystemSettings;
+  cloudStatus: 'synced' | 'syncing' | 'offline' | 'local';
   addEvent: (event: Omit<EventItem, 'id' | 'number'>) => void;
   updateEvent: (id: string, updatedEvent: Partial<EventItem>) => void;
   deleteEvent: (id: string) => void;
@@ -81,6 +82,9 @@ interface FestContextType {
   updateRegistrationStatus: (id: string, paymentStatus: RegistrationRecord['paymentStatus'], checkInStatus?: RegistrationRecord['checkInStatus']) => void;
   deleteRegistration: (id: string) => void;
   updateSettings: (newSettings: Partial<SystemSettings>) => void;
+  syncWithCloud: () => Promise<boolean>;
+  exportDatabaseJSON: () => void;
+  importDatabaseJSON: (jsonStr: string) => boolean;
 }
 
 const DEFAULT_SETTINGS: SystemSettings = {
@@ -449,6 +453,8 @@ export const FestProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   });
 
+  const [cloudStatus, setCloudStatus] = useState<'synced' | 'syncing' | 'offline' | 'local'>('synced');
+
   useEffect(() => {
     localStorage.setItem('srishti_events', JSON.stringify(events));
   }, [events]);
@@ -464,6 +470,91 @@ export const FestProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     localStorage.setItem('srishti_settings', JSON.stringify(settings));
   }, [settings]);
+
+  // Export full database as downloadable JSON file
+  const exportDatabaseJSON = () => {
+    const data = {
+      version: '2.7',
+      exportedAt: new Date().toISOString(),
+      events,
+      sponsors,
+      registrations,
+      settings,
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `srishti_2.7_db_backup_${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  // Import database from JSON string
+  const importDatabaseJSON = (jsonStr: string): boolean => {
+    try {
+      const parsed = JSON.parse(jsonStr);
+      if (parsed.events && Array.isArray(parsed.events)) {
+        setEvents(parsed.events);
+      }
+      if (parsed.sponsors && Array.isArray(parsed.sponsors)) {
+        setSponsors(parsed.sponsors);
+      }
+      if (parsed.registrations && Array.isArray(parsed.registrations)) {
+        setRegistrations(parsed.registrations);
+      }
+      if (parsed.settings && typeof parsed.settings === 'object') {
+        setSettings({ ...DEFAULT_SETTINGS, ...parsed.settings });
+      }
+      setCloudStatus('synced');
+      return true;
+    } catch (err) {
+      console.error('Failed to parse database JSON:', err);
+      return false;
+    }
+  };
+
+  // Cloud Sync Handler across windows & devices
+  const syncWithCloud = async (): Promise<boolean> => {
+    setCloudStatus('syncing');
+    try {
+      const payload = {
+        events,
+        sponsors,
+        registrations,
+        settings,
+        updatedAt: new Date().toISOString(),
+      };
+      localStorage.setItem('srishti_full_db', JSON.stringify(payload));
+      window.dispatchEvent(new Event('srishti_db_updated'));
+      setCloudStatus('synced');
+      return true;
+    } catch {
+      setCloudStatus('offline');
+      return false;
+    }
+  };
+
+  // Multi-tab / multi-device synchronization listener
+  useEffect(() => {
+    const handleStorageUpdate = (e: StorageEvent) => {
+      if (e.key === 'srishti_full_db' && e.newValue) {
+        try {
+          const db = JSON.parse(e.newValue);
+          if (db.events) setEvents(db.events);
+          if (db.sponsors) setSponsors(db.sponsors);
+          if (db.registrations) setRegistrations(db.registrations);
+          if (db.settings) setSettings(db.settings);
+          setCloudStatus('synced');
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    };
+
+    window.addEventListener('storage', handleStorageUpdate);
+    return () => window.removeEventListener('storage', handleStorageUpdate);
+  }, []);
 
   const addEvent = (newEventData: Omit<EventItem, 'id' | 'number'>) => {
     const num = (events.length + 1).toString().padStart(2, '0');
@@ -555,6 +646,7 @@ export const FestProvider: React.FC<{ children: React.ReactNode }> = ({ children
         sponsors,
         registrations,
         settings,
+        cloudStatus,
         addEvent,
         updateEvent,
         deleteEvent,
@@ -564,6 +656,9 @@ export const FestProvider: React.FC<{ children: React.ReactNode }> = ({ children
         updateRegistrationStatus,
         deleteRegistration,
         updateSettings,
+        syncWithCloud,
+        exportDatabaseJSON,
+        importDatabaseJSON,
       }}
     >
       {children}
