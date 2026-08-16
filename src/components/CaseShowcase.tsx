@@ -59,9 +59,9 @@ export const CaseShowcase: React.FC<CaseShowcaseProps> = ({ onNavigateToRegister
   const ANGLE_STEP = 360 / N; 
 
   // Perfectly proportioned 3D Wheel radii (cards stay 100% inside screen bounds!)
-  const RADIUS_X = isMobile ? 110 : 220; // Keeps side cards safely inside viewport width!
-  const RADIUS_Y = isMobile ? 40 : 60;
-  const RADIUS_Z = isMobile ? 160 : 260;
+  const RADIUS_X = isMobile ? 65 : 220; // Keeps side cards safely inside mobile viewport width!
+  const RADIUS_Y = isMobile ? 25 : 60;
+  const RADIUS_Z = isMobile ? 120 : 260;
 
   useEffect(() => {
     const checkMobile = () => {
@@ -86,32 +86,35 @@ export const CaseShowcase: React.FC<CaseShowcaseProps> = ({ onNavigateToRegister
   useEffect(() => {
     if (!sectionRef.current) return;
 
-    const ctx = gsap.context(() => {
-      // 1. Entrance animation when emerging after fullscreen hero
-      gsap.fromTo(
-        '.wheel-header, .wheel-stage-container',
-        { y: 50, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.8,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 85%',
-          },
-        }
-      );
+    const mm = gsap.matchMedia();
 
-      // 2. Pinned Scroll Scrub: scrolling rotates the 3D Event Wheel through all cards
+    // 1. Entrance animation when emerging after fullscreen hero
+    gsap.fromTo(
+      '.wheel-header, .wheel-stage-container',
+      { y: 40, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 0.8,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 85%',
+        },
+      }
+    );
+
+    // Desktop Pinned Wheel Timeline
+    mm.add('(min-width: 769px)', () => {
       ScrollTrigger.create({
         trigger: sectionRef.current,
         start: 'top top',
-        end: isMobile ? '+=1200' : '+=1800',
+        end: '+=1800',
         pin: true,
         pinSpacing: true,
         scrub: 0.6,
         anticipatePin: 1,
+        invalidateOnRefresh: true,
         onUpdate: (self) => {
           const progress = self.progress;
           const targetAngle = -progress * (N - 1) * ANGLE_STEP;
@@ -120,10 +123,31 @@ export const CaseShowcase: React.FC<CaseShowcaseProps> = ({ onNavigateToRegister
           setActiveIndex(newIdx);
         },
       });
-    }, sectionRef);
+    });
 
-    return () => ctx.revert();
-  }, [ANGLE_STEP, N, isMobile]);
+    // Mobile Pinned Wheel Timeline (crisp, compact distance, zero blank gap)
+    mm.add('(max-width: 768px)', () => {
+      ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: 'top top',
+        end: '+=450',
+        pin: true,
+        pinSpacing: true,
+        scrub: 0.3,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          const progress = self.progress;
+          const targetAngle = -progress * (N - 1) * ANGLE_STEP;
+          setWheelRotation(targetAngle);
+          const newIdx = Math.min(N - 1, Math.max(0, Math.round(progress * (N - 1))));
+          setActiveIndex(newIdx);
+        },
+      });
+    });
+
+    return () => mm.revert();
+  }, [ANGLE_STEP, N]);
 
   const handleCardWheel = (e: React.WheelEvent) => {
     // Debounce wheel events so fast trackpad scroll inertia doesn't cause rapid jitter

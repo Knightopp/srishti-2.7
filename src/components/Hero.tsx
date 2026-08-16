@@ -29,7 +29,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
   const hudGridRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
 
-  // Widget Cards & Organic Pills Refs
+  // Desktop Asymmetric Widgets & Organic Pills Refs
   const card1Ref = useRef<HTMLDivElement>(null);
   const card2Ref = useRef<HTMLDivElement>(null);
   const card3Ref = useRef<HTMLDivElement>(null);
@@ -37,7 +37,11 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
   const pill1Ref = useRef<HTMLDivElement>(null);
   const pill2Ref = useRef<HTMLDivElement>(null);
 
-  // Mouse Parallax Offset (subtle depth)
+  // Mobile Clean Widgets Ref
+  const mobileCard1Ref = useRef<HTMLDivElement>(null);
+  const mobileCard2Ref = useRef<HTMLDivElement>(null);
+
+  // Mouse Parallax Offset (subtle depth on desktop)
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   // Live Fest Countdown Timer State (Target: Dec 4, 2026 10:00 AM)
@@ -52,7 +56,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
 
       const days = Math.floor(difference / (1000 * 60 * 60 * 24));
       const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      const minutes = Math.floor((difference % (1000 * 60)) / 1000);
       const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
       setTimeLeft({
@@ -71,18 +75,17 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
   useEffect(() => {
     if (!heroRef.current) return;
 
-    const isMobile = window.innerWidth < 768;
+    const mm = gsap.matchMedia();
 
-    const ctx = gsap.context(() => {
-      // MASTER HERO SCROLL TIMELINE:
-      // Initial state: Normal hero scale (1.0), all elements visible.
-      // Scroll down: Central SRISHTI + TIMER group MAXIMIZES / ZOOMS IN to fullscreen.
-      // Navbar moves UP and disappears. Widgets subtly retreat & fade.
+    // ==========================================
+    // 1. DESKTOP ANIMATION CONFIGURATION (>= 769px)
+    // ==========================================
+    mm.add('(min-width: 769px)', () => {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: heroRef.current,
           start: 'top top',
-          end: isMobile ? '+=1300' : '+=1700', // Pinned scrub distance
+          end: '+=1500',
           pin: true,
           pinSpacing: true,
           scrub: true,
@@ -91,7 +94,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
         },
       });
 
-      // 1. Navbar Disappears (0.05 -> 0.40): Moves UP (-100%) and fades to 0 smoothly
+      // Navbar moves UP and disappears smoothly
       const globalNav = document.querySelector('.global-navbar');
       if (globalNav) {
         tl.to(
@@ -106,7 +109,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
         );
       }
 
-      // 2. Eyebrow badge and bottom bar slide away & fade out
+      // Eyebrow badge and bottom bar slide away & fade out
       tl.to(
         [eyebrowRef.current, bottomBarRef.current],
         {
@@ -118,31 +121,30 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
         0.08
       );
 
-      // 3. Central Hero Title Group (SRISHTI + 2.7 + TIMER + SUBTITLE) MAXIMIZES / ZOOMS IN (0.10 -> 0.85)
-      // Scales up smoothly from 1.0 -> 2.7 to become a fullscreen event identity moment
+      // Central Hero Title Group MAXIMIZES / ZOOMS IN (0.1 -> 0.75)
       tl.to(
         titleGroupRef.current,
         {
-          scale: isMobile ? 2.1 : 2.7,
+          scale: 2.6,
           ease: 'power1.inOut',
-          duration: 0.75,
+          duration: 0.65,
         },
         0.1
       );
 
-      // Ambient center glow expands with the typography
+      // Ambient center glow expands
       tl.to(
         glowRef.current,
         {
           scale: 1.9,
           opacity: 0.28,
           ease: 'power1.inOut',
-          duration: 0.75,
+          duration: 0.65,
         },
         0.1
       );
 
-      // 4. Peripheral Info Widgets subtly retreat toward screen edges & fade out (NO ROTATION / NO ORBITING)
+      // Desktop Peripheral Info Widgets retreat & fade out
       tl.to(
         [card1Ref.current, card3Ref.current, pill1Ref.current],
         {
@@ -167,14 +169,135 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
         0.15
       );
 
-      // 5. Fullscreen Hero State holds briefly (0.85 -> 1.00) before releasing pin to next section
-    }, heroRef);
+      // Transition out at end of hero pin so next section (CaseShowcase) enters cleanly
+      tl.to(
+        titleGroupRef.current,
+        {
+          opacity: 0,
+          y: -50,
+          ease: 'power1.inOut',
+          duration: 0.2,
+        },
+        0.8
+      );
 
-    return () => ctx.revert();
+      tl.to(
+        glowRef.current,
+        {
+          opacity: 0,
+          duration: 0.2,
+        },
+        0.8
+      );
+    });
+
+    // ==========================================
+    // 2. MOBILE ANIMATION CONFIGURATION (<= 768px)
+    // ==========================================
+    mm.add('(max-width: 768px)', () => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: heroRef.current,
+          start: 'top top',
+          end: '+=450', // Crisp, tight mobile scroll distance - ZERO giant blank gap!
+          pin: true,
+          pinSpacing: true,
+          scrub: 0.3,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      // Navbar moves UP and disappears
+      const globalNav = document.querySelector('.global-navbar');
+      if (globalNav) {
+        tl.to(
+          globalNav,
+          {
+            yPercent: -100,
+            opacity: 0,
+            ease: 'power1.inOut',
+            duration: 0.3,
+          },
+          0.05
+        );
+      }
+
+      // Eyebrow and bottom bar fade out
+      tl.to(
+        [eyebrowRef.current, bottomBarRef.current],
+        {
+          opacity: 0,
+          y: (i) => (i === 0 ? -15 : 15),
+          ease: 'power1.inOut',
+          duration: 0.3,
+        },
+        0.05
+      );
+
+      // Mobile friendly scale (1.0 -> 1.24) so text stays 100% inside viewport bounds
+      tl.to(
+        titleGroupRef.current,
+        {
+          scale: 1.24,
+          ease: 'power1.inOut',
+          duration: 0.65,
+        },
+        0.08
+      );
+
+      tl.to(
+        glowRef.current,
+        {
+          scale: 1.35,
+          opacity: 0.25,
+          ease: 'power1.inOut',
+          duration: 0.65,
+        },
+        0.08
+      );
+
+      // Mobile widgets fade out cleanly
+      tl.to(
+        [mobileCard1Ref.current, mobileCard2Ref.current],
+        {
+          y: 15,
+          opacity: 0,
+          scale: 0.9,
+          ease: 'power1.inOut',
+          duration: 0.35,
+        },
+        0.08
+      );
+
+      // Smooth exit at end of pin (0.75 -> 1.0) so it does NOT linger or overlap the Event Wheel
+      tl.to(
+        titleGroupRef.current,
+        {
+          opacity: 0,
+          y: -40,
+          ease: 'power1.inOut',
+          duration: 0.25,
+        },
+        0.75
+      );
+
+      tl.to(
+        glowRef.current,
+        {
+          opacity: 0,
+          duration: 0.25,
+        },
+        0.75
+      );
+    });
+
+    return () => mm.revert();
   }, []);
 
-  // Mouse Parallax Handler (subtle depth)
+  // Mouse Parallax Handler (desktop only)
   const handleMouseMove = (e: React.MouseEvent) => {
+    if (window.innerWidth < 768) return;
     if (!heroRef.current) return;
     const rect = heroRef.current.getBoundingClientRect();
     const x = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2);
@@ -186,7 +309,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
     <section
       ref={heroRef}
       onMouseMove={handleMouseMove}
-      className="relative w-full h-[100dvh] overflow-hidden bg-[#060608] text-[#f5f5f7] flex flex-col justify-between pt-20 md:pt-24 pb-6 md:pb-8 select-none"
+      className="relative w-full h-[100dvh] min-h-[100dvh] overflow-hidden bg-[#060608] text-[#f5f5f7] flex flex-col justify-between pt-12 sm:pt-18 md:pt-24 pb-3 sm:pb-5 md:pb-8 select-none"
     >
       {/* Background Subtle Grid & Center Ambient Glow */}
       <div 
@@ -202,26 +325,26 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
       />
       <div 
         ref={glowRef}
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[380px] sm:w-[680px] h-[320px] sm:h-[420px] bg-[#0077ff]/16 rounded-full blur-[130px] pointer-events-none" 
+        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] sm:w-[500px] md:w-[680px] h-[240px] sm:h-[350px] md:h-[420px] bg-[#0077ff]/16 rounded-full blur-[90px] sm:blur-[130px] pointer-events-none" 
       />
 
       {/* TOP DEPT EYEBROW LABEL WITH OFFICIAL LOGO */}
       <div 
         ref={eyebrowRef}
-        className="hero-eyebrow relative z-20 text-center w-full max-w-4xl mx-auto px-4 md:px-6"
+        className="hero-eyebrow relative z-20 text-center w-full max-w-4xl mx-auto px-3 sm:px-4 md:px-6"
       >
-        <div className="inline-flex items-center gap-2 md:gap-2.5 px-3.5 md:px-4 py-1 md:py-1.5 rounded-full bg-white/[0.03] border border-white/12 text-[10px] md:text-[11px] font-mono tracking-widest text-white/70 uppercase backdrop-blur-md">
-          <img src="/srishti-logo-transparent.png" alt="Srishti Logo" className="w-3.5 h-3.5 md:w-4 md:h-4 object-contain" />
+        <div className="inline-flex items-center gap-1.5 sm:gap-2.5 px-3 sm:px-4 py-1 md:py-1.5 rounded-full bg-white/[0.03] border border-white/12 text-[9px] sm:text-[10px] md:text-[11px] font-mono tracking-widest text-white/70 uppercase backdrop-blur-md">
+          <img src="/srishti-logo-transparent.png" alt="Srishti Logo" className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 object-contain" />
           <span>ST. THOMAS COLLEGE • CS DEPARTMENT</span>
         </div>
       </div>
 
-      {/* CENTER STAGE: CENTRAL HERO TITLE GROUP & ART-DIRECTED ASYMMETRICAL WIDGETS */}
-      <div className="relative z-30 w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-12 my-auto flex items-center justify-center min-h-[380px] md:min-h-[460px]">
+      {/* CENTER STAGE: CENTRAL HERO TITLE GROUP & WIDGETS */}
+      <div className="relative z-30 w-full max-w-7xl mx-auto px-3 sm:px-6 md:px-12 my-auto flex flex-col items-center justify-center min-h-[300px] sm:min-h-[360px] md:min-h-[460px]">
         
         {/* Subtle Mouse Parallax Sub-wrapper */}
         <div 
-          className="relative z-30 pointer-events-none flex items-center justify-center"
+          className="relative z-30 pointer-events-none flex flex-col items-center justify-center"
           style={{
             transform: `translate3d(${mousePos.x * 6}px, ${mousePos.y * 6}px, 0)`,
             willChange: 'transform',
@@ -230,7 +353,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
           {/* SINGLE HERO TITLE GROUP: SRISHTI + 2.7 + COUNTDOWN + SUBTITLE (SCALES TOGETHER AS ONE UNIT) */}
           <div 
             ref={titleGroupRef}
-            className="hero-title flex flex-col items-center justify-center text-center space-y-2 md:space-y-3 origin-center pointer-events-none"
+            className="hero-title flex flex-col items-center justify-center text-center space-y-1 sm:space-y-2 md:space-y-3 origin-center pointer-events-none"
             style={{ willChange: 'transform' }}
           >
             {/* Official Srishti Emblem Icon */}
@@ -238,64 +361,64 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
               <img 
                 src="/srishti-logo-transparent.png" 
                 alt="Official Srishti Logo" 
-                className="w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 object-contain drop-shadow-[0_0_25px_rgba(0,119,255,0.7)]" 
+                className="w-7 h-7 sm:w-12 sm:h-12 md:w-16 md:h-16 object-contain drop-shadow-[0_0_25px_rgba(0,119,255,0.7)]" 
               />
             </div>
 
             <div className="flex flex-col items-center justify-center leading-none">
               {/* Title Part 1: SRISHTI */}
-              <h1 className="font-syne font-black text-4xl sm:text-7xl md:text-8xl lg:text-[7.5rem] tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-[#f0f6ff] to-[#0044aa]/90 uppercase drop-shadow-[0_15px_30px_rgba(0,119,255,0.25)]">
+              <h1 className="font-syne font-black text-[2.35rem] sm:text-5xl md:text-7xl lg:text-[7.5rem] tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-[#f0f6ff] to-[#0044aa]/90 uppercase drop-shadow-[0_15px_30px_rgba(0,119,255,0.25)]">
                 SRISHTI
               </h1>
 
               {/* LIVE FEST COUNTDOWN TIMER (ANCHORED DIRECTLY TO HERO TITLE GROUP) */}
               <div 
                 ref={countdownRef}
-                className="my-2 sm:my-3.5 inline-flex flex-col items-center pointer-events-auto"
+                className="my-1 sm:my-2 md:my-3.5 inline-flex flex-col items-center pointer-events-auto"
               >
-                <div className="flex items-center gap-1.5 sm:gap-2.5 px-4 sm:px-6 py-2 sm:py-2.5 rounded-2xl bg-black/70 border border-white/15 backdrop-blur-2xl shadow-2xl">
+                <div className="flex items-center gap-1 sm:gap-2 md:gap-2.5 px-2.5 sm:px-5 md:px-6 py-1 sm:py-2 md:py-2.5 rounded-xl sm:rounded-2xl bg-black/70 border border-white/15 backdrop-blur-2xl shadow-2xl">
                   {/* DAYS */}
-                  <div className="flex flex-col items-center px-1.5 sm:px-2.5">
-                    <span className="font-orbitron font-black text-base sm:text-2xl text-white leading-none">
+                  <div className="flex flex-col items-center px-1 sm:px-2 md:px-2.5">
+                    <span className="font-orbitron font-black text-[11px] sm:text-base md:text-2xl text-white leading-none">
                       {timeLeft.days}
                     </span>
-                    <span className="text-[7px] sm:text-[9px] font-mono font-bold text-white/60 uppercase tracking-widest pt-1">
+                    <span className="text-[6px] sm:text-[8px] md:text-[9px] font-mono font-bold text-white/60 uppercase tracking-widest pt-0.5 sm:pt-1">
                       DAYS
                     </span>
                   </div>
 
-                  <span className="font-orbitron font-extrabold text-xs sm:text-base text-white/40 pb-2.5">:</span>
+                  <span className="font-orbitron font-extrabold text-[9px] sm:text-xs md:text-base text-white/40 pb-1 sm:pb-2.5">:</span>
 
                   {/* HOURS */}
-                  <div className="flex flex-col items-center px-1.5 sm:px-2.5">
-                    <span className="font-orbitron font-black text-base sm:text-2xl text-white leading-none">
+                  <div className="flex flex-col items-center px-1 sm:px-2 md:px-2.5">
+                    <span className="font-orbitron font-black text-[11px] sm:text-base md:text-2xl text-white leading-none">
                       {timeLeft.hours}
                     </span>
-                    <span className="text-[7px] sm:text-[9px] font-mono font-bold text-white/60 uppercase tracking-widest pt-1">
+                    <span className="text-[6px] sm:text-[8px] md:text-[9px] font-mono font-bold text-white/60 uppercase tracking-widest pt-0.5 sm:pt-1">
                       HRS
                     </span>
                   </div>
 
-                  <span className="font-orbitron font-extrabold text-xs sm:text-base text-white/40 pb-2.5">:</span>
+                  <span className="font-orbitron font-extrabold text-[9px] sm:text-xs md:text-base text-white/40 pb-1 sm:pb-2.5">:</span>
 
                   {/* MINUTES */}
-                  <div className="flex flex-col items-center px-1.5 sm:px-2.5">
-                    <span className="font-orbitron font-black text-base sm:text-2xl text-white leading-none">
+                  <div className="flex flex-col items-center px-1 sm:px-2 md:px-2.5">
+                    <span className="font-orbitron font-black text-[11px] sm:text-base md:text-2xl text-white leading-none">
                       {timeLeft.minutes}
                     </span>
-                    <span className="text-[7px] sm:text-[9px] font-mono font-bold text-white/60 uppercase tracking-widest pt-1">
+                    <span className="text-[6px] sm:text-[8px] md:text-[9px] font-mono font-bold text-white/60 uppercase tracking-widest pt-0.5 sm:pt-1">
                       MINS
                     </span>
                   </div>
 
-                  <span className="font-orbitron font-extrabold text-xs sm:text-base text-white/40 pb-2.5">:</span>
+                  <span className="font-orbitron font-extrabold text-[9px] sm:text-xs md:text-base text-white/40 pb-1 sm:pb-2.5">:</span>
 
                   {/* SECONDS */}
-                  <div className="flex flex-col items-center px-1.5 sm:px-2.5">
-                    <span className="font-orbitron font-black text-base sm:text-2xl text-white leading-none">
+                  <div className="flex flex-col items-center px-1 sm:px-2 md:px-2.5">
+                    <span className="font-orbitron font-black text-[11px] sm:text-base md:text-2xl text-white leading-none">
                       {timeLeft.seconds}
                     </span>
-                    <span className="text-[7px] sm:text-[9px] font-mono font-bold text-white/60 uppercase tracking-widest pt-1">
+                    <span className="text-[6px] sm:text-[8px] md:text-[9px] font-mono font-bold text-white/60 uppercase tracking-widest pt-0.5 sm:pt-1">
                       SECS
                     </span>
                   </div>
@@ -303,21 +426,51 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
               </div>
 
               {/* Title Part 2: 2.7 (ALWAYS ATTACHED DIRECTLY UNDER SRISHTI / COUNTDOWN) */}
-              <div className="font-orbitron font-black text-3xl sm:text-6xl md:text-7xl lg:text-[6.5rem] text-transparent bg-clip-text bg-gradient-to-r from-[#00d4ff] via-[#0077ff] to-[#0055ff] tracking-tight mt-0.5 inline-block text-center drop-shadow-[0_10px_25px_rgba(0,119,255,0.4)]">
+              <div className="font-orbitron font-black text-xl sm:text-4xl md:text-6xl lg:text-[6.5rem] text-transparent bg-clip-text bg-gradient-to-r from-[#00d4ff] via-[#0077ff] to-[#0055ff] tracking-tight mt-0.5 inline-block text-center drop-shadow-[0_10px_25px_rgba(0,119,255,0.4)]">
                 2.7
               </div>
             </div>
 
             {/* Subheadline: TECHNO CULTURAL FEST */}
-            <div ref={subtitleRef} className="hero-sub-text pt-1.5 sm:pt-3">
-              <p className="font-mono text-[10px] sm:text-xs md:text-sm tracking-[0.25em] sm:tracking-[0.35em] uppercase text-white/80 font-semibold">
+            <div ref={subtitleRef} className="hero-sub-text pt-0.5 sm:pt-1.5 md:pt-3">
+              <p className="font-mono text-[8px] sm:text-[10px] md:text-sm tracking-[0.2em] sm:tracking-[0.35em] uppercase text-white/80 font-semibold">
                 TECHNO CULTURAL FEST
               </p>
             </div>
           </div>
         </div>
 
-        {/* ART-DIRECTED ASYMMETRICAL WIDGET 1: TOP-LEFT (ELEVATED & WIDER OFFSET) */}
+        {/* MOBILE CONCISE SUPPORTING WIDGETS (FOCUSED & BALANCED FOR PHONE VIEWPORTS) */}
+        <div className="flex lg:hidden justify-center items-center gap-2 sm:gap-3.5 mt-2.5 sm:mt-3.5 z-20 pointer-events-auto">
+          <div
+            ref={mobileCard1Ref}
+            onClick={onNavigateToRegister}
+            className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-[#0e0e14]/90 border border-[#0077ff]/40 backdrop-blur-xl shadow-lg cursor-pointer"
+          >
+            <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-lg bg-[#0077ff]/20 flex items-center justify-center text-[#0077ff]">
+              <Users className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+            </div>
+            <div>
+              <span className="block text-[7px] sm:text-[8px] font-mono text-white/60 uppercase font-bold leading-tight">REGISTRATIONS</span>
+              <span className="font-syne font-black text-[10px] sm:text-xs text-white">500+ JOINED</span>
+            </div>
+          </div>
+
+          <div
+            ref={mobileCard2Ref}
+            className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-[#0e0e14]/90 border border-[#00e5ff]/40 backdrop-blur-xl shadow-lg"
+          >
+            <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-lg bg-[#00e5ff]/20 flex items-center justify-center text-[#00e5ff]">
+              <Zap className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+            </div>
+            <div>
+              <span className="block text-[7px] sm:text-[8px] font-mono text-white/60 uppercase font-bold leading-tight">EVENT LINEUP</span>
+              <span className="font-syne font-black text-[10px] sm:text-xs text-[#00e5ff]">15+ EVENTS</span>
+            </div>
+          </div>
+        </div>
+
+        {/* DESKTOP ART-DIRECTED ASYMMETRICAL WIDGET 1: TOP-LEFT */}
         <div
           ref={card1Ref}
           className="hidden lg:flex absolute top-[4%] left-[1.5%] xl:left-[3%] z-20 p-4 bg-[#0e0e14]/95 border border-[#0077ff]/40 rounded-2xl backdrop-blur-2xl shadow-[0_15px_40px_rgba(0,119,255,0.25)] w-56 flex-col gap-2.5 hover:scale-105 hover:border-[#0077ff] hover:shadow-[0_20px_50px_rgba(0,119,255,0.5)] transition-all duration-300 group cursor-pointer"
@@ -348,7 +501,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
           </div>
         </div>
 
-        {/* ART-DIRECTED ASYMMETRICAL WIDGET 2: TOP-RIGHT (SET LOWER DOWN & MORE INSET) */}
+        {/* DESKTOP ART-DIRECTED ASYMMETRICAL WIDGET 2: TOP-RIGHT */}
         <div
           ref={card2Ref}
           className="hidden lg:flex absolute top-[20%] right-[1.5%] xl:right-[3%] z-20 p-4 bg-[#0e0e14]/95 border border-[#00e5ff]/40 rounded-2xl backdrop-blur-2xl shadow-[0_15px_40px_rgba(0,229,255,0.2)] w-60 flex-col gap-2.5 hover:scale-105 hover:border-[#00e5ff] hover:shadow-[0_20px_50px_rgba(0,229,255,0.45)] transition-all duration-300 group cursor-pointer"
@@ -387,7 +540,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
           </div>
         </div>
 
-        {/* ART-DIRECTED ASYMMETRICAL WIDGET 3: BOTTOM-LEFT (MORE INSET & ELEVATED FROM BASE) */}
+        {/* DESKTOP ART-DIRECTED ASYMMETRICAL WIDGET 3: BOTTOM-LEFT */}
         <div
           ref={card3Ref}
           className="hidden lg:flex absolute bottom-[20%] left-[3%] xl:left-[5.5%] z-20 p-4 bg-[#0e0e14]/95 border border-[#00d4ff]/40 rounded-2xl backdrop-blur-2xl shadow-[0_15px_40px_rgba(0,212,255,0.2)] w-56 flex-col gap-2.5 hover:scale-105 hover:border-[#00d4ff] hover:shadow-[0_20px_50px_rgba(0,212,255,0.45)] transition-all duration-300 group cursor-pointer"
@@ -418,7 +571,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
           </p>
         </div>
 
-        {/* ART-DIRECTED ASYMMETRICAL WIDGET 4: BOTTOM-RIGHT (NESTLED NEAR BOTTOM EDGE) */}
+        {/* DESKTOP ART-DIRECTED ASYMMETRICAL WIDGET 4: BOTTOM-RIGHT */}
         <div
           ref={card4Ref}
           className="hidden lg:flex absolute bottom-[4%] right-[1%] xl:right-[2.5%] z-20 p-4 bg-[#0e0e14]/95 border border-[#38bdf8]/40 rounded-2xl backdrop-blur-2xl shadow-[0_15px_40px_rgba(56,189,248,0.2)] w-60 flex-col gap-2.5 hover:scale-105 hover:border-[#38bdf8] hover:shadow-[0_20px_50px_rgba(56,189,248,0.45)] transition-all duration-300 group cursor-pointer"
@@ -452,7 +605,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
           </div>
         </div>
 
-        {/* ART-DIRECTED ASYMMETRICAL PILL 1: "2 DAYS" (UPPER-MID LEFT) */}
+        {/* DESKTOP ART-DIRECTED ASYMMETRICAL PILL 1: "2 DAYS" */}
         <div
           ref={pill1Ref}
           className="hidden xl:flex absolute top-[38%] left-[10%] xl:left-[14%] z-20 px-3.5 py-1.5 rounded-full bg-[#0077ff] text-white text-[10px] font-mono font-bold uppercase shadow-2xl shadow-[#0077ff]/50 -rotate-6 items-center gap-2 hover:rotate-0 hover:scale-110 transition-all duration-300 cursor-pointer"
@@ -461,7 +614,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
           <span>2 DAYS</span>
         </div>
 
-        {/* ART-DIRECTED ASYMMETRICAL PILL 2: "DECEMBER 4 & 5" (LOWER-MID RIGHT) */}
+        {/* DESKTOP ART-DIRECTED ASYMMETRICAL PILL 2: "DECEMBER 4 & 5" */}
         <div
           ref={pill2Ref}
           className="hidden xl:flex absolute bottom-[32%] right-[12%] xl:right-[16%] z-20 px-3.5 py-1.5 rounded-full bg-[#00e5ff]/20 border border-[#00e5ff]/60 text-[#00e5ff] text-[10px] font-mono font-bold uppercase backdrop-blur-2xl shadow-2xl shadow-[#00e5ff]/40 rotate-8 items-center gap-2 hover:rotate-0 hover:scale-110 transition-all duration-300 cursor-pointer"
@@ -475,18 +628,18 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
       {/* HERO BOTTOM STATUS BAR */}
       <div 
         ref={bottomBarRef}
-        className="hero-bottom-bar relative z-20 max-w-7xl mx-auto px-4 md:px-12 w-full flex items-center justify-between text-[10px] md:text-xs font-mono text-white/50 border-t border-white/10 pt-3 md:pt-4"
+        className="hero-bottom-bar relative z-20 max-w-7xl mx-auto px-3 sm:px-6 md:px-12 w-full flex items-center justify-between text-[8px] sm:text-[10px] md:text-xs font-mono text-white/50 border-t border-white/10 pt-2 sm:pt-3 md:pt-4"
       >
         {/* Left Info */}
-        <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-[#0077ff]" />
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#0077ff]" />
           <span>SRISHTI 2.7 • ST. THOMAS COLLEGE</span>
         </div>
 
         {/* Center Scroll Indicator */}
-        <div className="flex items-center gap-2 text-white/60">
-          <span className="tracking-widest uppercase text-[9px] md:text-[10px]">SCROLL TO EXPLORE</span>
-          <div className="w-3.5 h-5 md:h-6 border border-white/30 rounded-full flex justify-center p-0.5">
+        <div className="flex items-center gap-1.5 sm:gap-2 text-white/60">
+          <span className="tracking-widest uppercase text-[7px] sm:text-[9px] md:text-[10px]">SCROLL TO EXPLORE</span>
+          <div className="w-3 sm:w-3.5 h-4 sm:h-5 md:h-6 border border-white/30 rounded-full flex justify-center p-0.5">
             <div className="w-1 h-1.5 bg-[#0077ff] rounded-full animate-bounce" />
           </div>
         </div>
