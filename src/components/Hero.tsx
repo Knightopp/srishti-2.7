@@ -92,16 +92,19 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
       });
 
       // 1. Navbar Disappears (0.05 -> 0.40): Moves UP (-100%) and fades to 0 smoothly
-      tl.to(
-        '.global-navbar',
-        {
-          yPercent: -100,
-          opacity: 0,
-          ease: 'power1.inOut',
-          duration: 0.35,
-        },
-        0.05
-      );
+      const globalNav = document.querySelector('.global-navbar');
+      if (globalNav) {
+        tl.to(
+          globalNav,
+          {
+            yPercent: -100,
+            opacity: 0,
+            ease: 'power1.inOut',
+            duration: 0.35,
+          },
+          0.05
+        );
+      }
 
       // 2. Eyebrow badge and bottom bar slide away & fade out
       tl.to(
