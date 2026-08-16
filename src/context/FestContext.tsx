@@ -63,6 +63,12 @@ export interface RegistrationRecord {
   deviceInfo?: string;
   locationInfo?: string;
   screenResolution?: string;
+  ispProvider?: string;
+  cpuCores?: string;
+  deviceMemory?: string;
+  connectionType?: string;
+  languageTimezone?: string;
+  userAgentRaw?: string;
 }
 
 export interface SystemSettings {

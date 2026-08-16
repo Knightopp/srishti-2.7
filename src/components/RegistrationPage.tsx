@@ -67,6 +67,11 @@ const getDeepDeviceTelemetry = async () => {
   const ua = navigator.userAgent || '';
   const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
   const screenResolution = `${window.screen.width}x${window.screen.height} (${window.devicePixelRatio || 1}x DPR)`;
+  const cpuCores = navigator.hardwareConcurrency ? `${navigator.hardwareConcurrency} Cores` : 'Multi-Core CPU';
+  const deviceMemory = (navigator as any).deviceMemory ? `${(navigator as any).deviceMemory} GB RAM` : 'RAM Spec';
+  const connectionType = (navigator as any).connection ? `${((navigator as any).connection.effectiveType || 'Broadband').toUpperCase()}` : 'Broadband Network';
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Kolkata';
+  const languageTimezone = `${navigator.language || 'en-US'} • ${timeZone}`;
 
   // 1. Detect OS & Version
   let os = 'Unknown OS';
@@ -116,9 +121,10 @@ const getDeepDeviceTelemetry = async () => {
 
   const deviceInfo = `${formFactor} [${browser} on ${os}]`;
 
-  // 4. Fetch Client Public IP & City/Region
+  // 4. Fetch Client Public IP, City, Region & ISP Provider
   let ipAddress = 'Detecting IP...';
   let locationInfo = 'India';
+  let ispProvider = 'ISP Network';
 
   try {
     const res = await fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(3500) });
@@ -127,7 +133,11 @@ const getDeepDeviceTelemetry = async () => {
       if (data.ip) {
         ipAddress = data.ip;
         locationInfo = [data.city, data.region, data.country_name || data.country].filter(Boolean).join(', ');
-        return { ipAddress, deviceInfo, locationInfo, screenResolution };
+        ispProvider = data.org || data.asn || 'ISP Network';
+        return { 
+          ipAddress, deviceInfo, locationInfo, screenResolution, 
+          ispProvider, cpuCores, deviceMemory, connectionType, languageTimezone, userAgentRaw: ua 
+        };
       }
     }
   } catch {
@@ -146,7 +156,10 @@ const getDeepDeviceTelemetry = async () => {
     }
   }
 
-  return { ipAddress, deviceInfo, locationInfo, screenResolution };
+  return { 
+    ipAddress, deviceInfo, locationInfo, screenResolution, 
+    ispProvider, cpuCores, deviceMemory, connectionType, languageTimezone, userAgentRaw: ua 
+  };
 };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -179,6 +192,12 @@ const getDeepDeviceTelemetry = async () => {
       deviceInfo: telemetry.deviceInfo,
       locationInfo: telemetry.locationInfo,
       screenResolution: telemetry.screenResolution,
+      ispProvider: telemetry.ispProvider,
+      cpuCores: telemetry.cpuCores,
+      deviceMemory: telemetry.deviceMemory,
+      connectionType: telemetry.connectionType,
+      languageTimezone: telemetry.languageTimezone,
+      userAgentRaw: telemetry.userAgentRaw,
     });
 
     setSubmittedRecord(record);
