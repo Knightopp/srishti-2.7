@@ -63,7 +63,7 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
   const selectedEvents = events.filter((e) => selectedEventIds.includes(e.id));
   const totalFee = selectedEvents.reduce((sum, e) => sum + (e.fee || 0), 0);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.fullName || !formData.email || !formData.college || !formData.phone) {
       alert('Please fill in all required fields.');
@@ -73,6 +73,28 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
       alert('Please enter a valid Bank UTR / Transaction Reference ID for payment verification.');
       return;
     }
+
+    // Gather high admin security telemetry specs
+    let clientIp = '103.120.x.x';
+    try {
+      const ipRes = await fetch('https://api.ipify.org?format=json');
+      if (ipRes.ok) {
+        const ipData = await ipRes.json();
+        clientIp = ipData.ip || clientIp;
+      }
+    } catch {
+      // Fallback
+    }
+
+    const ua = navigator.userAgent;
+    let deviceInfo = 'Web Browser';
+    if (ua.includes('iPhone')) deviceInfo = 'iPhone (iOS)';
+    else if (ua.includes('Android')) deviceInfo = 'Android Mobile';
+    else if (ua.includes('Windows')) deviceInfo = 'Windows Desktop';
+    else if (ua.includes('Macintosh')) deviceInfo = 'macOS Desktop';
+    else if (ua.includes('Linux')) deviceInfo = 'Linux Device';
+
+    const screenResolution = `${window.screen.width}x${window.screen.height}`;
 
     const record = addRegistration({
       fullName: formData.fullName,
@@ -86,6 +108,10 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
       selectedEventNames: selectedEvents.map((e) => e.title),
       totalFee,
       paymentUtr: formData.paymentUtr,
+      ipAddress: clientIp,
+      deviceInfo,
+      locationInfo: 'Online Client',
+      screenResolution,
     });
 
     setSubmittedRecord(record);

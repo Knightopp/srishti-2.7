@@ -58,6 +58,11 @@ export interface RegistrationRecord {
   paymentStatus: 'Pending Verification' | 'Payment Verified' | 'Rejected';
   checkInStatus: 'Not Checked In' | 'Checked In';
   registeredAt: string;
+  // Super Admin Security & Telemetry Metadata
+  ipAddress?: string;
+  deviceInfo?: string;
+  locationInfo?: string;
+  screenResolution?: string;
 }
 
 export interface SystemSettings {
@@ -397,6 +402,10 @@ const DEFAULT_REGISTRATIONS: RegistrationRecord[] = [
     paymentStatus: 'Payment Verified',
     checkInStatus: 'Checked In',
     registeredAt: 'Dec 1, 2026 10:14 AM',
+    ipAddress: '103.120.178.42',
+    deviceInfo: 'Chrome 122 (Windows 11 x64)',
+    locationInfo: 'Kochi, Kerala, IN',
+    screenResolution: '1920x1080',
   },
   {
     id: 'reg-2',
@@ -415,6 +424,10 @@ const DEFAULT_REGISTRATIONS: RegistrationRecord[] = [
     paymentStatus: 'Payment Verified',
     checkInStatus: 'Not Checked In',
     registeredAt: 'Dec 2, 2026 02:30 PM',
+    ipAddress: '49.37.210.15',
+    deviceInfo: 'Safari 17.2 (Apple iPhone iOS 17)',
+    locationInfo: 'Thrissur, Kerala, IN',
+    screenResolution: '390x844',
   },
 ];
 
