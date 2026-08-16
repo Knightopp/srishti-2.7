@@ -776,15 +776,43 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 <label className="text-[#00e5ff] font-bold block">
                   GOOGLE SHEETS / CLOUD DB API ENDPOINT URL
                 </label>
-                <input
-                  type="url"
-                  placeholder="https://script.google.com/macros/s/.../exec OR https://sheetdb.io/api/v1/..."
-                  value={settingsForm.cloudDbUrl}
-                  onChange={(e) => setSettingsForm({ ...settingsForm, cloudDbUrl: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl bg-black/60 border border-[#00e5ff]/50 text-white placeholder-white/40 focus:outline-none focus:border-[#00e5ff]"
-                />
+                <div className="flex gap-2">
+                  <input
+                    type="url"
+                    placeholder="https://script.google.com/macros/s/.../exec OR https://sheetdb.io/api/v1/..."
+                    value={settingsForm.cloudDbUrl}
+                    onChange={(e) => setSettingsForm({ ...settingsForm, cloudDbUrl: e.target.value })}
+                    className="flex-1 px-4 py-3 rounded-xl bg-black/60 border border-[#00e5ff]/50 text-white placeholder-white/40 focus:outline-none focus:border-[#00e5ff]"
+                  />
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      if (!settingsForm.cloudDbUrl) {
+                        alert('Please enter a Google Apps Script or Cloud DB URL first.');
+                        return;
+                      }
+                      try {
+                        const res = await fetch(settingsForm.cloudDbUrl);
+                        const text = await res.text();
+                        if (res.status === 403 || text.includes('You need access') || text.includes('You need permission')) {
+                          alert('⚠️ Google Workspace 403 Blocked!\n\nThis Google Sheet Apps Script was created under an organization / college account (@stthomas.ac.in) which Google blocks from public access.\n\nFIX: Create a new Google Sheet using a PERSONAL @gmail.com account and deploy Apps Script from there!');
+                        } else if (text.trim().startsWith('{') || text.trim().startsWith('[')) {
+                          await syncWithCloud();
+                          alert('✅ Connection Successful!\n\nYour Google Sheet is connected and synchronized live across all devices!');
+                        } else {
+                          alert('⚠️ Connection Response Error:\n\nGoogle returned non-JSON data. Please verify your Apps Script deployment is set to "Who has access: Anyone".');
+                        }
+                      } catch (err: any) {
+                        alert('❌ Network Error testing endpoint: ' + err.message);
+                      }
+                    }}
+                    className="px-4 py-3 rounded-xl bg-[#00e5ff]/20 border border-[#00e5ff]/50 text-[#00e5ff] font-bold uppercase hover:bg-[#00e5ff]/30 transition-all shrink-0"
+                  >
+                    Test Link
+                  </button>
+                </div>
                 <span className="text-[10px] text-white/50 block">
-                  Paste your Google Apps Script Web App URL or SheetDB endpoint here to auto-sync events and passes.
+                  Paste your Google Apps Script Web App URL here. Note: Must be deployed from a personal @gmail.com account if your college Google account blocks external sharing.
                 </span>
               </div>
 
