@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, memo } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { 
@@ -14,6 +14,88 @@ import {
 
 gsap.registerPlugin(ScrollTrigger);
 
+// Isolated Countdown component so timer interval never re-renders the Hero container or GSAP elements
+const HeroCountdown = memo(() => {
+  const [timeLeft, setTimeLeft] = useState({ days: '00', hours: '00', minutes: '00', seconds: '00' });
+
+  useEffect(() => {
+    const targetDate = new Date('2026-12-04T10:00:00').getTime();
+
+    const updateTimer = () => {
+      const now = new Date().getTime();
+      const difference = Math.max(0, targetDate - now);
+
+      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((difference % (1000 * 60)) / 1000);
+      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+      setTimeLeft({
+        days: days < 10 ? `0${days}` : `${days}`,
+        hours: hours < 10 ? `0${hours}` : `${hours}`,
+        minutes: minutes < 10 ? `0${minutes}` : `${minutes}`,
+        seconds: seconds < 10 ? `0${seconds}` : `${seconds}`,
+      });
+    };
+
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="my-1 sm:my-2 md:my-3.5 inline-flex flex-col items-center pointer-events-auto">
+      <div className="flex items-center gap-1 sm:gap-2 md:gap-2.5 px-2.5 sm:px-5 md:px-6 py-1 sm:py-2 md:py-2.5 rounded-xl sm:rounded-2xl bg-black/70 border border-white/15 backdrop-blur-2xl shadow-2xl">
+        {/* DAYS */}
+        <div className="flex flex-col items-center px-1 sm:px-2 md:px-2.5">
+          <span className="font-orbitron font-black text-[11px] sm:text-base md:text-2xl text-white leading-none">
+            {timeLeft.days}
+          </span>
+          <span className="text-[6px] sm:text-[8px] md:text-[9px] font-mono font-bold text-white/60 uppercase tracking-widest pt-0.5 sm:pt-1">
+            DAYS
+          </span>
+        </div>
+
+        <span className="font-orbitron font-extrabold text-[9px] sm:text-xs md:text-base text-white/40 pb-1 sm:pb-2.5">:</span>
+
+        {/* HOURS */}
+        <div className="flex flex-col items-center px-1 sm:px-2 md:px-2.5">
+          <span className="font-orbitron font-black text-[11px] sm:text-base md:text-2xl text-white leading-none">
+            {timeLeft.hours}
+          </span>
+          <span className="text-[6px] sm:text-[8px] md:text-[9px] font-mono font-bold text-white/60 uppercase tracking-widest pt-0.5 sm:pt-1">
+            HRS
+          </span>
+        </div>
+
+        <span className="font-orbitron font-extrabold text-[9px] sm:text-xs md:text-base text-white/40 pb-1 sm:pb-2.5">:</span>
+
+        {/* MINUTES */}
+        <div className="flex flex-col items-center px-1 sm:px-2 md:px-2.5">
+          <span className="font-orbitron font-black text-[11px] sm:text-base md:text-2xl text-white leading-none">
+            {timeLeft.minutes}
+          </span>
+          <span className="text-[6px] sm:text-[8px] md:text-[9px] font-mono font-bold text-white/60 uppercase tracking-widest pt-0.5 sm:pt-1">
+            MINS
+          </span>
+        </div>
+
+        <span className="font-orbitron font-extrabold text-[9px] sm:text-xs md:text-base text-white/40 pb-1 sm:pb-2.5">:</span>
+
+        {/* SECONDS */}
+        <div className="flex flex-col items-center px-1 sm:px-2 md:px-2.5">
+          <span className="font-orbitron font-black text-[11px] sm:text-base md:text-2xl text-white leading-none">
+            {timeLeft.seconds}
+          </span>
+          <span className="text-[6px] sm:text-[8px] md:text-[9px] font-mono font-bold text-white/60 uppercase tracking-widest pt-0.5 sm:pt-1">
+            SECS
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+});
+
 interface HeroProps {
   onNavigateToRegister?: () => void;
 }
@@ -22,7 +104,6 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
   const heroRef = useRef<HTMLElement>(null);
   const titleGroupRef = useRef<HTMLDivElement>(null);
   const emblemRef = useRef<HTMLDivElement>(null);
-  const countdownRef = useRef<HTMLDivElement>(null);
   const subtitleRef = useRef<HTMLDivElement>(null);
   const eyebrowRef = useRef<HTMLDivElement>(null);
   const bottomBarRef = useRef<HTMLDivElement>(null);
@@ -40,37 +121,6 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
   // Mobile Clean Widgets Ref
   const mobileCard1Ref = useRef<HTMLDivElement>(null);
   const mobileCard2Ref = useRef<HTMLDivElement>(null);
-
-  // Mouse Parallax Offset (subtle depth on desktop)
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-
-  // Live Fest Countdown Timer State (Target: Dec 4, 2026 10:00 AM)
-  const [timeLeft, setTimeLeft] = useState({ days: '00', hours: '00', minutes: '00', seconds: '00' });
-
-  useEffect(() => {
-    const targetDate = new Date('2026-12-04T10:00:00').getTime();
-
-    const updateTimer = () => {
-      const now = new Date().getTime();
-      const difference = Math.max(0, targetDate - now);
-
-      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((difference % (1000 * 60)) / (1000 * 60));
-      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-
-      setTimeLeft({
-        days: days < 10 ? `0${days}` : `${days}`,
-        hours: hours < 10 ? `0${hours}` : `${hours}`,
-        minutes: minutes < 10 ? `0${minutes}` : `${minutes}`,
-        seconds: seconds < 10 ? `0${seconds}` : `${seconds}`,
-      });
-    };
-
-    updateTimer();
-    const interval = setInterval(updateTimer, 1000);
-    return () => clearInterval(interval);
-  }, []);
 
   useEffect(() => {
     if (!heroRef.current) return;
@@ -122,12 +172,13 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
       );
 
       // Central Hero Title Group MAXIMIZES / ZOOMS IN smoothly (1.0 -> 1.85, controlled & clean)
+      // NEVER fades out, stays 100% visible at full zoom
       tl.to(
         titleGroupRef.current,
         {
           scale: 1.85,
           ease: 'power1.inOut',
-          duration: 0.65,
+          duration: 0.75,
         },
         0.05
       );
@@ -139,55 +190,34 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
           scale: 1.6,
           opacity: 0.25,
           ease: 'power1.inOut',
-          duration: 0.65,
+          duration: 0.75,
         },
         0.05
       );
 
-      // Desktop Peripheral Info Widgets retreat & fade out smoothly without lag
+      // Desktop Peripheral Info Widgets retreat & fade out smoothly (stays hidden while zoomed)
       tl.to(
         [card1Ref.current, card3Ref.current, pill1Ref.current],
         {
-          x: -50,
+          x: -60,
           opacity: 0,
-          scale: 0.92,
+          scale: 0.9,
           ease: 'power1.inOut',
           duration: 0.4,
         },
-        0.1
+        0.08
       );
 
       tl.to(
         [card2Ref.current, card4Ref.current, pill2Ref.current],
         {
-          x: 50,
+          x: 60,
           opacity: 0,
-          scale: 0.92,
+          scale: 0.9,
           ease: 'power1.inOut',
           duration: 0.4,
         },
-        0.1
-      );
-
-      // Transition out at end of hero pin so next section (CaseShowcase) enters cleanly
-      tl.to(
-        titleGroupRef.current,
-        {
-          opacity: 0,
-          y: -40,
-          ease: 'power1.inOut',
-          duration: 0.25,
-        },
-        0.75
-      );
-
-      tl.to(
-        glowRef.current,
-        {
-          opacity: 0,
-          duration: 0.25,
-        },
-        0.75
+        0.08
       );
     });
 
@@ -199,7 +229,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
         scrollTrigger: {
           trigger: heroRef.current,
           start: 'top top',
-          end: '+=550', // Balanced mobile scroll distance - continuous, fluid motion!
+          end: '+=550',
           pin: true,
           pinSpacing: true,
           scrub: 0.4,
@@ -235,13 +265,13 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
         0.0
       );
 
-      // Mobile continuous scale (1.0 -> 1.20) - perfectly proportioned for phone screens
+      // Mobile continuous scale (1.0 -> 1.22) - stays 100% visible, never fades out
       tl.to(
         titleGroupRef.current,
         {
-          scale: 1.20,
+          scale: 1.22,
           ease: 'power1.inOut',
-          duration: 0.65,
+          duration: 0.75,
         },
         0.02
       );
@@ -250,14 +280,14 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
         glowRef.current,
         {
           scale: 1.3,
-          opacity: 0.22,
+          opacity: 0.25,
           ease: 'power1.inOut',
-          duration: 0.65,
+          duration: 0.75,
         },
         0.02
       );
 
-      // Mobile widgets fade out cleanly
+      // Mobile widgets fade out cleanly and stay hidden while zoomed
       tl.to(
         [mobileCard1Ref.current, mobileCard2Ref.current],
         {
@@ -269,46 +299,14 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
         },
         0.05
       );
-
-      // Smooth exit at end of pin (0.75 -> 1.0) so it hands off to Event Wheel seamlessly
-      tl.to(
-        titleGroupRef.current,
-        {
-          opacity: 0,
-          y: -35,
-          ease: 'power1.inOut',
-          duration: 0.25,
-        },
-        0.75
-      );
-
-      tl.to(
-        glowRef.current,
-        {
-          opacity: 0,
-          duration: 0.25,
-        },
-        0.75
-      );
     });
 
     return () => mm.revert();
   }, []);
 
-  // Mouse Parallax Handler (desktop only)
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (window.innerWidth < 768) return;
-    if (!heroRef.current) return;
-    const rect = heroRef.current.getBoundingClientRect();
-    const x = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2);
-    const y = (e.clientY - rect.top - rect.height / 2) / (rect.height / 2);
-    setMousePos({ x, y });
-  };
-
   return (
     <section
       ref={heroRef}
-      onMouseMove={handleMouseMove}
       className="relative w-full h-[100dvh] min-h-[100dvh] overflow-hidden bg-[#060608] text-[#f5f5f7] flex flex-col justify-between pt-12 sm:pt-18 md:pt-24 pb-3 sm:pb-5 md:pb-8 select-none"
     >
       {/* Background Subtle Grid & Center Ambient Glow */}
@@ -342,19 +340,12 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
       {/* CENTER STAGE: CENTRAL HERO TITLE GROUP & WIDGETS */}
       <div className="relative z-30 w-full max-w-7xl mx-auto px-3 sm:px-6 md:px-12 my-auto flex flex-col items-center justify-center min-h-[300px] sm:min-h-[360px] md:min-h-[460px]">
         
-        {/* Subtle Mouse Parallax Sub-wrapper */}
-        <div 
-          className="relative z-30 pointer-events-none flex flex-col items-center justify-center"
-          style={{
-            transform: `translate3d(${mousePos.x * 6}px, ${mousePos.y * 6}px, 0)`,
-            willChange: 'transform',
-          }}
-        >
+        {/* Sub-wrapper */}
+        <div className="relative z-30 pointer-events-none flex flex-col items-center justify-center">
           {/* SINGLE HERO TITLE GROUP: SRISHTI + 2.7 + COUNTDOWN + SUBTITLE (SCALES TOGETHER AS ONE UNIT) */}
           <div 
             ref={titleGroupRef}
             className="hero-title flex flex-col items-center justify-center text-center space-y-1 sm:space-y-2 md:space-y-3 origin-center pointer-events-none"
-            style={{ willChange: 'transform' }}
           >
             {/* Official Srishti Emblem Icon */}
             <div ref={emblemRef} className="flex justify-center mb-0.5">
@@ -372,58 +363,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
               </h1>
 
               {/* LIVE FEST COUNTDOWN TIMER (ANCHORED DIRECTLY TO HERO TITLE GROUP) */}
-              <div 
-                ref={countdownRef}
-                className="my-1 sm:my-2 md:my-3.5 inline-flex flex-col items-center pointer-events-auto"
-              >
-                <div className="flex items-center gap-1 sm:gap-2 md:gap-2.5 px-2.5 sm:px-5 md:px-6 py-1 sm:py-2 md:py-2.5 rounded-xl sm:rounded-2xl bg-black/70 border border-white/15 backdrop-blur-2xl shadow-2xl">
-                  {/* DAYS */}
-                  <div className="flex flex-col items-center px-1 sm:px-2 md:px-2.5">
-                    <span className="font-orbitron font-black text-[11px] sm:text-base md:text-2xl text-white leading-none">
-                      {timeLeft.days}
-                    </span>
-                    <span className="text-[6px] sm:text-[8px] md:text-[9px] font-mono font-bold text-white/60 uppercase tracking-widest pt-0.5 sm:pt-1">
-                      DAYS
-                    </span>
-                  </div>
-
-                  <span className="font-orbitron font-extrabold text-[9px] sm:text-xs md:text-base text-white/40 pb-1 sm:pb-2.5">:</span>
-
-                  {/* HOURS */}
-                  <div className="flex flex-col items-center px-1 sm:px-2 md:px-2.5">
-                    <span className="font-orbitron font-black text-[11px] sm:text-base md:text-2xl text-white leading-none">
-                      {timeLeft.hours}
-                    </span>
-                    <span className="text-[6px] sm:text-[8px] md:text-[9px] font-mono font-bold text-white/60 uppercase tracking-widest pt-0.5 sm:pt-1">
-                      HRS
-                    </span>
-                  </div>
-
-                  <span className="font-orbitron font-extrabold text-[9px] sm:text-xs md:text-base text-white/40 pb-1 sm:pb-2.5">:</span>
-
-                  {/* MINUTES */}
-                  <div className="flex flex-col items-center px-1 sm:px-2 md:px-2.5">
-                    <span className="font-orbitron font-black text-[11px] sm:text-base md:text-2xl text-white leading-none">
-                      {timeLeft.minutes}
-                    </span>
-                    <span className="text-[6px] sm:text-[8px] md:text-[9px] font-mono font-bold text-white/60 uppercase tracking-widest pt-0.5 sm:pt-1">
-                      MINS
-                    </span>
-                  </div>
-
-                  <span className="font-orbitron font-extrabold text-[9px] sm:text-xs md:text-base text-white/40 pb-1 sm:pb-2.5">:</span>
-
-                  {/* SECONDS */}
-                  <div className="flex flex-col items-center px-1 sm:px-2 md:px-2.5">
-                    <span className="font-orbitron font-black text-[11px] sm:text-base md:text-2xl text-white leading-none">
-                      {timeLeft.seconds}
-                    </span>
-                    <span className="text-[6px] sm:text-[8px] md:text-[9px] font-mono font-bold text-white/60 uppercase tracking-widest pt-0.5 sm:pt-1">
-                      SECS
-                    </span>
-                  </div>
-                </div>
-              </div>
+              <HeroCountdown />
 
               {/* Title Part 2: 2.7 (ALWAYS ATTACHED DIRECTLY UNDER SRISHTI / COUNTDOWN) */}
               <div className="font-orbitron font-black text-xl sm:text-4xl md:text-6xl lg:text-[6.5rem] text-transparent bg-clip-text bg-gradient-to-r from-[#00d4ff] via-[#0077ff] to-[#0055ff] tracking-tight mt-0.5 inline-block text-center drop-shadow-[0_10px_25px_rgba(0,119,255,0.4)]">
@@ -474,9 +414,6 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
         <div
           ref={card1Ref}
           className="hidden lg:flex absolute top-[4%] left-[1.5%] xl:left-[3%] z-20 p-4 bg-[#0e0e14]/95 border border-[#0077ff]/40 rounded-2xl backdrop-blur-2xl shadow-[0_15px_40px_rgba(0,119,255,0.25)] w-56 flex-col gap-2.5 hover:scale-105 hover:border-[#0077ff] hover:shadow-[0_20px_50px_rgba(0,119,255,0.5)] transition-all duration-300 group cursor-pointer"
-          style={{
-            transform: `translate3d(${mousePos.x * -10}px, ${mousePos.y * -10}px, 0)`,
-          }}
           onClick={onNavigateToRegister}
         >
           <div className="flex items-center justify-between">
@@ -505,9 +442,6 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
         <div
           ref={card2Ref}
           className="hidden lg:flex absolute top-[20%] right-[1.5%] xl:right-[3%] z-20 p-4 bg-[#0e0e14]/95 border border-[#00e5ff]/40 rounded-2xl backdrop-blur-2xl shadow-[0_15px_40px_rgba(0,229,255,0.2)] w-60 flex-col gap-2.5 hover:scale-105 hover:border-[#00e5ff] hover:shadow-[0_20px_50px_rgba(0,229,255,0.45)] transition-all duration-300 group cursor-pointer"
-          style={{
-            transform: `translate3d(${mousePos.x * 12}px, ${mousePos.y * -10}px, 0)`,
-          }}
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -544,9 +478,6 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
         <div
           ref={card3Ref}
           className="hidden lg:flex absolute bottom-[20%] left-[3%] xl:left-[5.5%] z-20 p-4 bg-[#0e0e14]/95 border border-[#00d4ff]/40 rounded-2xl backdrop-blur-2xl shadow-[0_15px_40px_rgba(0,212,255,0.2)] w-56 flex-col gap-2.5 hover:scale-105 hover:border-[#00d4ff] hover:shadow-[0_20px_50px_rgba(0,212,255,0.45)] transition-all duration-300 group cursor-pointer"
-          style={{
-            transform: `translate3d(${mousePos.x * -10}px, ${mousePos.y * 12}px, 0)`,
-          }}
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -575,9 +506,6 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
         <div
           ref={card4Ref}
           className="hidden lg:flex absolute bottom-[4%] right-[1%] xl:right-[2.5%] z-20 p-4 bg-[#0e0e14]/95 border border-[#38bdf8]/40 rounded-2xl backdrop-blur-2xl shadow-[0_15px_40px_rgba(56,189,248,0.2)] w-60 flex-col gap-2.5 hover:scale-105 hover:border-[#38bdf8] hover:shadow-[0_20px_50px_rgba(56,189,248,0.45)] transition-all duration-300 group cursor-pointer"
-          style={{
-            transform: `translate3d(${mousePos.x * 12}px, ${mousePos.y * 12}px, 0)`,
-          }}
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
