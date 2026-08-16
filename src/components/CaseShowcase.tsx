@@ -43,8 +43,9 @@ export const CaseShowcase: React.FC<CaseShowcaseProps> = ({ onNavigateToRegister
 
   const touchStartY = useRef<number | null>(null);
 
-  // Map dynamic events from FestContext
-  const WHEEL_EVENTS: WheelEventItem[] = events.map((e, i) => ({
+  // Map dynamic participating events from FestContext (excluding schedule-only ceremonies)
+  const participatingEvents = events.filter((e) => e.isParticipating !== false);
+  const WHEEL_EVENTS: WheelEventItem[] = (participatingEvents.length > 0 ? participatingEvents : events).map((e, i) => ({
     ...e,
     number: (i + 1).toString().padStart(2, '0'),
     icon: <Sparkles className="w-5 h-5" style={{ color: e.color || '#0077ff' }} />,

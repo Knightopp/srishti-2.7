@@ -16,6 +16,7 @@ export interface EventItem {
   bgGradient: string;
   image: string;
   fee: number; // in INR (0 for free)
+  isParticipating?: boolean; // false for Inauguration, Keynote, Lunch Breaks (Roadmap Schedule Only)
   // Schedule & Timeline Roadmap Fields
   day?: 'dec-4' | 'dec-5';
   dayLabel?: string;
@@ -115,6 +116,7 @@ const DEFAULT_EVENTS: EventItem[] = [
     bgGradient: 'from-[#0a182e] via-[#0d1e38] to-[#080b12]',
     image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1200&q=80',
     fee: 0,
+    isParticipating: false,
     day: 'dec-4',
     dayLabel: 'DECEMBER 4, 2026',
     subtitle: 'Opening Address & Lamp Lighting',
@@ -444,6 +446,9 @@ const sanitizeEvent = (raw: any, index: number): EventItem => {
     } : defaultRef.speaker,
     highlights: Array.isArray(raw.highlights) && raw.highlights.length > 0 ? raw.highlights : defaultRef.highlights,
     side: raw.side === 'right' ? 'right' : 'left',
+    isParticipating: typeof raw.isParticipating === 'boolean' 
+      ? raw.isParticipating 
+      : (defaultRef.isParticipating !== undefined ? defaultRef.isParticipating : (raw.id === 'ev-1' || raw.category === 'CEREMONY' ? false : true)),
   };
 };
 

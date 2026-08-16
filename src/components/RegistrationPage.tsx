@@ -25,7 +25,13 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
   const { events, addRegistration, settings } = useFest();
 
   // Multi-select events state (default first event selected)
-  const [selectedEventIds, setSelectedEventIds] = useState<string[]>([events[0]?.id || 'hackathon']);
+  const participatingEvents = events.filter((e) => e.isParticipating !== false);
+  const registerableList = participatingEvents.length > 0 ? participatingEvents : events;
+
+  const [selectedEventIds, setSelectedEventIds] = useState<string[]>(() => {
+    const firstPart = events.find((e) => e.isParticipating !== false);
+    return firstPart ? [firstPart.id] : [events[0]?.id || 'code-clash'];
+  });
 
   const [formData, setFormData] = useState({
     fullName: '',
@@ -140,7 +146,7 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {events.map((evt) => {
+                {registerableList.map((evt) => {
                   const isSelected = selectedEventIds.includes(evt.id);
                   return (
                     <div

@@ -126,6 +126,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1200&q=80',
     fee: 100,
     tags: 'Coding, Tech',
+    isParticipating: true,
   });
 
   // Add Sponsor Form State
@@ -248,6 +249,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1200&q=80',
       fee: 100,
       tags: 'Coding, Tech',
+      isParticipating: true,
     });
     setIsAddEventOpen(true);
   };
@@ -274,6 +276,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       image: evt.image,
       fee: evt.fee,
       tags: evt.tags ? evt.tags.join(', ') : '',
+      isParticipating: evt.isParticipating !== false,
     });
     setIsAddEventOpen(true);
   };
@@ -312,6 +315,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       image: eventForm.image,
       fee: Number(eventForm.fee),
       tags: eventForm.tags ? eventForm.tags.split(',').map((t) => t.trim()).filter(Boolean) : ['Tech'],
+      isParticipating: eventForm.isParticipating,
     };
 
     if (editingEvent) {
@@ -978,6 +982,27 @@ function doPost(e) {
             </div>
 
             <form onSubmit={handleSaveEvent} className="space-y-4 text-xs font-mono">
+              {/* PARTICIPATING EVENT VS SCHEDULE ONLY TOGGLE */}
+              <div className="p-3.5 rounded-2xl bg-white/5 border border-white/15 flex items-center justify-between gap-3">
+                <div className="space-y-0.5">
+                  <span className="text-[#00e5ff] font-bold block">EVENT TYPE & VISIBILITY</span>
+                  <span className="text-[10px] text-white/60 block">
+                    {eventForm.isParticipating 
+                      ? "✅ Participating Event (Shows in 3D Showcase & Pass Registration)"
+                      : "📌 Schedule Only (Shows in Roadmap Timeline ONLY, e.g. Inauguration, Lunch Break)"}
+                  </span>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer shrink-0">
+                  <input
+                    type="checkbox"
+                    checked={eventForm.isParticipating}
+                    onChange={(e) => setEventForm({ ...eventForm, isParticipating: e.target.checked })}
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#0077ff]"></div>
+                </label>
+              </div>
+
               <div className="space-y-1">
                 <label className="text-[#00e5ff] font-bold">EVENT TITLE *</label>
                 <input
