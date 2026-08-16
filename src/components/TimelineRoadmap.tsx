@@ -561,7 +561,7 @@ export const TimelineRoadmap: React.FC = () => {
                             {ev.title}
                           </h4>
                           <p className="text-xs text-white/50 font-light">
-                            Coordinator: {ev.speaker.name} ({ev.speaker.role})
+                            Coordinator: {ev.speaker?.name || 'Coordinator'} ({ev.speaker?.role || 'St. Thomas Faculty'})
                           </p>
                         </div>
 
@@ -711,7 +711,7 @@ export const TimelineRoadmap: React.FC = () => {
                             <div className="flex items-center gap-2">
                               <User className="w-3.5 h-3.5 text-[#00e5ff]" />
                               <span className="text-white/80 font-semibold">
-                                {event.speaker.name}
+                                {event.speaker?.name || 'Coordinator'}
                               </span>
                             </div>
                           </div>
@@ -724,7 +724,7 @@ export const TimelineRoadmap: React.FC = () => {
                               </span>
 
                               <ul className="space-y-2">
-                                {event.highlights.map((item, idx) => (
+                                {(event.highlights || []).map((item, idx) => (
                                   <li
                                     key={idx}
                                     className="flex items-center gap-2.5 text-xs text-white/80 font-light"

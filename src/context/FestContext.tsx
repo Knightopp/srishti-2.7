@@ -524,6 +524,37 @@ export const FestProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+const sanitizeEvent = (raw: any, index: number): EventItem => {
+  const defaultRef = DEFAULT_EVENTS[index % DEFAULT_EVENTS.length] || DEFAULT_EVENTS[0];
+  return {
+    id: raw.id ? String(raw.id) : `evt-${Date.now()}-${index}`,
+    number: raw.number || defaultRef.number || (index + 1).toString().padStart(2, '0'),
+    stageLabel: raw.stageLabel || defaultRef.stageLabel || 'KEYNOTE / CONTEST',
+    title: raw.title || raw.name || defaultRef.title || 'Srishti Festival Event',
+    subtitle: raw.subtitle || defaultRef.subtitle || 'St. Thomas College Festival',
+    category: raw.category || defaultRef.category || 'TECHNICAL',
+    highlightText: raw.highlightText || defaultRef.highlightText || 'ST. THOMAS COLLEGE',
+    description: raw.description || defaultRef.description || 'Srishti 2.7 National Level Inter-Collegiate Tech & Cultural Fest.',
+    time: raw.time || defaultRef.time || '10:00 AM – 01:00 PM',
+    venue: raw.venue || raw.location || defaultRef.venue || 'Main Auditorium',
+    prize: raw.prize || raw.prizePool || defaultRef.prize || '₹10,000+',
+    tags: Array.isArray(raw.tags) ? raw.tags : (defaultRef.tags || ['SRISHTI 2.7', 'TECH']),
+    color: raw.color || defaultRef.color || '#0077ff',
+    bgGradient: raw.bgGradient || defaultRef.bgGradient || 'from-[#0077ff]/20 to-transparent',
+    image: raw.image || defaultRef.image || '',
+    fee: typeof raw.fee === 'number' ? raw.fee : (defaultRef.fee || 150),
+    day: raw.day || defaultRef.day || 'dec-4',
+    dayLabel: raw.dayLabel || defaultRef.dayLabel || 'DAY 01 • DEC 4, 2026',
+    locationId: raw.locationId || defaultRef.locationId || 'main-auditorium',
+    speaker: raw.speaker && typeof raw.speaker === 'object' ? {
+      name: raw.speaker.name || 'Event Coordinator',
+      role: raw.speaker.role || 'St. Thomas Faculty / Student Lead',
+    } : defaultRef.speaker,
+    highlights: Array.isArray(raw.highlights) && raw.highlights.length > 0 ? raw.highlights : defaultRef.highlights,
+    side: raw.side === 'right' ? 'right' : 'left',
+  };
+};
+
   // Fetch latest data from Cloud Database / Google Sheets API
   const fetchFromCloud = async () => {
     if (!settings.cloudDbUrl) return;
@@ -539,7 +570,8 @@ export const FestProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const payload = JSON.parse(text);
         const data = payload.data || payload;
         if (data.events && Array.isArray(data.events) && data.events.length > 0) {
-          setEvents(data.events);
+          const sanitized = data.events.map((e: any, idx: number) => sanitizeEvent(e, idx));
+          setEvents(sanitized);
         }
         if (data.sponsors && Array.isArray(data.sponsors) && data.sponsors.length > 0) {
           setSponsors(data.sponsors);
