@@ -94,7 +94,7 @@ const DEFAULT_SETTINGS: SystemSettings = {
   contactEmail: 'srishti@stthomas.ac.in',
   contactPhone: '+91 98765 43210',
   collegeName: 'St. Thomas College',
-  cloudDbUrl: '',
+  cloudDbUrl: 'https://script.google.com/macros/s/AKfycbxtHO-ypMU7h-pYeR0_JpZ_kaeTEQDaoqvz_OoFhk3Vx1QrTECvXsEIbMayPtH838Tj/exec',
 };
 
 const DEFAULT_EVENTS: EventItem[] = [
@@ -449,7 +449,15 @@ export const FestProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [settings, setSettings] = useState<SystemSettings>(() => {
     try {
       const saved = localStorage.getItem('srishti_settings');
-      return saved ? { ...DEFAULT_SETTINGS, ...JSON.parse(saved) } : DEFAULT_SETTINGS;
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        return {
+          ...DEFAULT_SETTINGS,
+          ...parsed,
+          cloudDbUrl: parsed.cloudDbUrl || DEFAULT_SETTINGS.cloudDbUrl,
+        };
+      }
+      return DEFAULT_SETTINGS;
     } catch {
       return DEFAULT_SETTINGS;
     }
