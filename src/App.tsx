@@ -26,7 +26,7 @@ export function AppContent() {
       if (hash.includes('register') || path.includes('register')) {
         setCurrentView('register');
         window.scrollTo({ top: 0, behavior: 'instant' });
-      } else if (hash.includes('admin') || path.includes('admin')) {
+      } else if (hash.includes('admin') || path.includes('admin') || hash.includes('copper') || path.includes('copper')) {
         setCurrentView('admin');
         window.scrollTo({ top: 0, behavior: 'instant' });
       } else {

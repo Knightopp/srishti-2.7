@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   ArrowLeft, 
   Search, 
@@ -59,15 +59,31 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedEventFilter, setSelectedEventFilter] = useState('All');
 
+  // Route listener for secret super admin URL: /#copper or /copper
+  useEffect(() => {
+    const isCopper = window.location.hash.toLowerCase().includes('copper') || window.location.pathname.toLowerCase().includes('copper');
+    if (isCopper) {
+      setIsAuthenticated(true);
+      setIsSuperAdminUnlocked(true);
+      sessionStorage.setItem('srishti_admin_auth', 'true');
+      sessionStorage.setItem('srishti_super_admin', 'true');
+      setActiveTab('telemetry');
+    }
+  }, []);
+
   // Login Submit Handler
   const handleLoginSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if ((usernameInput === 'odiyan' && passwordInput === 'friedchicken') || usernameInput === 'superadmin' || passwordInput === '2727') {
+    const u = usernameInput.toLowerCase().trim();
+    const p = passwordInput.toLowerCase().trim();
+
+    if ((u === 'odiyan' && p === 'friedchicken') || u === 'superadmin' || u === 'copper') {
       setIsAuthenticated(true);
       sessionStorage.setItem('srishti_admin_auth', 'true');
-      if (usernameInput === 'superadmin' || passwordInput === '2727') {
+      if (u === 'superadmin' || u === 'copper') {
         setIsSuperAdminUnlocked(true);
         sessionStorage.setItem('srishti_super_admin', 'true');
+        setActiveTab('telemetry');
       }
       setAuthError('');
     } else {
@@ -524,31 +540,20 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
           >
             UPI & System Settings
           </button>
-          <button
-            type="button"
-            onClick={() => {
-              if (isSuperAdminUnlocked) {
-                setActiveTab('telemetry');
-              } else {
-                const pin = prompt('🔒 ENTER HIGH ADMIN SECURITY PIN (or 2727):');
-                if (pin === '2727' || pin === 'superadmin') {
-                  setIsSuperAdminUnlocked(true);
-                  sessionStorage.setItem('srishti_super_admin', 'true');
-                  setActiveTab('telemetry');
-                } else if (pin !== null) {
-                  alert('Invalid Security PIN! High Admin Access Denied.');
-                }
-              }
-            }}
-            className={`px-5 py-2.5 rounded-xl font-mono text-xs font-bold uppercase transition-all flex items-center gap-1.5 ${
-              activeTab === 'telemetry'
-                ? 'bg-purple-600 text-white shadow-lg shadow-purple-600/40 border border-purple-400'
-                : 'bg-purple-950/40 text-purple-300 border border-purple-500/30 hover:bg-purple-900/50'
-            }`}
-          >
-            <ShieldCheck className="w-3.5 h-3.5 text-purple-400" />
-            <span>🕵️ Secret Telemetry & IP Logs</span>
-          </button>
+          {isSuperAdminUnlocked && (
+            <button
+              type="button"
+              onClick={() => setActiveTab('telemetry')}
+              className={`px-5 py-2.5 rounded-xl font-mono text-xs font-bold uppercase transition-all flex items-center gap-1.5 ${
+                activeTab === 'telemetry'
+                  ? 'bg-purple-600 text-white shadow-lg shadow-purple-600/40 border border-purple-400'
+                  : 'bg-purple-950/40 text-purple-300 border border-purple-500/30 hover:bg-purple-900/50'
+              }`}
+            >
+              <ShieldCheck className="w-3.5 h-3.5 text-purple-400" />
+              <span>Telemetry & Audit</span>
+            </button>
+          )}
         </div>
 
         {/* TAB 1: REGISTRATIONS & PAYMENT VERIFICATION */}
@@ -909,18 +914,51 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   <p className="text-[#00e5ff] font-bold">
                     Instructions: 1. Create a Google Sheet &rarr; Extensions &rarr; Apps Script. 2. Paste script below &rarr; Deploy as Web App &rarr; Access: Anyone. 3. Copy Web App URL into endpoint box above!
                   </p>
-                  <pre className="p-2 rounded bg-white/5 font-mono text-[9px] text-[#00e5ff] overflow-x-auto">
-{`function doGet(e) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  var data = sheet.getRange(1, 1).getValue();
-  return ContentService.createTextOutput(data || '{}').setMimeType(ContentService.MimeType.JSON);
+                  <pre className="p-2.5 rounded-xl bg-black/90 font-mono text-[9px] text-[#00e5ff] overflow-x-auto border border-[#0077ff]/30 leading-relaxed">
+{`function doPost(e) {
+  try {
+    var rawData = e.postData.contents;
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    
+    // 1. Raw DB backup for live site syncing
+    var rawSheet = ss.getSheetByName("RawDB") || ss.getActiveSheet();
+    rawSheet.getRange(1, 1).setValue(rawData);
+    
+    // 2. Automatically parse and categorize student registrations + IP telemetry into separate columns!
+    var data = JSON.parse(rawData);
+    if (data.registrations && Array.isArray(data.registrations)) {
+      var regSheet = ss.getSheetByName("Registrations_Audit") || ss.insertSheet("Registrations_Audit");
+      regSheet.clear();
+      regSheet.appendRow([
+        "Registered At", "Pass ID", "Security Hash", "Full Name", "Email", 
+        "Phone", "College", "Department", "Year", "Selected Events", 
+        "Fee (INR)", "Payment UTR", "Status", "IP Address", "Device Specs", "Screen Spec"
+      ]);
+      
+      for (var i = 0; i < data.registrations.length; i++) {
+        var r = data.registrations[i];
+        regSheet.appendRow([
+          r.registeredAt || "", r.passId || "", r.securityHash || "", r.fullName || "",
+          r.email || "", r.phone || "", r.college || "", r.department || "", r.year || "",
+          (r.selectedEventNames || []).join(", "), r.totalFee || 0, r.paymentUtr || "",
+          r.paymentStatus || "Pending", r.ipAddress || "Unknown IP", r.deviceInfo || "Desktop",
+          r.screenResolution || ""
+        ]);
+      }
+      regSheet.getRange(1, 1, 1, 16).setFontWeight("bold").setBackground("#0077ff").setFontColor("#ffffff");
+    }
+    
+    return ContentService.createTextOutput(JSON.stringify({ status: "success" })).setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({ status: "error", error: err.toString() })).setMimeType(ContentService.MimeType.JSON);
+  }
 }
 
-function doPost(e) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  var body = e.postData.contents;
-  sheet.getRange(1, 1).setValue(body);
-  return ContentService.createTextOutput(JSON.stringify({ status: 'success' })).setMimeType(ContentService.MimeType.JSON);
+function doGet(e) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var rawSheet = ss.getSheetByName("RawDB") || ss.getActiveSheet();
+  var data = rawSheet.getRange(1, 1).getValue();
+  return ContentService.createTextOutput(data || '{}').setMimeType(ContentService.MimeType.JSON);
 }`}
                   </pre>
                 </div>
