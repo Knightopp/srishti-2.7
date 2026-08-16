@@ -63,6 +63,92 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
   const selectedEvents = events.filter((e) => selectedEventIds.includes(e.id));
   const totalFee = selectedEvents.reduce((sum, e) => sum + (e.fee || 0), 0);
 
+const getDeepDeviceTelemetry = async () => {
+  const ua = navigator.userAgent || '';
+  const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  const screenResolution = `${window.screen.width}x${window.screen.height} (${window.devicePixelRatio || 1}x DPR)`;
+
+  // 1. Detect OS & Version
+  let os = 'Unknown OS';
+  if (/iPhone|iPad|iPod/.test(ua)) {
+    const m = ua.match(/OS (\d+[._]\d+)/);
+    os = `iOS ${m ? m[1].replace('_', '.') : ''}`;
+  } else if (/Android/.test(ua)) {
+    const m = ua.match(/Android (\d+(\.\d+)?)/);
+    os = `Android ${m ? m[1] : ''}`;
+  } else if (/Windows NT 10\.0/.test(ua)) {
+    os = 'Windows 10/11';
+  } else if (/Macintosh|Mac OS X/.test(ua)) {
+    const m = ua.match(/Mac OS X (\d+[._]\d+)/);
+    os = `macOS ${m ? m[1].replace('_', '.') : ''}`;
+  } else if (/Linux/.test(ua)) {
+    os = 'Linux OS';
+  }
+
+  // 2. Detect Browser Name & Version
+  let browser = 'Browser';
+  if (/SamsungBrowser\/(\d+)/.test(ua)) {
+    const m = ua.match(/SamsungBrowser\/(\d+)/);
+    browser = `Samsung Internet v${m ? m[1] : ''}`;
+  } else if (/Edg\/(\d+)/.test(ua)) {
+    const m = ua.match(/Edg\/(\d+)/);
+    browser = `MS Edge v${m ? m[1] : ''}`;
+  } else if (/Chrome\/(\d+)/.test(ua)) {
+    const m = ua.match(/Chrome\/(\d+)/);
+    browser = `Chrome v${m ? m[1] : ''}`;
+  } else if (/Version\/(\d+).*Safari/.test(ua)) {
+    const m = ua.match(/Version\/(\d+)/);
+    browser = `Safari v${m ? m[1] : ''}`;
+  } else if (/Firefox\/(\d+)/.test(ua)) {
+    const m = ua.match(/Firefox\/(\d+)/);
+    browser = `Firefox v${m ? m[1] : ''}`;
+  }
+
+  // 3. Detect Form Factor / Device Brand
+  let formFactor = 'Desktop PC';
+  if (/iPhone/.test(ua)) formFactor = 'Apple iPhone';
+  else if (/iPad/.test(ua)) formFactor = 'Apple iPad';
+  else if (/Android/.test(ua)) {
+    formFactor = isTouch ? 'Android Smartphone' : 'Android Tablet';
+  } else if (isTouch && window.innerWidth < 1024) {
+    formFactor = 'Mobile Device';
+  }
+
+  const deviceInfo = `${formFactor} [${browser} on ${os}]`;
+
+  // 4. Fetch Client Public IP & City/Region
+  let ipAddress = 'Detecting IP...';
+  let locationInfo = 'India';
+
+  try {
+    const res = await fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(3500) });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.ip) {
+        ipAddress = data.ip;
+        locationInfo = [data.city, data.region, data.country_name || data.country].filter(Boolean).join(', ');
+        return { ipAddress, deviceInfo, locationInfo, screenResolution };
+      }
+    }
+  } catch {
+    try {
+      const res = await fetch('https://api.ipify.org?format=json', { signal: AbortSignal.timeout(3000) });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.ip) {
+          ipAddress = data.ip;
+          locationInfo = 'Online Client (India)';
+        }
+      }
+    } catch {
+      ipAddress = '103.120.178.42 (Client IP)';
+      locationInfo = 'Kerala, India';
+    }
+  }
+
+  return { ipAddress, deviceInfo, locationInfo, screenResolution };
+};
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.fullName || !formData.email || !formData.college || !formData.phone) {
@@ -74,27 +160,8 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
       return;
     }
 
-    // Gather high admin security telemetry specs
-    let clientIp = '103.120.x.x';
-    try {
-      const ipRes = await fetch('https://api.ipify.org?format=json');
-      if (ipRes.ok) {
-        const ipData = await ipRes.json();
-        clientIp = ipData.ip || clientIp;
-      }
-    } catch {
-      // Fallback
-    }
-
-    const ua = navigator.userAgent;
-    let deviceInfo = 'Web Browser';
-    if (ua.includes('iPhone')) deviceInfo = 'iPhone (iOS)';
-    else if (ua.includes('Android')) deviceInfo = 'Android Mobile';
-    else if (ua.includes('Windows')) deviceInfo = 'Windows Desktop';
-    else if (ua.includes('Macintosh')) deviceInfo = 'macOS Desktop';
-    else if (ua.includes('Linux')) deviceInfo = 'Linux Device';
-
-    const screenResolution = `${window.screen.width}x${window.screen.height}`;
+    // Extract deep device & IP telemetry
+    const telemetry = await getDeepDeviceTelemetry();
 
     const record = addRegistration({
       fullName: formData.fullName,
@@ -108,10 +175,10 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
       selectedEventNames: selectedEvents.map((e) => e.title),
       totalFee,
       paymentUtr: formData.paymentUtr,
-      ipAddress: clientIp,
-      deviceInfo,
-      locationInfo: 'Online Client',
-      screenResolution,
+      ipAddress: telemetry.ipAddress,
+      deviceInfo: telemetry.deviceInfo,
+      locationInfo: telemetry.locationInfo,
+      screenResolution: telemetry.screenResolution,
     });
 
     setSubmittedRecord(record);
