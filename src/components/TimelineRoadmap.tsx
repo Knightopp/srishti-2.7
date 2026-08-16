@@ -13,11 +13,11 @@ import {
   Award,
   Zap,
   Music,
-  Users,
   Compass,
   Layers,
   Radio
 } from 'lucide-react';
+import { useFest } from '../context/FestContext';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -29,7 +29,7 @@ export interface TimelineEvent {
   title: string;
   subtitle: string;
   description: string;
-  category: 'Competition' | 'Workshop' | 'Hackathon' | 'Talk' | 'Cultural' | 'Awards';
+  category: string;
   categoryColor: string;
   location: string;
   locationId: string;
@@ -41,6 +41,50 @@ export interface TimelineEvent {
   side: 'left' | 'right';
   icon: React.ReactNode;
 }
+
+const getCategoryBadge = (category: string) => {
+  const catLower = (category || '').toLowerCase();
+  if (catLower.includes('hackathon') || catLower.includes('prototype')) {
+    return {
+      categoryColor: 'border-[#00e5ff] text-[#00e5ff] bg-[#00e5ff]/10',
+      icon: <Code className="w-5 h-5 text-[#00e5ff]" />,
+    };
+  }
+  if (catLower.includes('competition') || catLower.includes('ctf') || catLower.includes('quiz') || catLower.includes('battle')) {
+    return {
+      categoryColor: 'border-[#0077ff] text-[#0077ff] bg-[#0077ff]/10',
+      icon: <Sparkles className="w-5 h-5 text-[#0077ff]" />,
+    };
+  }
+  if (catLower.includes('workshop') || catLower.includes('masterclass') || catLower.includes('learning')) {
+    return {
+      categoryColor: 'border-[#00d4ff] text-[#00d4ff] bg-[#00d4ff]/10',
+      icon: <Layers className="w-5 h-5 text-[#00d4ff]" />,
+    };
+  }
+  if (catLower.includes('talk') || catLower.includes('keynote')) {
+    return {
+      categoryColor: 'border-[#38bdf8] text-[#38bdf8] bg-[#38bdf8]/10',
+      icon: <Zap className="w-5 h-5 text-[#38bdf8]" />,
+    };
+  }
+  if (catLower.includes('cultural') || catLower.includes('music') || catLower.includes('dj')) {
+    return {
+      categoryColor: 'border-[#00e5ff] text-[#00e5ff] bg-[#00e5ff]/10',
+      icon: <Music className="w-5 h-5 text-[#00e5ff]" />,
+    };
+  }
+  if (catLower.includes('award') || catLower.includes('valedictory') || catLower.includes('closing')) {
+    return {
+      categoryColor: 'border-[#38bdf8] text-[#38bdf8] bg-[#38bdf8]/10',
+      icon: <Award className="w-5 h-5 text-[#38bdf8]" />,
+    };
+  }
+  return {
+    categoryColor: 'border-[#0077ff] text-[#0077ff] bg-[#0077ff]/10',
+    icon: <Sparkles className="w-5 h-5 text-[#0077ff]" />,
+  };
+};
 
 export interface MapLocation {
   id: string;
@@ -116,263 +160,10 @@ const MAP_LOCATIONS: MapLocation[] = [
   },
 ];
 
-const EVENTS_DATA: TimelineEvent[] = [
-  // DECEMBER 4
-  {
-    id: 'ev-1',
-    day: 'dec-4',
-    dayLabel: 'DECEMBER 4, 2026',
-    time: '09:00 AM - 10:00 AM',
-    title: 'Inaugural Ceremony & Srishti 2.7 Launch',
-    subtitle: 'Opening Address & Lamp Lighting',
-    description:
-      'The grand opening of Srishti 2.7 with dignitaries, faculty address, and the unveiling of this year\'s theme. A montage of past editions kicks off the energy.',
-    category: 'Cultural',
-    categoryColor: 'border-[#0077ff] text-[#0077ff] bg-[#0077ff]/10',
-    location: 'Main Auditorium',
-    locationId: 'main-auditorium',
-    speaker: {
-      name: 'Prof. Dr. Mathew K.',
-      role: 'Head of Department, CS',
-    },
-    highlights: [
-      'Lamp Lighting & Prayer',
-      'Keynote Address by Chief Guest',
-      'Srishti 2.7 Promo Reveal',
-    ],
-    side: 'left',
-    icon: <Sparkles className="w-5 h-5 text-[#0077ff]" />,
-  },
-  {
-    id: 'ev-2',
-    day: 'dec-4',
-    dayLabel: 'DECEMBER 4, 2026',
-    time: '10:30 AM - 12:30 PM',
-    title: 'Code Clash — Competitive Programming',
-    subtitle: 'Algorithmic Battle on HackerRank',
-    description:
-      'Individual competitive programming contest hosted on HackerRank. Solve DSA challenges in C++, Java, or Python within the time limit to top the leaderboard.',
-    category: 'Competition',
-    categoryColor: 'border-[#00e5ff] text-[#00e5ff] bg-[#00e5ff]/10',
-    location: 'CS Lab Complex',
-    locationId: 'cs-lab',
-    speaker: {
-      name: 'Arun K. & Neeraj S.',
-      role: 'Event Coordinators',
-    },
-    highlights: [
-      'Live HackerRank leaderboard',
-      'Prizes for Top 3 contestants',
-      'Open to all CS/IT students',
-    ],
-    side: 'right',
-    icon: <Code className="w-5 h-5 text-[#00e5ff]" />,
-  },
-  {
-    id: 'ev-3',
-    day: 'dec-4',
-    dayLabel: 'DECEMBER 4, 2026',
-    time: '11:00 AM - 01:00 PM',
-    title: 'UI/UX Design Sprint',
-    subtitle: 'Design a Mobile App Interface in 2 Hours',
-    description:
-      'Teams of 2 receive a problem brief and must design a complete mobile app UI in Figma within 2 hours. Judged on creativity, usability, and visual appeal.',
-    category: 'Competition',
-    categoryColor: 'border-[#00d4ff] text-[#00d4ff] bg-[#00d4ff]/10',
-    location: 'Seminar Hall',
-    locationId: 'seminar-hall',
-    speaker: {
-      name: 'Meera R.',
-      role: 'Design Lead',
-    },
-    highlights: [
-      'Figma-based rapid prototyping',
-      'Industry judges scoring panel',
-      'Best design wins goodies + certificate',
-    ],
-    side: 'left',
-    icon: <Zap className="w-5 h-5 text-[#00d4ff]" />,
-  },
-  {
-    id: 'ev-4',
-    day: 'dec-4',
-    dayLabel: 'DECEMBER 4, 2026',
-    time: '02:00 PM - 04:00 PM',
-    title: 'AI & Machine Learning Workshop',
-    subtitle: 'Build Your First ML Model with Python',
-    description:
-      'A beginner-friendly hands-on workshop where participants build and train a machine learning classification model using scikit-learn and Google Colab.',
-    category: 'Workshop',
-    categoryColor: 'border-[#0077ff] text-[#0077ff] bg-[#0077ff]/10',
-    location: 'Conference Room',
-    locationId: 'conference-room',
-    speaker: {
-      name: 'Vishnu Prasad',
-      role: 'AI Research Intern, IIT Madras',
-    },
-    highlights: [
-      'Hands-on Google Colab notebooks',
-      'Real-world dataset classification',
-      'Certificate for all participants',
-    ],
-    side: 'right',
-    icon: <Layers className="w-5 h-5 text-[#0077ff]" />,
-  },
-  {
-    id: 'ev-5',
-    day: 'dec-4',
-    dayLabel: 'DECEMBER 4, 2026',
-    time: '04:30 PM - 06:30 PM',
-    title: 'Tech Quiz — ByteBlitz',
-    subtitle: 'CS Trivia & Rapid Fire Showdown',
-    description:
-      'A high-energy tech quiz in teams of 3 covering data structures, OS, DBMS, networking, current tech trends, and pop culture crossovers.',
-    category: 'Competition',
-    categoryColor: 'border-[#38bdf8] text-[#38bdf8] bg-[#38bdf8]/10',
-    location: 'Main Auditorium',
-    locationId: 'main-auditorium',
-    speaker: {
-      name: 'Quizmaster Ajay V.',
-      role: 'Quiz Committee Head',
-    },
-    highlights: [
-      'Buzzer-round finals on stage',
-      'Wildcard audience participation',
-      'Trophies for winning team',
-    ],
-    side: 'left',
-    icon: <Users className="w-5 h-5 text-[#38bdf8]" />,
-  },
-  {
-    id: 'ev-6',
-    day: 'dec-4',
-    dayLabel: 'DECEMBER 4, 2026',
-    time: '07:00 PM - 10:00 PM',
-    title: 'Cultural Night & DJ Evening',
-    subtitle: 'Band Performances, Dance & Open Mic',
-    description:
-      'The Day 1 cultural evening featuring student band performances, western and classical dance, stand-up comedy, and a DJ set to close the night.',
-    category: 'Cultural',
-    categoryColor: 'border-[#00e5ff] text-[#00e5ff] bg-[#00e5ff]/10',
-    location: 'Open Air Stage',
-    locationId: 'open-stage',
-    speaker: {
-      name: 'Cultural Committee',
-      role: 'Srishti 2.7 Team',
-    },
-    highlights: [
-      'Live Band & Acoustic Sets',
-      'Dance Performances & Open Mic',
-      'DJ Night with Light Show',
-    ],
-    side: 'right',
-    icon: <Music className="w-5 h-5 text-[#00e5ff]" />,
-  },
 
-  // DECEMBER 5
-  {
-    id: 'ev-7',
-    day: 'dec-5',
-    dayLabel: 'DECEMBER 5, 2026',
-    time: '09:30 AM - 11:30 AM',
-    title: 'Capture The Flag — CyberSec CTF',
-    subtitle: 'Offensive Security & Forensics Challenge',
-    description:
-      'A team-based Capture The Flag cybersecurity competition. Solve challenges in web exploitation, cryptography, binary analysis, and digital forensics.',
-    category: 'Competition',
-    categoryColor: 'border-[#0077ff] text-[#0077ff] bg-[#0077ff]/10',
-    location: 'CS Lab Complex',
-    locationId: 'cs-lab',
-    speaker: {
-      name: 'Team CyberCell',
-      role: 'CTF Organizers',
-    },
-    highlights: [
-      'Web Exploitation & Crypto challenges',
-      'Live scoreboard on big screen',
-      'Prizes for Top 3 teams',
-    ],
-    side: 'left',
-    icon: <Sparkles className="w-5 h-5 text-[#0077ff]" />,
-  },
-  {
-    id: 'ev-8',
-    day: 'dec-5',
-    dayLabel: 'DECEMBER 5, 2026',
-    time: '10:00 AM - 04:00 PM',
-    title: '6-Hour Hackathon — BuildBlitz',
-    subtitle: 'Build a Working Prototype in 6 Hours',
-    description:
-      'Teams of 3-4 build a functional web or mobile prototype in 6 hours based on a problem statement revealed at the start. All tech stacks allowed.',
-    category: 'Hackathon',
-    categoryColor: 'border-[#00e5ff] text-[#00e5ff] bg-[#00e5ff]/10',
-    location: 'Innovation Hub',
-    locationId: 'innovation-lab',
-    speaker: {
-      name: 'Industry Mentor Panel',
-      role: 'Hackathon Jury',
-    },
-    highlights: [
-      '₹25,000 Grand Prize',
-      'Mentorship from industry professionals',
-      'Live Demo Pitches to judges',
-    ],
-    side: 'right',
-    icon: <Code className="w-5 h-5 text-[#00e5ff]" />,
-  },
-  {
-    id: 'ev-9',
-    day: 'dec-5',
-    dayLabel: 'DECEMBER 5, 2026',
-    time: '11:30 AM - 01:00 PM',
-    title: 'Industry Talk: Future of Web Development',
-    subtitle: 'From React to AI-Powered Interfaces',
-    description:
-      'A keynote talk by an industry expert on the evolution of modern web development, serverless architectures, and AI-assisted coding tools.',
-    category: 'Talk',
-    categoryColor: 'border-[#00d4ff] text-[#00d4ff] bg-[#00d4ff]/10',
-    location: 'Seminar Hall',
-    locationId: 'seminar-hall',
-    speaker: {
-      name: 'Rahul Menon',
-      role: 'Sr. Engineer, Zoho Corp',
-    },
-    highlights: [
-      'Modern web stack evolution',
-      'AI pair-programming demos',
-      'Q&A and career advice',
-    ],
-    side: 'left',
-    icon: <Zap className="w-5 h-5 text-[#00d4ff]" />,
-  },
-  {
-    id: 'ev-10',
-    day: 'dec-5',
-    dayLabel: 'DECEMBER 5, 2026',
-    time: '04:30 PM - 06:00 PM',
-    title: 'Valedictory & Prize Distribution',
-    subtitle: 'Closing Ceremony & Awards',
-    description:
-      'The grand closing ceremony of Srishti 2.7 with hackathon results, competition prize distribution, best participant awards, and the official wrap-up address.',
-    category: 'Awards',
-    categoryColor: 'border-[#38bdf8] text-[#38bdf8] bg-[#38bdf8]/10',
-    location: 'Main Auditorium',
-    locationId: 'main-auditorium',
-    speaker: {
-      name: 'Faculty & Chief Guest',
-      role: 'Valedictory Panel',
-    },
-    highlights: [
-      'Hackathon Grand Prize Announcement',
-      'Best Participant & Team Awards',
-      'Srishti 2.8 Teaser Reveal',
-    ],
-    side: 'right',
-    icon: <Award className="w-5 h-5 text-[#38bdf8]" />,
-  },
-];
 
 export const TimelineRoadmap: React.FC = () => {
+  const { events } = useFest();
   const [viewMode, setViewMode] = useState<'timeline' | 'map'>('timeline');
   const [selectedDay, setSelectedDay] = useState<'all' | 'dec-4' | 'dec-5'>('all');
   const [expandedCardId, setExpandedCardId] = useState<string | null>(null);
@@ -385,12 +176,46 @@ export const TimelineRoadmap: React.FC = () => {
   const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
   const nodeDotsRef = useRef<(HTMLDivElement | null)[]>([]);
 
+  // Map dynamic events from FestContext into TimelineEvent structure
+  const roadmapEvents: TimelineEvent[] = events.map((e, index) => {
+    const badgeInfo = getCategoryBadge(e.category);
+    return {
+      id: e.id,
+      day: e.day || (index < 6 ? 'dec-4' : 'dec-5'),
+      dayLabel: e.dayLabel || (e.day === 'dec-5' || index >= 6 ? 'DECEMBER 5, 2026' : 'DECEMBER 4, 2026'),
+      time: e.time,
+      title: e.title,
+      subtitle: e.subtitle || e.stageLabel || e.category,
+      description: e.description,
+      category: e.category,
+      categoryColor: badgeInfo.categoryColor,
+      location: e.venue,
+      locationId:
+        e.locationId ||
+        (e.venue.toLowerCase().includes('auditorium')
+          ? 'main-auditorium'
+          : e.venue.toLowerCase().includes('lab')
+          ? 'cs-lab'
+          : e.venue.toLowerCase().includes('seminar')
+          ? 'seminar-hall'
+          : e.venue.toLowerCase().includes('stage')
+          ? 'open-stage'
+          : e.venue.toLowerCase().includes('hub') || e.venue.toLowerCase().includes('innovation')
+          ? 'innovation-lab'
+          : 'conference-room'),
+      speaker: e.speaker || { name: 'Event Coordinators', role: 'Srishti 2.7 Team' },
+      highlights: e.highlights && e.highlights.length > 0 ? e.highlights : [e.highlightText || 'Exciting competition with awards and certificates.'],
+      side: e.side || (index % 2 === 0 ? 'left' : 'right'),
+      icon: badgeInfo.icon,
+    };
+  });
+
   const filteredEvents = selectedDay === 'all'
-    ? EVENTS_DATA
-    : EVENTS_DATA.filter((e) => e.day === selectedDay);
+    ? roadmapEvents
+    : roadmapEvents.filter((e) => e.day === selectedDay);
 
   const activeMapLocation = MAP_LOCATIONS.find((loc) => loc.id === activeMapPinId) || MAP_LOCATIONS[0];
-  const activeLocationEvents = EVENTS_DATA.filter((ev) => ev.locationId === activeMapPinId);
+  const activeLocationEvents = roadmapEvents.filter((ev) => ev.locationId === activeMapPinId);
 
   useEffect(() => {
     // Refresh ScrollTrigger so pinned sections below (like CaseShowcase) adjust their start positions when Roadmap height changes

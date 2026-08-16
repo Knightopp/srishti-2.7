@@ -104,11 +104,18 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   const [eventForm, setEventForm] = useState({
     title: '',
     stageLabel: 'TECH COMPETITION',
-    category: '',
+    category: 'Competition',
+    subtitle: '',
+    day: 'dec-4' as 'dec-4' | 'dec-5',
+    dayLabel: 'DECEMBER 4, 2026',
+    time: 'DEC 4 • 10:00 AM - 12:00 PM',
+    venue: 'CS Innovation Hub',
+    locationId: 'innovation-lab',
+    speakerName: 'Event Coordinators',
+    speakerRole: 'Srishti 2.7 Team',
+    highlights: 'Live prototyping challenge, Mentorship session, Cash prize pool',
     description: '',
     highlightText: '',
-    time: 'DEC 4 • 10:00 AM',
-    venue: 'CS Main Hall',
     prize: '₹10,000 Pool',
     color: '#0077ff',
     image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1200&q=80',
@@ -219,11 +226,18 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     setEventForm({
       title: '',
       stageLabel: 'TECH COMPETITION',
-      category: '',
+      category: 'Competition',
+      subtitle: '',
+      day: 'dec-4',
+      dayLabel: 'DECEMBER 4, 2026',
+      time: 'DEC 4 • 10:00 AM - 12:00 PM',
+      venue: 'CS Innovation Hub',
+      locationId: 'innovation-lab',
+      speakerName: 'Event Coordinators',
+      speakerRole: 'Srishti 2.7 Team',
+      highlights: 'Live contest, Cash prize pool, Certificates',
       description: '',
       highlightText: '',
-      time: 'DEC 4 • 10:00 AM',
-      venue: 'CS Main Hall',
       prize: '₹10,000 Pool',
       color: '#0077ff',
       image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1200&q=80',
@@ -237,17 +251,24 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     setEditingEvent(evt);
     setEventForm({
       title: evt.title,
-      stageLabel: evt.stageLabel,
-      category: evt.category,
-      description: evt.description,
-      highlightText: evt.highlightText,
+      stageLabel: evt.stageLabel || 'TECH EVENT',
+      category: evt.category || 'Competition',
+      subtitle: evt.subtitle || '',
+      day: evt.day || 'dec-4',
+      dayLabel: evt.dayLabel || (evt.day === 'dec-5' ? 'DECEMBER 5, 2026' : 'DECEMBER 4, 2026'),
       time: evt.time,
       venue: evt.venue,
+      locationId: evt.locationId || 'main-auditorium',
+      speakerName: evt.speaker?.name || '',
+      speakerRole: evt.speaker?.role || '',
+      highlights: evt.highlights ? evt.highlights.join(', ') : '',
+      description: evt.description,
+      highlightText: evt.highlightText || '',
       prize: evt.prize,
-      color: evt.color,
+      color: evt.color || '#0077ff',
       image: evt.image,
       fee: evt.fee,
-      tags: evt.tags.join(', '),
+      tags: evt.tags ? evt.tags.join(', ') : '',
     });
     setIsAddEventOpen(true);
   };
@@ -259,20 +280,33 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       return;
     }
 
+    const highlightsArray = eventForm.highlights
+      ? eventForm.highlights.split(',').map((h) => h.trim()).filter(Boolean)
+      : [];
+
     const eventPayload = {
       title: eventForm.title,
       stageLabel: eventForm.stageLabel,
       category: eventForm.category,
-      description: eventForm.description,
-      highlightText: eventForm.highlightText,
+      subtitle: eventForm.subtitle,
+      day: eventForm.day,
+      dayLabel: eventForm.day === 'dec-5' ? 'DECEMBER 5, 2026' : 'DECEMBER 4, 2026',
       time: eventForm.time,
       venue: eventForm.venue,
+      locationId: eventForm.locationId,
+      speaker: {
+        name: eventForm.speakerName || 'Event Coordinators',
+        role: eventForm.speakerRole || 'Srishti 2.7 Team',
+      },
+      highlights: highlightsArray.length > 0 ? highlightsArray : [eventForm.highlightText || 'Official Srishti 2.7 event.'],
+      description: eventForm.description,
+      highlightText: eventForm.highlightText || (highlightsArray[0] || eventForm.description.slice(0, 60)),
       prize: eventForm.prize,
       color: eventForm.color,
       bgGradient: 'from-[#0a182e] via-[#0d1e38] to-[#080b12]',
       image: eventForm.image,
       fee: Number(eventForm.fee),
-      tags: eventForm.tags.split(',').map((t) => t.trim()),
+      tags: eventForm.tags ? eventForm.tags.split(',').map((t) => t.trim()).filter(Boolean) : ['Tech'],
     };
 
     if (editingEvent) {
@@ -795,11 +829,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
             <form onSubmit={handleSaveEvent} className="space-y-4 text-xs font-mono">
               <div className="space-y-1">
-                <label className="text-white/70">EVENT TITLE *</label>
+                <label className="text-[#00e5ff] font-bold">EVENT TITLE *</label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. AI Masterclass"
+                  placeholder="e.g. BuildBlitz Hackathon"
                   value={eventForm.title}
                   onChange={(e) => setEventForm({ ...eventForm, title: e.target.value })}
                   className="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white"
@@ -808,26 +842,134 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1">
+                  <label className="text-white/70">FESTIVAL SCHEDULE DAY *</label>
+                  <select
+                    value={eventForm.day}
+                    onChange={(e) => setEventForm({ ...eventForm, day: e.target.value as 'dec-4' | 'dec-5' })}
+                    className="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white"
+                  >
+                    <option value="dec-4">December 4 (Day 1)</option>
+                    <option value="dec-5">December 5 (Day 2)</option>
+                  </select>
+                </div>
+                <div className="space-y-1">
+                  <label className="text-white/70">STAGE BADGE LABEL</label>
+                  <input
+                    type="text"
+                    placeholder="BUILD & PROTOTYPE"
+                    value={eventForm.stageLabel}
+                    onChange={(e) => setEventForm({ ...eventForm, stageLabel: e.target.value })}
+                    className="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="text-white/70">CATEGORY</label>
+                  <input
+                    type="text"
+                    placeholder="Hackathon / Workshop / Competition"
+                    value={eventForm.category}
+                    onChange={(e) => setEventForm({ ...eventForm, category: e.target.value })}
+                    className="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-white/70">SUBTITLE / TAGLINE</label>
+                  <input
+                    type="text"
+                    placeholder="6-Hour Rapid Prototyping Challenge"
+                    value={eventForm.subtitle}
+                    onChange={(e) => setEventForm({ ...eventForm, subtitle: e.target.value })}
+                    className="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1">
                   <label className="text-white/70">TIMING & DATE *</label>
                   <input
                     type="text"
                     required
-                    placeholder="DEC 4 • 10:00 AM"
+                    placeholder="DEC 4 • 10:00 AM - 04:00 PM"
                     value={eventForm.time}
                     onChange={(e) => setEventForm({ ...eventForm, time: e.target.value })}
                     className="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white"
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-white/70">VENUE LOCATION</label>
+                  <label className="text-white/70">VENUE NAME</label>
                   <input
                     type="text"
-                    placeholder="CS Innovation Lab"
+                    placeholder="CS Innovation Hub"
                     value={eventForm.venue}
                     onChange={(e) => setEventForm({ ...eventForm, venue: e.target.value })}
                     className="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white"
                   />
                 </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="text-white/70">MAP VENUE PIN LOCATION</label>
+                  <select
+                    value={eventForm.locationId}
+                    onChange={(e) => setEventForm({ ...eventForm, locationId: e.target.value })}
+                    className="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white"
+                  >
+                    <option value="main-auditorium">Main Auditorium</option>
+                    <option value="cs-lab">CS Lab Complex</option>
+                    <option value="seminar-hall">Seminar Hall</option>
+                    <option value="open-stage">Open Air Stage</option>
+                    <option value="innovation-lab">Innovation Hub</option>
+                    <option value="conference-room">Conference Room</option>
+                  </select>
+                </div>
+                <div className="space-y-1">
+                  <label className="text-white/70">ACCENT COLOR</label>
+                  <input
+                    type="color"
+                    value={eventForm.color}
+                    onChange={(e) => setEventForm({ ...eventForm, color: e.target.value })}
+                    className="w-full h-10 px-2 py-1 rounded-xl bg-black/60 border border-white/15 cursor-pointer"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="text-white/70">COORDINATOR / SPEAKER NAME</label>
+                  <input
+                    type="text"
+                    placeholder="Dr. Mathew K."
+                    value={eventForm.speakerName}
+                    onChange={(e) => setEventForm({ ...eventForm, speakerName: e.target.value })}
+                    className="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-white/70">SPEAKER ROLE / TITLE</label>
+                  <input
+                    type="text"
+                    placeholder="Head of Department, CS"
+                    value={eventForm.speakerRole}
+                    onChange={(e) => setEventForm({ ...eventForm, speakerRole: e.target.value })}
+                    className="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-white/70">EVENT HIGHLIGHTS (comma separated)</label>
+                <input
+                  type="text"
+                  placeholder="Live leaderboard, Cash prizes, Certificate for all"
+                  value={eventForm.highlights}
+                  onChange={(e) => setEventForm({ ...eventForm, highlights: e.target.value })}
+                  className="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white"
+                />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
@@ -865,10 +1007,21 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
               </div>
 
               <div className="space-y-1">
+                <label className="text-white/70">TAGS (comma separated)</label>
+                <input
+                  type="text"
+                  placeholder="Hackathon, Full-Stack, Team Challenge"
+                  value={eventForm.tags}
+                  onChange={(e) => setEventForm({ ...eventForm, tags: e.target.value })}
+                  className="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white"
+                />
+              </div>
+
+              <div className="space-y-1">
                 <label className="text-white/70">DESCRIPTION</label>
                 <textarea
                   rows={3}
-                  placeholder="Event description..."
+                  placeholder="Detailed event description..."
                   value={eventForm.description}
                   onChange={(e) => setEventForm({ ...eventForm, description: e.target.value })}
                   className="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white"
@@ -877,9 +1030,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
               <button
                 type="submit"
-                className="w-full py-3 rounded-xl bg-[#0077ff] text-white font-syne font-bold uppercase text-xs hover:bg-[#0055ff] transition-all"
+                className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#00e5ff] to-[#0077ff] text-white font-syne font-extrabold uppercase text-xs tracking-wider shadow-lg shadow-[#0077ff]/30 hover:scale-[1.01] active:scale-95 transition-all mt-2"
               >
-                Save Event To Website
+                Save Schedule Event To Website
               </button>
             </form>
           </div>

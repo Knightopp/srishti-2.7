@@ -143,7 +143,7 @@ export const CaseShowcase: React.FC<CaseShowcaseProps> = ({ onNavigateToRegister
     <section
       id="cases"
       ref={sectionRef}
-      className="relative w-full h-[100dvh] bg-[#060608] text-[#f5f5f7] flex flex-col justify-between py-5 md:py-8 overflow-hidden select-none"
+      className="relative w-full min-h-screen md:h-[100dvh] bg-[#060608] text-[#f5f5f7] flex flex-col justify-between py-6 md:py-8 overflow-hidden select-none"
     >
       {/* Top Section Header */}
       <div className="wheel-header max-w-7xl mx-auto px-5 md:px-12 w-full flex flex-col md:flex-row md:items-end justify-between gap-3 z-30 shrink-0">
@@ -192,13 +192,13 @@ export const CaseShowcase: React.FC<CaseShowcaseProps> = ({ onNavigateToRegister
       </div>
 
       {/* Main Split Grid: Left Active Info Panel + Right 3D Rotating Wheel */}
-      <div className="max-w-7xl mx-auto px-5 md:px-12 w-full grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center my-auto z-20 flex-1 min-h-0">
+      <div className="max-w-7xl mx-auto px-5 md:px-12 w-full grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center my-auto z-20 flex-1 min-h-0 py-4 md:py-0">
         
         {/* LEFT COLUMN: Active Event Information Panel (Synchronized with 3D Wheel Front Card) */}
-        <div className="lg:col-span-5 flex flex-col justify-center space-y-3.5 md:space-y-6 z-30">
+        <div className="lg:col-span-5 flex flex-col justify-center space-y-3 md:space-y-6 z-30">
           
           {/* Stage & Category Pills */}
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2 md:gap-3">
             <span 
               key={activeEvent.id + '-stage'}
               className="px-3 py-1 text-[10px] md:text-[11px] font-mono font-semibold tracking-wider uppercase rounded-full border transition-all duration-500 animate-fadeIn"
@@ -219,7 +219,7 @@ export const CaseShowcase: React.FC<CaseShowcaseProps> = ({ onNavigateToRegister
           <div className="space-y-1">
             <h3 
               key={activeEvent.id + '-title'}
-              className="font-syne text-2xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight transition-all duration-300 animate-fadeIn"
+              className="font-syne text-xl sm:text-3xl md:text-5xl font-extrabold text-white tracking-tight leading-tight transition-all duration-300 animate-fadeIn"
             >
               {activeEvent.title}
             </h3>
@@ -234,7 +234,7 @@ export const CaseShowcase: React.FC<CaseShowcaseProps> = ({ onNavigateToRegister
           {/* Outcrowd Style Highlight Stat Box */}
           <div 
             key={activeEvent.id + '-stat'}
-            className="p-3.5 md:p-5 rounded-2xl bg-white/[0.04] border border-white/10 relative overflow-hidden transition-all duration-300 animate-fadeIn"
+            className="p-3 md:p-5 rounded-2xl bg-white/[0.04] border border-white/10 relative overflow-hidden transition-all duration-300 animate-fadeIn"
           >
             <div 
               className="absolute left-0 top-0 bottom-0 w-1 rounded-l-2xl transition-colors duration-500" 
@@ -251,7 +251,7 @@ export const CaseShowcase: React.FC<CaseShowcaseProps> = ({ onNavigateToRegister
           {/* Event Description */}
           <p 
             key={activeEvent.id + '-desc'}
-            className="text-xs md:text-sm text-white/75 leading-relaxed font-light line-clamp-3 md:line-clamp-none animate-fadeIn"
+            className="text-xs md:text-sm text-white/75 leading-relaxed font-light line-clamp-2 md:line-clamp-none animate-fadeIn"
           >
             {activeEvent.description}
           </p>
@@ -278,7 +278,7 @@ export const CaseShowcase: React.FC<CaseShowcaseProps> = ({ onNavigateToRegister
                   onNavigateToRegister();
                 }
               }}
-              className="inline-flex items-center gap-2 px-6 py-3 md:px-7 md:py-3.5 rounded-full bg-white text-black font-syne text-[11px] md:text-xs font-bold uppercase tracking-wider hover:bg-[#0077ff] hover:text-white transition-all duration-300 shadow-xl group"
+              className="inline-flex items-center gap-2 px-5 py-2.5 md:px-7 md:py-3.5 rounded-full bg-white text-black font-syne text-[10px] md:text-xs font-bold uppercase tracking-wider hover:bg-[#0077ff] hover:text-white transition-all duration-300 shadow-xl group shrink-0"
             >
               <span>Register For Event</span>
               <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
@@ -288,7 +288,7 @@ export const CaseShowcase: React.FC<CaseShowcaseProps> = ({ onNavigateToRegister
               <button
                 onClick={() => spinToCard(activeIndex - 1)}
                 disabled={activeIndex === 0}
-                className="w-9 h-9 md:w-10 md:h-10 rounded-full border border-white/15 bg-white/5 flex items-center justify-center text-white hover:bg-white/15 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                className="w-8 h-8 md:w-10 md:h-10 rounded-full border border-white/15 bg-white/5 flex items-center justify-center text-white hover:bg-white/15 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
                 aria-label="Previous Event"
               >
                 <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
@@ -296,7 +296,7 @@ export const CaseShowcase: React.FC<CaseShowcaseProps> = ({ onNavigateToRegister
               <button
                 onClick={() => spinToCard(activeIndex + 1)}
                 disabled={activeIndex === N - 1}
-                className="w-9 h-9 md:w-10 md:h-10 rounded-full border border-white/15 bg-white/5 flex items-center justify-center text-white hover:bg-white/15 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                className="w-8 h-8 md:w-10 md:h-10 rounded-full border border-white/15 bg-white/5 flex items-center justify-center text-white hover:bg-white/15 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
                 aria-label="Next Event"
               >
                 <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
@@ -308,7 +308,7 @@ export const CaseShowcase: React.FC<CaseShowcaseProps> = ({ onNavigateToRegister
 
         {/* RIGHT COLUMN: 3D Elliptical Rotating Wheel (100% Clickable, Hover-Wheel Controlled) */}
         <div 
-          className="lg:col-span-7 relative h-[360px] sm:h-[440px] md:h-[500px] w-full flex items-center justify-center"
+          className="lg:col-span-7 relative h-[250px] sm:h-[360px] md:h-[500px] w-full flex items-center justify-center my-2 md:my-0"
           onWheel={handleCardWheel}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
