@@ -56,7 +56,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
 
       const days = Math.floor(difference / (1000 * 60 * 60 * 24));
       const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((difference % (1000 * 60)) / 1000);
+      const minutes = Math.floor((difference % (1000 * 60)) / (1000 * 60));
       const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
       setTimeLeft({
@@ -85,16 +85,16 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
         scrollTrigger: {
           trigger: heroRef.current,
           start: 'top top',
-          end: '+=1500',
+          end: '+=1400',
           pin: true,
           pinSpacing: true,
-          scrub: true,
+          scrub: 0.5,
           anticipatePin: 1,
           invalidateOnRefresh: true,
         },
       });
 
-      // Navbar moves UP and disappears smoothly
+      // Navbar moves UP and disappears smoothly (0.0 -> 0.35)
       const globalNav = document.querySelector('.global-navbar');
       if (globalNav) {
         tl.to(
@@ -105,7 +105,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
             ease: 'power1.inOut',
             duration: 0.35,
           },
-          0.05
+          0.0
         );
       }
 
@@ -114,59 +114,59 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
         [eyebrowRef.current, bottomBarRef.current],
         {
           opacity: 0,
-          y: (i) => (i === 0 ? -30 : 30),
+          y: (i) => (i === 0 ? -25 : 25),
           ease: 'power1.inOut',
           duration: 0.35,
         },
-        0.08
+        0.05
       );
 
-      // Central Hero Title Group MAXIMIZES / ZOOMS IN (0.1 -> 0.75)
+      // Central Hero Title Group MAXIMIZES / ZOOMS IN smoothly (1.0 -> 1.85, controlled & clean)
       tl.to(
         titleGroupRef.current,
         {
-          scale: 2.6,
+          scale: 1.85,
           ease: 'power1.inOut',
           duration: 0.65,
         },
-        0.1
+        0.05
       );
 
       // Ambient center glow expands
       tl.to(
         glowRef.current,
         {
-          scale: 1.9,
-          opacity: 0.28,
+          scale: 1.6,
+          opacity: 0.25,
           ease: 'power1.inOut',
           duration: 0.65,
         },
-        0.1
+        0.05
       );
 
-      // Desktop Peripheral Info Widgets retreat & fade out
+      // Desktop Peripheral Info Widgets retreat & fade out smoothly without lag
       tl.to(
         [card1Ref.current, card3Ref.current, pill1Ref.current],
         {
-          x: -60,
+          x: -50,
           opacity: 0,
-          scale: 0.9,
+          scale: 0.92,
           ease: 'power1.inOut',
-          duration: 0.45,
+          duration: 0.4,
         },
-        0.15
+        0.1
       );
 
       tl.to(
         [card2Ref.current, card4Ref.current, pill2Ref.current],
         {
-          x: 60,
+          x: 50,
           opacity: 0,
-          scale: 0.9,
+          scale: 0.92,
           ease: 'power1.inOut',
-          duration: 0.45,
+          duration: 0.4,
         },
-        0.15
+        0.1
       );
 
       // Transition out at end of hero pin so next section (CaseShowcase) enters cleanly
@@ -174,20 +174,20 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
         titleGroupRef.current,
         {
           opacity: 0,
-          y: -50,
+          y: -40,
           ease: 'power1.inOut',
-          duration: 0.2,
+          duration: 0.25,
         },
-        0.8
+        0.75
       );
 
       tl.to(
         glowRef.current,
         {
           opacity: 0,
-          duration: 0.2,
+          duration: 0.25,
         },
-        0.8
+        0.75
       );
     });
 
@@ -199,16 +199,16 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
         scrollTrigger: {
           trigger: heroRef.current,
           start: 'top top',
-          end: '+=450', // Crisp, tight mobile scroll distance - ZERO giant blank gap!
+          end: '+=550', // Balanced mobile scroll distance - continuous, fluid motion!
           pin: true,
           pinSpacing: true,
-          scrub: 0.3,
+          scrub: 0.4,
           anticipatePin: 1,
           invalidateOnRefresh: true,
         },
       });
 
-      // Navbar moves UP and disappears
+      // Navbar moves UP and disappears immediately on scroll start
       const globalNav = document.querySelector('.global-navbar');
       if (globalNav) {
         tl.to(
@@ -219,7 +219,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
             ease: 'power1.inOut',
             duration: 0.3,
           },
-          0.05
+          0.0
         );
       }
 
@@ -232,29 +232,29 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
           ease: 'power1.inOut',
           duration: 0.3,
         },
-        0.05
+        0.0
       );
 
-      // Mobile friendly scale (1.0 -> 1.24) so text stays 100% inside viewport bounds
+      // Mobile continuous scale (1.0 -> 1.20) - perfectly proportioned for phone screens
       tl.to(
         titleGroupRef.current,
         {
-          scale: 1.24,
+          scale: 1.20,
           ease: 'power1.inOut',
           duration: 0.65,
         },
-        0.08
+        0.02
       );
 
       tl.to(
         glowRef.current,
         {
-          scale: 1.35,
-          opacity: 0.25,
+          scale: 1.3,
+          opacity: 0.22,
           ease: 'power1.inOut',
           duration: 0.65,
         },
-        0.08
+        0.02
       );
 
       // Mobile widgets fade out cleanly
@@ -263,19 +263,19 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
         {
           y: 15,
           opacity: 0,
-          scale: 0.9,
+          scale: 0.92,
           ease: 'power1.inOut',
           duration: 0.35,
         },
-        0.08
+        0.05
       );
 
-      // Smooth exit at end of pin (0.75 -> 1.0) so it does NOT linger or overlap the Event Wheel
+      // Smooth exit at end of pin (0.75 -> 1.0) so it hands off to Event Wheel seamlessly
       tl.to(
         titleGroupRef.current,
         {
           opacity: 0,
-          y: -40,
+          y: -35,
           ease: 'power1.inOut',
           duration: 0.25,
         },
@@ -440,7 +440,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
           </div>
         </div>
 
-        {/* MOBILE CONCISE SUPPORTING WIDGETS (FOCUSED & BALANCED FOR PHONE VIEWPORTS) */}
+        {/* MOBILE CONCISE SUPPORTING WIDGETS */}
         <div className="flex lg:hidden justify-center items-center gap-2 sm:gap-3.5 mt-2.5 sm:mt-3.5 z-20 pointer-events-auto">
           <div
             ref={mobileCard1Ref}
@@ -497,7 +497,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
           </div>
 
           <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden p-0.5 border border-white/10">
-            <div className="bg-gradient-to-r from-[#0077ff] via-[#00e5ff] to-[#d4ff00] h-full rounded-full w-[84%] animate-pulse" />
+            <div className="bg-gradient-to-r from-[#0077ff] via-[#00e5ff] to-[#d4ff00] h-full rounded-full w-[84%]" />
           </div>
         </div>
 
@@ -518,7 +518,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
                 EVENT LINEUP
               </span>
             </div>
-            <span className="px-2.5 py-0.5 text-[8px] font-mono font-bold bg-[#00e5ff]/20 text-[#00e5ff] rounded-full border border-[#00e5ff]/50 animate-pulse">
+            <span className="px-2.5 py-0.5 text-[8px] font-mono font-bold bg-[#00e5ff]/20 text-[#00e5ff] rounded-full border border-[#00e5ff]/50">
               LIVE 2026
             </span>
           </div>
@@ -557,7 +557,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
                 PRIZE POOL
               </span>
             </div>
-            <Sparkles className="w-4 h-4 text-[#d4ff00] animate-spin" style={{ animationDuration: '8s' }} />
+            <Sparkles className="w-4 h-4 text-[#d4ff00]" />
           </div>
 
           <div className="flex items-baseline justify-between pt-0.5">
@@ -588,7 +588,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
                 WORKSHOPS
               </span>
             </div>
-            <Cpu className="w-4 h-4 text-[#38bdf8] animate-pulse" />
+            <Cpu className="w-4 h-4 text-[#38bdf8]" />
           </div>
 
           <div className="flex items-baseline justify-between pt-0.5">
@@ -610,7 +610,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
           ref={pill1Ref}
           className="hidden xl:flex absolute top-[38%] left-[10%] xl:left-[14%] z-20 px-3.5 py-1.5 rounded-full bg-[#0077ff] text-white text-[10px] font-mono font-bold uppercase shadow-2xl shadow-[#0077ff]/50 -rotate-6 items-center gap-2 hover:rotate-0 hover:scale-110 transition-all duration-300 cursor-pointer"
         >
-          <Calendar className="w-3.5 h-3.5 text-white animate-bounce" />
+          <Calendar className="w-3.5 h-3.5 text-white" />
           <span>2 DAYS</span>
         </div>
 
@@ -619,7 +619,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
           ref={pill2Ref}
           className="hidden xl:flex absolute bottom-[32%] right-[12%] xl:right-[16%] z-20 px-3.5 py-1.5 rounded-full bg-[#00e5ff]/20 border border-[#00e5ff]/60 text-[#00e5ff] text-[10px] font-mono font-bold uppercase backdrop-blur-2xl shadow-2xl shadow-[#00e5ff]/40 rotate-8 items-center gap-2 hover:rotate-0 hover:scale-110 transition-all duration-300 cursor-pointer"
         >
-          <Sparkles className="w-3.5 h-3.5 text-[#00e5ff] animate-pulse" />
+          <Sparkles className="w-3.5 h-3.5 text-[#00e5ff]" />
           <span>DEC 4 & 5</span>
         </div>
 
