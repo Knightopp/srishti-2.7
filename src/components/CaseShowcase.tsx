@@ -84,10 +84,10 @@ export const CaseShowcase: React.FC<CaseShowcaseProps> = ({ onNavigateToRegister
     if (!sectionRef.current) return;
 
     const ctx = gsap.context(() => {
-      // Header animation when section enters viewport
+      // 1. Entrance animation when emerging after fullscreen hero
       gsap.fromTo(
-        '.wheel-header',
-        { y: -20, opacity: 0 },
+        '.wheel-header, .wheel-stage-container',
+        { y: 50, opacity: 0 },
         {
           y: 0,
           opacity: 1,
@@ -99,10 +99,28 @@ export const CaseShowcase: React.FC<CaseShowcaseProps> = ({ onNavigateToRegister
           },
         }
       );
+
+      // 2. Pinned Scroll Scrub: scrolling rotates the 3D Event Wheel through all cards
+      ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: 'top top',
+        end: isMobile ? '+=1200' : '+=1800',
+        pin: true,
+        pinSpacing: true,
+        scrub: 0.6,
+        anticipatePin: 1,
+        onUpdate: (self) => {
+          const progress = self.progress;
+          const targetAngle = -progress * (N - 1) * ANGLE_STEP;
+          setWheelRotation(targetAngle);
+          const newIdx = Math.min(N - 1, Math.max(0, Math.round(progress * (N - 1))));
+          setActiveIndex(newIdx);
+        },
+      });
     }, sectionRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [ANGLE_STEP, N, isMobile]);
 
   const handleCardWheel = (e: React.WheelEvent) => {
     // Debounce wheel events so fast trackpad scroll inertia doesn't cause rapid jitter

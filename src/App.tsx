@@ -100,19 +100,19 @@ export function AppContent() {
         <Hero onNavigateToRegister={() => navigateTo('register')} />
       </section>
 
-      {/* 3. Continuous Infinite Moving Sponsors Ticker */}
+      {/* 3. 3D Rotating Wheel Case Showcase (Second phase after Fullscreen Hero) */}
+      <section className="relative w-full">
+        <CaseShowcase onNavigateToRegister={() => navigateTo('register')} />
+      </section>
+
+      {/* 4. Continuous Infinite Moving Sponsors Ticker */}
       <section className="relative w-full">
         <SponsorsTicker />
       </section>
 
-      {/* 4. Event Map & Timeline Roadmap Section */}
+      {/* 5. Event Map & Timeline Roadmap Section */}
       <section className="relative w-full">
         <TimelineRoadmap />
-      </section>
-
-      {/* 5. 3D Rotating Wheel Case Showcase */}
-      <section className="relative w-full">
-        <CaseShowcase onNavigateToRegister={() => navigateTo('register')} />
       </section>
 
       {/* 6. Compact Photo Gallery Section */}

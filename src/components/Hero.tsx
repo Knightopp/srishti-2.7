@@ -37,7 +37,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
   const pill1Ref = useRef<HTMLDivElement>(null);
   const pill2Ref = useRef<HTMLDivElement>(null);
 
-  // Mouse Parallax Offset (applied to dedicated parallax sub-wrappers so GSAP transforms aren't overridden)
+  // Mouse Parallax Offset (subtle depth)
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   // Live Fest Countdown Timer State (Target: Dec 4, 2026 10:00 AM)
@@ -74,127 +74,103 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
     const isMobile = window.innerWidth < 768;
 
     const ctx = gsap.context(() => {
-      // ONE PINNED SCROLL TIMELINE: heroTimeline
-      // Controls the entire transition from giant initial typography -> final complete composition -> pin release
+      // MASTER HERO SCROLL TIMELINE:
+      // Initial state: Normal hero scale (1.0), all elements visible.
+      // Scroll down: Central SRISHTI + TIMER group MAXIMIZES / ZOOMS IN to fullscreen.
+      // Navbar moves UP and disappears. Widgets subtly retreat & fade.
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: heroRef.current,
           start: 'top top',
-          end: isMobile ? '+=1200' : '+=1600', // Pinned scrub distance
+          end: isMobile ? '+=1300' : '+=1700', // Pinned scrub distance
           pin: true,
           pinSpacing: true,
-          scrub: 0.5,
+          scrub: true,
           anticipatePin: 1,
           invalidateOnRefresh: true,
         },
       });
 
-      // 0% -> 75%: Hero Title Group (SRISHTI + 2.7) zooms out together from huge to 1.0
-      tl.fromTo(
+      // 1. Navbar Disappears (0.05 -> 0.40): Moves UP (-100%) and fades to 0 smoothly
+      tl.to(
+        '.global-navbar',
+        {
+          yPercent: -100,
+          opacity: 0,
+          ease: 'power1.inOut',
+          duration: 0.35,
+        },
+        0.05
+      );
+
+      // 2. Eyebrow badge and bottom bar slide away & fade out
+      tl.to(
+        [eyebrowRef.current, bottomBarRef.current],
+        {
+          opacity: 0,
+          y: (i) => (i === 0 ? -30 : 30),
+          ease: 'power1.inOut',
+          duration: 0.35,
+        },
+        0.08
+      );
+
+      // 3. Central Hero Title Group (SRISHTI + 2.7 + TIMER + SUBTITLE) MAXIMIZES / ZOOMS IN (0.10 -> 0.85)
+      // Scales up smoothly from 1.0 -> 2.7 to become a fullscreen event identity moment
+      tl.to(
         titleGroupRef.current,
-        { scale: isMobile ? 1.6 : 2.4, y: isMobile ? 10 : 0 },
-        { scale: 1.0, y: 0, ease: 'power1.inOut', duration: 0.75 },
-        0
+        {
+          scale: isMobile ? 2.1 : 2.7,
+          ease: 'power1.inOut',
+          duration: 0.75,
+        },
+        0.1
       );
 
-      // 0% -> 30%: Background Grid & Ambient Glow fade in
-      tl.fromTo(
-        hudGridRef.current,
-        { opacity: 0.03 },
-        { opacity: 0.15, ease: 'power1.out', duration: 0.35 },
-        0
-      );
-
-      tl.fromTo(
+      // Ambient center glow expands with the typography
+      tl.to(
         glowRef.current,
-        { opacity: 0.4, scale: 0.75 },
-        { opacity: 1, scale: 1, ease: 'power1.out', duration: 0.45 },
-        0
+        {
+          scale: 1.9,
+          opacity: 0.28,
+          ease: 'power1.inOut',
+          duration: 0.75,
+        },
+        0.1
       );
 
-      // 20% -> 60%: Eyebrow badge reveals smoothly
-      tl.fromTo(
-        eyebrowRef.current,
-        { opacity: 0, y: -30 },
-        { opacity: 1, y: 0, ease: 'power2.out', duration: 0.4 },
-        0.2
+      // 4. Peripheral Info Widgets subtly retreat toward screen edges & fade out (NO ROTATION / NO ORBITING)
+      tl.to(
+        [card1Ref.current, card3Ref.current, pill1Ref.current],
+        {
+          x: -60,
+          opacity: 0,
+          scale: 0.9,
+          ease: 'power1.inOut',
+          duration: 0.45,
+        },
+        0.15
       );
 
-      // 30% -> 70%: Countdown timer reveals between SRISHTI and 2.7
-      tl.fromTo(
-        countdownRef.current,
-        { opacity: 0, scale: 0.75, y: 15 },
-        { opacity: 1, scale: 1, y: 0, ease: 'power2.out', duration: 0.4 },
-        0.3
+      tl.to(
+        [card2Ref.current, card4Ref.current, pill2Ref.current],
+        {
+          x: 60,
+          opacity: 0,
+          scale: 0.9,
+          ease: 'power1.inOut',
+          duration: 0.45,
+        },
+        0.15
       );
 
-      // 45% -> 75%: Subtitle ("TECHNO CULTURAL FEST") reveals
-      tl.fromTo(
-        subtitleRef.current,
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, ease: 'power2.out', duration: 0.3 },
-        0.45
-      );
-
-      // 30% -> 75%: Info Cards fly in from edges and settle at exact final positions
-      tl.fromTo(
-        card1Ref.current,
-        { opacity: 0, x: -110, y: -40, scale: 0.8 },
-        { opacity: 1, x: 0, y: 0, scale: 1, ease: 'power2.out', duration: 0.45 },
-        0.3
-      );
-
-      tl.fromTo(
-        card2Ref.current,
-        { opacity: 0, x: 110, y: -40, scale: 0.8 },
-        { opacity: 1, x: 0, y: 0, scale: 1, ease: 'power2.out', duration: 0.45 },
-        0.3
-      );
-
-      tl.fromTo(
-        card3Ref.current,
-        { opacity: 0, x: -110, y: 40, scale: 0.8 },
-        { opacity: 1, x: 0, y: 0, scale: 1, ease: 'power2.out', duration: 0.45 },
-        0.35
-      );
-
-      tl.fromTo(
-        card4Ref.current,
-        { opacity: 0, x: 110, y: 40, scale: 0.8 },
-        { opacity: 1, x: 0, y: 0, scale: 1, ease: 'power2.out', duration: 0.45 },
-        0.35
-      );
-
-      // 40% -> 75%: Date Pills reveal and settle
-      tl.fromTo(
-        pill1Ref.current,
-        { opacity: 0, x: -60, scale: 0.75 },
-        { opacity: 1, x: 0, scale: 1, ease: 'back.out(1.2)', duration: 0.35 },
-        0.4
-      );
-
-      tl.fromTo(
-        pill2Ref.current,
-        { opacity: 0, x: 60, scale: 0.75 },
-        { opacity: 1, x: 0, scale: 1, ease: 'back.out(1.2)', duration: 0.35 },
-        0.4
-      );
-
-      // 0% -> 50%: Scroll bottom bar subtle fade-in of details
-      tl.fromTo(
-        bottomBarRef.current,
-        { opacity: 0.6 },
-        { opacity: 1, ease: 'power1.out', duration: 0.5 },
-        0
-      );
-
-      // 75% -> 100%: Plateau / Final Composition resting state (no abrupt transitions, clean release at 100%)
+      // 5. Fullscreen Hero State holds briefly (0.85 -> 1.00) before releasing pin to next section
     }, heroRef);
 
     return () => ctx.revert();
   }, []);
 
-  // Mouse Parallax Handler (subtle 3D responsiveness)
+  // Mouse Parallax Handler (subtle depth)
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!heroRef.current) return;
     const rect = heroRef.current.getBoundingClientRect();
@@ -209,10 +185,10 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
       onMouseMove={handleMouseMove}
       className="relative w-full h-[100dvh] overflow-hidden bg-[#060608] text-[#f5f5f7] flex flex-col justify-between pt-20 md:pt-24 pb-6 md:pb-8 select-none"
     >
-      {/* Fine Background Grid & Center Ambient Glow */}
+      {/* Background Subtle Grid & Center Ambient Glow */}
       <div 
         ref={hudGridRef}
-        className="absolute inset-0 pointer-events-none transition-opacity duration-500 opacity-15"
+        className="absolute inset-0 pointer-events-none opacity-15"
         style={{
           backgroundImage: `
             linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
@@ -223,7 +199,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
       />
       <div 
         ref={glowRef}
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] sm:w-[650px] h-[300px] sm:h-[400px] bg-[#0077ff]/14 rounded-full blur-[130px] pointer-events-none" 
+        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[380px] sm:w-[680px] h-[320px] sm:h-[420px] bg-[#0077ff]/16 rounded-full blur-[130px] pointer-events-none" 
       />
 
       {/* TOP DEPT EYEBROW LABEL WITH OFFICIAL LOGO */}
@@ -231,20 +207,20 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
         ref={eyebrowRef}
         className="hero-eyebrow relative z-20 text-center w-full max-w-4xl mx-auto px-4 md:px-6"
       >
-        <div className="inline-flex items-center gap-2 md:gap-2.5 px-3 md:px-4 py-1 md:py-1.5 rounded-full bg-white/[0.03] border border-white/12 text-[10px] md:text-[11px] font-mono tracking-widest text-white/70 uppercase backdrop-blur-md">
+        <div className="inline-flex items-center gap-2 md:gap-2.5 px-3.5 md:px-4 py-1 md:py-1.5 rounded-full bg-white/[0.03] border border-white/12 text-[10px] md:text-[11px] font-mono tracking-widest text-white/70 uppercase backdrop-blur-md">
           <img src="/srishti-logo-transparent.png" alt="Srishti Logo" className="w-3.5 h-3.5 md:w-4 md:h-4 object-contain" />
           <span>ST. THOMAS COLLEGE • CS DEPARTMENT</span>
         </div>
       </div>
 
-      {/* CENTER STAGE: UNIFIED HERO TITLE GROUP & PERIPHERAL INFO CARDS */}
-      <div className="relative z-30 w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-12 my-auto flex items-center justify-center min-h-[360px] md:min-h-[440px]">
+      {/* CENTER STAGE: CENTRAL HERO TITLE GROUP & ART-DIRECTED ASYMMETRICAL WIDGETS */}
+      <div className="relative z-30 w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-12 my-auto flex items-center justify-center min-h-[380px] md:min-h-[460px]">
         
-        {/* Mouse Parallax Wrapper for Central Title */}
+        {/* Subtle Mouse Parallax Sub-wrapper */}
         <div 
           className="relative z-30 pointer-events-none flex items-center justify-center"
           style={{
-            transform: `translate3d(${mousePos.x * 8}px, ${mousePos.y * 8}px, 0)`,
+            transform: `translate3d(${mousePos.x * 6}px, ${mousePos.y * 6}px, 0)`,
             willChange: 'transform',
           }}
         >
@@ -259,7 +235,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
               <img 
                 src="/srishti-logo-transparent.png" 
                 alt="Official Srishti Logo" 
-                className="w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 object-contain drop-shadow-[0_0_25px_rgba(0,119,255,0.7)] animate-pulse" 
+                className="w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 object-contain drop-shadow-[0_0_25px_rgba(0,119,255,0.7)]" 
               />
             </div>
 
@@ -274,7 +250,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
                 ref={countdownRef}
                 className="my-2 sm:my-3.5 inline-flex flex-col items-center pointer-events-auto"
               >
-                <div className="flex items-center gap-1.5 sm:gap-2.5 px-4 sm:px-6 py-2 sm:py-2.5 rounded-2xl bg-black/60 border border-white/15 backdrop-blur-2xl shadow-xl">
+                <div className="flex items-center gap-1.5 sm:gap-2.5 px-4 sm:px-6 py-2 sm:py-2.5 rounded-2xl bg-black/70 border border-white/15 backdrop-blur-2xl shadow-2xl">
                   {/* DAYS */}
                   <div className="flex flex-col items-center px-1.5 sm:px-2.5">
                     <span className="font-orbitron font-black text-base sm:text-2xl text-white leading-none">
@@ -338,21 +314,12 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
           </div>
         </div>
 
-        {/* DYNAMIC FLOATING PARTICLES / LIGHT SPECKS BACKGROUND */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden z-10">
-          <div className="absolute top-[20%] left-[15%] w-2 h-2 rounded-full bg-[#0077ff] animate-particle" style={{ animationDelay: '0s' }} />
-          <div className="absolute top-[60%] left-[80%] w-1.5 h-1.5 rounded-full bg-[#00e5ff] animate-particle" style={{ animationDelay: '1.2s' }} />
-          <div className="absolute top-[40%] left-[70%] w-2 h-2 rounded-full bg-[#00d4ff] animate-particle" style={{ animationDelay: '2.4s' }} />
-          <div className="absolute top-[75%] left-[25%] w-1 h-1 rounded-full bg-[#d4ff00] animate-particle" style={{ animationDelay: '0.8s' }} />
-          <div className="absolute top-[15%] left-[85%] w-2.5 h-2.5 rounded-full bg-[#0077ff]/60 blur-[1px] animate-particle" style={{ animationDelay: '1.8s' }} />
-        </div>
-
-        {/* PERIPHERAL FLOATING WIDGET 1: TOP-LEFT — REGISTRATIONS */}
+        {/* ART-DIRECTED ASYMMETRICAL WIDGET 1: TOP-LEFT (ELEVATED & WIDER OFFSET) */}
         <div
           ref={card1Ref}
-          className="hidden lg:flex absolute top-[3%] left-[-1%] xl:left-[1%] z-40 p-4 bg-[#0e0e14]/95 border border-[#0077ff]/40 rounded-2xl backdrop-blur-2xl shadow-[0_15px_40px_rgba(0,119,255,0.25)] w-56 flex-col gap-2.5 animate-float-1 hover:scale-105 hover:border-[#0077ff] hover:shadow-[0_20px_50px_rgba(0,119,255,0.5)] transition-all duration-300 group cursor-pointer"
+          className="hidden lg:flex absolute top-[4%] left-[1.5%] xl:left-[3%] z-20 p-4 bg-[#0e0e14]/95 border border-[#0077ff]/40 rounded-2xl backdrop-blur-2xl shadow-[0_15px_40px_rgba(0,119,255,0.25)] w-56 flex-col gap-2.5 hover:scale-105 hover:border-[#0077ff] hover:shadow-[0_20px_50px_rgba(0,119,255,0.5)] transition-all duration-300 group cursor-pointer"
           style={{
-            transform: `translate3d(${mousePos.x * -16}px, ${mousePos.y * -16}px, 0)`,
+            transform: `translate3d(${mousePos.x * -10}px, ${mousePos.y * -10}px, 0)`,
           }}
           onClick={onNavigateToRegister}
         >
@@ -378,12 +345,12 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
           </div>
         </div>
 
-        {/* PERIPHERAL FLOATING WIDGET 2: TOP-RIGHT — EVENT LINEUP */}
+        {/* ART-DIRECTED ASYMMETRICAL WIDGET 2: TOP-RIGHT (SET LOWER DOWN & MORE INSET) */}
         <div
           ref={card2Ref}
-          className="hidden lg:flex absolute top-[11%] right-[-1%] xl:right-[1%] z-40 p-4 bg-[#0e0e14]/95 border border-[#00e5ff]/40 rounded-2xl backdrop-blur-2xl shadow-[0_15px_40px_rgba(0,229,255,0.2)] w-60 flex-col gap-2.5 animate-float-2 hover:scale-105 hover:border-[#00e5ff] hover:shadow-[0_20px_50px_rgba(0,229,255,0.45)] transition-all duration-300 group cursor-pointer"
+          className="hidden lg:flex absolute top-[20%] right-[1.5%] xl:right-[3%] z-20 p-4 bg-[#0e0e14]/95 border border-[#00e5ff]/40 rounded-2xl backdrop-blur-2xl shadow-[0_15px_40px_rgba(0,229,255,0.2)] w-60 flex-col gap-2.5 hover:scale-105 hover:border-[#00e5ff] hover:shadow-[0_20px_50px_rgba(0,229,255,0.45)] transition-all duration-300 group cursor-pointer"
           style={{
-            transform: `translate3d(${mousePos.x * 18}px, ${mousePos.y * -16}px, 0)`,
+            transform: `translate3d(${mousePos.x * 12}px, ${mousePos.y * -10}px, 0)`,
           }}
         >
           <div className="flex items-center justify-between">
@@ -417,12 +384,12 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
           </div>
         </div>
 
-        {/* PERIPHERAL FLOATING WIDGET 3: BOTTOM-LEFT — PRIZE POOL */}
+        {/* ART-DIRECTED ASYMMETRICAL WIDGET 3: BOTTOM-LEFT (MORE INSET & ELEVATED FROM BASE) */}
         <div
           ref={card3Ref}
-          className="hidden lg:flex absolute bottom-[9%] left-[0.5%] xl:left-[2%] z-40 p-4 bg-[#0e0e14]/95 border border-[#00d4ff]/40 rounded-2xl backdrop-blur-2xl shadow-[0_15px_40px_rgba(0,212,255,0.2)] w-56 flex-col gap-2.5 animate-float-3 hover:scale-105 hover:border-[#00d4ff] hover:shadow-[0_20px_50px_rgba(0,212,255,0.45)] transition-all duration-300 group cursor-pointer"
+          className="hidden lg:flex absolute bottom-[20%] left-[3%] xl:left-[5.5%] z-20 p-4 bg-[#0e0e14]/95 border border-[#00d4ff]/40 rounded-2xl backdrop-blur-2xl shadow-[0_15px_40px_rgba(0,212,255,0.2)] w-56 flex-col gap-2.5 hover:scale-105 hover:border-[#00d4ff] hover:shadow-[0_20px_50px_rgba(0,212,255,0.45)] transition-all duration-300 group cursor-pointer"
           style={{
-            transform: `translate3d(${mousePos.x * -16}px, ${mousePos.y * 18}px, 0)`,
+            transform: `translate3d(${mousePos.x * -10}px, ${mousePos.y * 12}px, 0)`,
           }}
         >
           <div className="flex items-center justify-between">
@@ -448,12 +415,12 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
           </p>
         </div>
 
-        {/* PERIPHERAL FLOATING WIDGET 4: BOTTOM-RIGHT — WORKSHOPS */}
+        {/* ART-DIRECTED ASYMMETRICAL WIDGET 4: BOTTOM-RIGHT (NESTLED NEAR BOTTOM EDGE) */}
         <div
           ref={card4Ref}
-          className="hidden lg:flex absolute bottom-[4%] right-[0.5%] xl:right-[2%] z-40 p-4 bg-[#0e0e14]/95 border border-[#38bdf8]/40 rounded-2xl backdrop-blur-2xl shadow-[0_15px_40px_rgba(56,189,248,0.2)] w-60 flex-col gap-2.5 animate-float-4 hover:scale-105 hover:border-[#38bdf8] hover:shadow-[0_20px_50px_rgba(56,189,248,0.45)] transition-all duration-300 group cursor-pointer"
+          className="hidden lg:flex absolute bottom-[4%] right-[1%] xl:right-[2.5%] z-20 p-4 bg-[#0e0e14]/95 border border-[#38bdf8]/40 rounded-2xl backdrop-blur-2xl shadow-[0_15px_40px_rgba(56,189,248,0.2)] w-60 flex-col gap-2.5 hover:scale-105 hover:border-[#38bdf8] hover:shadow-[0_20px_50px_rgba(56,189,248,0.45)] transition-all duration-300 group cursor-pointer"
           style={{
-            transform: `translate3d(${mousePos.x * 18}px, ${mousePos.y * 18}px, 0)`,
+            transform: `translate3d(${mousePos.x * 12}px, ${mousePos.y * 12}px, 0)`,
           }}
         >
           <div className="flex items-center justify-between">
@@ -482,19 +449,19 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
           </div>
         </div>
 
-        {/* ORGANIC FLOATING PILL 1: "2 DAYS" */}
+        {/* ART-DIRECTED ASYMMETRICAL PILL 1: "2 DAYS" (UPPER-MID LEFT) */}
         <div
           ref={pill1Ref}
-          className="hidden xl:flex absolute top-[44%] left-[-1.5%] z-40 px-3.5 py-1.5 rounded-full bg-[#0077ff] text-white text-[10px] font-mono font-bold uppercase shadow-2xl shadow-[#0077ff]/50 -rotate-12 items-center gap-2 hover:rotate-0 hover:scale-110 transition-all duration-300 cursor-pointer"
+          className="hidden xl:flex absolute top-[38%] left-[10%] xl:left-[14%] z-20 px-3.5 py-1.5 rounded-full bg-[#0077ff] text-white text-[10px] font-mono font-bold uppercase shadow-2xl shadow-[#0077ff]/50 -rotate-6 items-center gap-2 hover:rotate-0 hover:scale-110 transition-all duration-300 cursor-pointer"
         >
           <Calendar className="w-3.5 h-3.5 text-white animate-bounce" />
           <span>2 DAYS</span>
         </div>
 
-        {/* ORGANIC FLOATING PILL 2: "DECEMBER 4 & 5" */}
+        {/* ART-DIRECTED ASYMMETRICAL PILL 2: "DECEMBER 4 & 5" (LOWER-MID RIGHT) */}
         <div
           ref={pill2Ref}
-          className="hidden xl:flex absolute top-[52%] right-[-1.5%] z-40 px-3.5 py-1.5 rounded-full bg-[#00e5ff]/20 border border-[#00e5ff]/60 text-[#00e5ff] text-[10px] font-mono font-bold uppercase backdrop-blur-2xl shadow-2xl shadow-[#00e5ff]/40 rotate-12 items-center gap-2 hover:rotate-0 hover:scale-110 transition-all duration-300 cursor-pointer"
+          className="hidden xl:flex absolute bottom-[32%] right-[12%] xl:right-[16%] z-20 px-3.5 py-1.5 rounded-full bg-[#00e5ff]/20 border border-[#00e5ff]/60 text-[#00e5ff] text-[10px] font-mono font-bold uppercase backdrop-blur-2xl shadow-2xl shadow-[#00e5ff]/40 rotate-8 items-center gap-2 hover:rotate-0 hover:scale-110 transition-all duration-300 cursor-pointer"
         >
           <Sparkles className="w-3.5 h-3.5 text-[#00e5ff] animate-pulse" />
           <span>DEC 4 & 5</span>
@@ -505,7 +472,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
       {/* HERO BOTTOM STATUS BAR */}
       <div 
         ref={bottomBarRef}
-        className="hero-bottom-bar relative z-30 max-w-7xl mx-auto px-4 md:px-12 w-full flex items-center justify-between text-[10px] md:text-xs font-mono text-white/50 border-t border-white/10 pt-3 md:pt-4"
+        className="hero-bottom-bar relative z-20 max-w-7xl mx-auto px-4 md:px-12 w-full flex items-center justify-between text-[10px] md:text-xs font-mono text-white/50 border-t border-white/10 pt-3 md:pt-4"
       >
         {/* Left Info */}
         <div className="flex items-center gap-2">
