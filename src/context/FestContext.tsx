@@ -65,6 +65,7 @@ export interface SystemSettings {
   contactEmail: string;
   contactPhone: string;
   collegeName: string;
+  cloudDbUrl: string;
 }
 
 interface FestContextType {
@@ -93,6 +94,7 @@ const DEFAULT_SETTINGS: SystemSettings = {
   contactEmail: 'srishti@stthomas.ac.in',
   contactPhone: '+91 98765 43210',
   collegeName: 'St. Thomas College',
+  cloudDbUrl: '',
 };
 
 const DEFAULT_EVENTS: EventItem[] = [
@@ -514,6 +516,32 @@ export const FestProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  // Fetch latest data from Cloud Database / Google Sheets API
+  const fetchFromCloud = async () => {
+    if (!settings.cloudDbUrl) return;
+    try {
+      setCloudStatus('syncing');
+      const res = await fetch(settings.cloudDbUrl);
+      if (res.ok) {
+        const data = await res.json();
+        const payload = data.data || data;
+        if (payload.events && Array.isArray(payload.events)) {
+          setEvents(payload.events);
+        }
+        if (payload.sponsors && Array.isArray(payload.sponsors)) {
+          setSponsors(payload.sponsors);
+        }
+        if (payload.registrations && Array.isArray(payload.registrations)) {
+          setRegistrations(payload.registrations);
+        }
+        setCloudStatus('synced');
+      }
+    } catch (err) {
+      console.warn('Cloud DB fetch failed:', err);
+      setCloudStatus('offline');
+    }
+  };
+
   // Cloud Sync Handler across windows & devices
   const syncWithCloud = async (): Promise<boolean> => {
     setCloudStatus('syncing');
@@ -525,8 +553,19 @@ export const FestProvider: React.FC<{ children: React.ReactNode }> = ({ children
         settings,
         updatedAt: new Date().toISOString(),
       };
+      
       localStorage.setItem('srishti_full_db', JSON.stringify(payload));
       window.dispatchEvent(new Event('srishti_db_updated'));
+
+      // Push to Cloud Database / Google Sheets API if endpoint is set
+      if (settings.cloudDbUrl) {
+        await fetch(settings.cloudDbUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+      }
+
       setCloudStatus('synced');
       return true;
     } catch {
@@ -534,6 +573,21 @@ export const FestProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return false;
     }
   };
+
+  // Auto-sync polling every 5 seconds & on window focus when cloudDbUrl is set
+  useEffect(() => {
+    if (!settings.cloudDbUrl) return;
+    fetchFromCloud();
+
+    const interval = setInterval(fetchFromCloud, 5000);
+    const handleFocus = () => fetchFromCloud();
+
+    window.addEventListener('focus', handleFocus);
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, [settings.cloudDbUrl]);
 
   // Multi-tab / multi-device synchronization listener
   useEffect(() => {

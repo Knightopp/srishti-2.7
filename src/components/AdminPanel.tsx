@@ -80,12 +80,13 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     upiQrImage: settings?.upiQrImage || '',
     contactEmail: settings?.contactEmail || 'srishti@stthomas.ac.in',
     collegeName: settings?.collegeName || 'St. Thomas College',
+    cloudDbUrl: settings?.cloudDbUrl || '',
   });
 
   const handleSaveSettings = (e: React.FormEvent) => {
     e.preventDefault();
     updateSettings(settingsForm);
-    alert('System & UPI Payment Settings updated successfully!');
+    alert('System, UPI Payment & Cloud Database Settings updated successfully!');
   };
 
   const handleQrUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -767,11 +768,29 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
               </div>
 
               <p className="text-xs font-mono text-white/70 leading-relaxed">
-                Changes made on your phone or PC are automatically synchronized. You can also manually push data to the cloud or export/import database JSON files below.
+                Connect a Google Sheet or Cloud REST API endpoint below for automatic real-time sync between Phone & PC devices globally.
               </p>
+
+              {/* GOOGLE SHEETS / CLOUD REST ENDPOINT INPUT */}
+              <div className="space-y-1.5 pt-1 font-mono text-xs">
+                <label className="text-[#00e5ff] font-bold block">
+                  GOOGLE SHEETS / CLOUD DB API ENDPOINT URL
+                </label>
+                <input
+                  type="url"
+                  placeholder="https://script.google.com/macros/s/.../exec OR https://sheetdb.io/api/v1/..."
+                  value={settingsForm.cloudDbUrl}
+                  onChange={(e) => setSettingsForm({ ...settingsForm, cloudDbUrl: e.target.value })}
+                  className="w-full px-4 py-3 rounded-xl bg-black/60 border border-[#00e5ff]/50 text-white placeholder-white/40 focus:outline-none focus:border-[#00e5ff]"
+                />
+                <span className="text-[10px] text-white/50 block">
+                  Paste your Google Apps Script Web App URL or SheetDB endpoint here to auto-sync events and passes.
+                </span>
+              </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
                 <button
+                  type="button"
                   onClick={async () => {
                     await syncWithCloud();
                     alert('Cloud database synchronized successfully across all devices!');
@@ -783,6 +802,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 </button>
 
                 <button
+                  type="button"
                   onClick={exportDatabaseJSON}
                   className="px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white font-mono text-xs font-bold uppercase hover:bg-white/20 transition-all flex items-center justify-center gap-2"
                 >
@@ -815,6 +835,32 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   />
                 </label>
               </div>
+
+              {/* GOOGLE APPS SCRIPT SNIPPET COLLAPSIBLE */}
+              <details className="pt-2 border-t border-white/10 text-[11px] font-mono text-white/60">
+                <summary className="cursor-pointer hover:text-[#00e5ff] transition-colors py-1 font-bold">
+                  📋 View 15-line Google Apps Script snippet for Google Sheets integration
+                </summary>
+                <div className="mt-2 p-3 rounded-xl bg-black/80 border border-white/10 text-[10px] space-y-2 overflow-x-auto text-white/80">
+                  <p className="text-[#00e5ff] font-bold">
+                    Instructions: 1. Create a Google Sheet &rarr; Extensions &rarr; Apps Script. 2. Paste script below &rarr; Deploy as Web App &rarr; Access: Anyone. 3. Copy Web App URL into endpoint box above!
+                  </p>
+                  <pre className="p-2 rounded bg-white/5 font-mono text-[9px] text-[#00e5ff] overflow-x-auto">
+{`function doGet(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var data = sheet.getRange(1, 1).getValue();
+  return ContentService.createTextOutput(data || '{}').setMimeType(ContentService.MimeType.JSON);
+}
+
+function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var body = e.postData.contents;
+  sheet.getRange(1, 1).setValue(body);
+  return ContentService.createTextOutput(JSON.stringify({ status: 'success' })).setMimeType(ContentService.MimeType.JSON);
+}`}
+                  </pre>
+                </div>
+              </details>
             </div>
 
             <div className="p-6 sm:p-8 rounded-3xl bg-white/[0.03] border border-white/10 space-y-6">
