@@ -521,20 +521,28 @@ export const FestProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!settings.cloudDbUrl) return;
     try {
       setCloudStatus('syncing');
-      const res = await fetch(settings.cloudDbUrl);
-      if (res.ok) {
-        const data = await res.json();
-        const payload = data.data || data;
-        if (payload.events && Array.isArray(payload.events)) {
-          setEvents(payload.events);
+      const res = await fetch(settings.cloudDbUrl, {
+        method: 'GET',
+        redirect: 'follow',
+      });
+      const text = await res.text();
+      // Check if response is valid JSON (not Google login HTML page)
+      if (text && (text.trim().startsWith('{') || text.trim().startsWith('['))) {
+        const payload = JSON.parse(text);
+        const data = payload.data || payload;
+        if (data.events && Array.isArray(data.events) && data.events.length > 0) {
+          setEvents(data.events);
         }
-        if (payload.sponsors && Array.isArray(payload.sponsors)) {
-          setSponsors(payload.sponsors);
+        if (data.sponsors && Array.isArray(data.sponsors) && data.sponsors.length > 0) {
+          setSponsors(data.sponsors);
         }
-        if (payload.registrations && Array.isArray(payload.registrations)) {
-          setRegistrations(payload.registrations);
+        if (data.registrations && Array.isArray(data.registrations)) {
+          setRegistrations(data.registrations);
         }
         setCloudStatus('synced');
+      } else {
+        console.warn('Cloud DB response is not JSON. Check Google Apps Script access permission (Who Has Access: Anyone).');
+        setCloudStatus('offline');
       }
     } catch (err) {
       console.warn('Cloud DB fetch failed:', err);
@@ -543,10 +551,10 @@ export const FestProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // Cloud Sync Handler across windows & devices
-  const syncWithCloud = async (): Promise<boolean> => {
+  const syncWithCloud = async (overridePayload?: any): Promise<boolean> => {
     setCloudStatus('syncing');
     try {
-      const payload = {
+      const payload = overridePayload || {
         events,
         sponsors,
         registrations,
@@ -561,14 +569,17 @@ export const FestProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (settings.cloudDbUrl) {
         await fetch(settings.cloudDbUrl, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          mode: 'no-cors', // Bypasses CORS preflight for Google Apps Script Web Apps!
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify(payload),
+          redirect: 'follow',
         });
       }
 
       setCloudStatus('synced');
       return true;
-    } catch {
+    } catch (err) {
+      console.error('syncWithCloud error:', err);
       setCloudStatus('offline');
       return false;
     }
