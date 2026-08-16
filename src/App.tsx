@@ -11,22 +11,26 @@ import CTA from './components/CTA';
 import Footer from './components/Footer';
 import RegistrationPage from './components/RegistrationPage';
 import AdminPanel from './components/AdminPanel';
+import CopperPanel from './components/CopperPanel';
 import { FestProvider } from './context/FestContext';
 
 export function AppContent() {
   useLenis();
 
-  const [currentView, setCurrentView] = useState<'home' | 'register' | 'admin'>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'register' | 'admin' | 'copper'>('home');
 
   useEffect(() => {
     const checkRoute = () => {
       const hash = window.location.hash.toLowerCase();
       const path = window.location.pathname.toLowerCase();
       
-      if (hash.includes('register') || path.includes('register')) {
+      if (hash.includes('copper') || path.includes('copper')) {
+        setCurrentView('copper');
+        window.scrollTo({ top: 0, behavior: 'instant' });
+      } else if (hash.includes('register') || path.includes('register')) {
         setCurrentView('register');
         window.scrollTo({ top: 0, behavior: 'instant' });
-      } else if (hash.includes('admin') || path.includes('admin') || hash.includes('copper') || path.includes('copper')) {
+      } else if (hash.includes('admin') || path.includes('admin')) {
         setCurrentView('admin');
         window.scrollTo({ top: 0, behavior: 'instant' });
       } else {
@@ -43,19 +47,30 @@ export function AppContent() {
     };
   }, []);
 
-  const navigateTo = (view: 'home' | 'register' | 'admin') => {
+  const navigateTo = (view: 'home' | 'register' | 'admin' | 'copper') => {
     if (view === 'home') {
       window.location.hash = '';
       setCurrentView('home');
     } else if (view === 'admin') {
       window.location.hash = 'adminodiyan';
       setCurrentView('admin');
+    } else if (view === 'copper') {
+      window.location.hash = 'copper';
+      setCurrentView('copper');
     } else {
       window.location.hash = view;
       setCurrentView(view);
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  if (currentView === 'copper') {
+    return (
+      <CopperPanel
+        onBackToHome={() => navigateTo('home')}
+      />
+    );
+  }
 
   if (currentView === 'register') {
     return (
