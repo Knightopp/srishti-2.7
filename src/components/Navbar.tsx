@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowUpRight, Menu, X, Sparkles, Calendar, Compass, Mail, Camera } from 'lucide-react';
+import { ArrowUpRight, Menu, X, Calendar, Sparkles, Compass, Mail, Camera } from 'lucide-react';
 
 interface NavbarProps {
   onNavigateToRegister?: () => void;
@@ -33,7 +33,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     };
   }, [isMenuOpen]);
 
-  // Outcrowd Signature Liquid Explode MouseMove Handler
+  // Liquid Explode MouseMove Handler — only for Register CTA
   const handleExplodeMove = (e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>) => {
     const button = e.currentTarget;
     const explode = button.querySelector('.explode') as HTMLElement;
@@ -48,11 +48,11 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   const navLinks = [
-    { href: '#roadmap', label: 'Schedule', number: '01', icon: <Calendar className="w-5 h-5 text-[#0077ff]" /> },
-    { href: '#cases', label: 'Highlights', number: '02', icon: <Sparkles className="w-5 h-5 text-[#00d4ff]" /> },
-    { href: '#gallery', label: 'Gallery', number: '03', icon: <Camera className="w-5 h-5 text-[#00e5ff]" /> },
-    { href: '#philosophy', label: 'About', number: '04', icon: <Compass className="w-5 h-5 text-[#00e5ff]" /> },
-    { href: '#register', label: 'Register', number: '05', icon: <Mail className="w-5 h-5 text-[#0055ff]" />, onClick: onNavigateToRegister },
+    { href: '#roadmap', label: 'Schedule', number: '01', icon: <Calendar className="w-4 h-4 text-white/40" /> },
+    { href: '#cases', label: 'Highlights', number: '02', icon: <Sparkles className="w-4 h-4 text-white/40" /> },
+    { href: '#gallery', label: 'Gallery', number: '03', icon: <Camera className="w-4 h-4 text-white/40" /> },
+    { href: '#philosophy', label: 'About', number: '04', icon: <Compass className="w-4 h-4 text-white/40" /> },
+    { href: '#register', label: 'Register', number: '05', icon: <Mail className="w-4 h-4 text-white/40" />, onClick: onNavigateToRegister },
   ];
 
   return (
@@ -60,24 +60,24 @@ export const Navbar: React.FC<NavbarProps> = ({
       <header
         className={`global-navbar fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
           isScrolled
-            ? 'py-3.5 bg-[#0b0b0b]/85 backdrop-blur-xl border-b border-white/10 shadow-2xl'
+            ? 'py-3 bg-[#050608]/92 backdrop-blur-lg border-b border-white/[0.06]'
             : 'py-5 md:py-6 bg-transparent'
         }`}
       >
 
         <div className="max-w-7xl mx-auto px-5 sm:px-8 md:px-12 flex items-center justify-between">
           {/* Srishti 2.7 Brand Logo */}
-          <a href="#" className="flex items-center gap-3 group relative z-50">
-            <div className="w-9 h-9 rounded-xl bg-white/5 border border-white/15 p-1 flex items-center justify-center group-hover:rotate-6 transition-transform duration-300 shadow-lg shadow-[#0077ff]/20">
-              <img src="/srishti-logo-transparent.png" alt="Srishti 2.7 Logo" className="w-full h-full object-contain" />
+          <a href="#" className="flex items-center gap-2.5 group relative z-50">
+            <div className="w-8 h-8 rounded-lg bg-white/[0.04] border border-white/[0.08] p-1 flex items-center justify-center transition-all duration-300">
+              <img src="/srishti-logo-transparent.png" alt="Srishti 2.7 Logo" className="w-full h-full object-contain opacity-70" />
             </div>
-            <span className="font-syne font-bold text-lg md:text-xl tracking-tight text-white group-hover:text-[#0077ff] transition-colors">
-              srishti <span className="font-orbitron font-extrabold text-[#00d4ff]">2.7</span>
+            <span className="font-display font-semibold text-base md:text-lg tracking-tight text-white/90">
+              srishti<span className="font-technical font-bold text-[#2563EB] ml-0.5">2.7</span>
             </span>
           </a>
 
-          {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center gap-8 text-xs font-syne font-semibold tracking-widest uppercase text-white/70">
+          {/* Desktop Navigation Links — plain typography */}
+          <nav className="hidden md:flex items-center gap-7 text-[11px] font-body font-medium tracking-wider uppercase text-white/40">
             {navLinks.map((link) => (
               <a 
                 key={link.href} 
@@ -96,20 +96,18 @@ export const Navbar: React.FC<NavbarProps> = ({
             ))}
           </nav>
 
-          {/* CTA Buttons with Liquid Explode Hover Effect (Desktop) */}
-          <div className="hidden md:flex items-center gap-4">
+          {/* CTA Buttons (Desktop) */}
+          <div className="hidden md:flex items-center gap-3">
+            {/* Event Highlights — secondary, restrained */}
             <a
               href="#cases"
-              onMouseMove={handleExplodeMove}
-              className="btn-outcrowd px-5 py-2.5 border border-white/20 text-white font-syne text-xs font-semibold tracking-wider uppercase"
+              className="px-4 py-2 border border-white/[0.08] rounded-md text-white/50 font-body text-[11px] font-medium tracking-wider uppercase hover:border-white/20 hover:text-white/80 transition-all duration-300 flex items-center gap-2"
             >
-              <div className="explode" />
-              <div className="btn-content">
-                <span>Event Highlights</span>
-                <ArrowUpRight className="w-3.5 h-3.5 text-[#00e5ff]" />
-              </div>
+              <span>Highlights</span>
+              <ArrowUpRight className="w-3 h-3 text-white/30" />
             </a>
 
+            {/* Register Now — primary CTA */}
             <a
               href="#register"
               onClick={(e) => {
@@ -119,7 +117,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 }
               }}
               onMouseMove={handleExplodeMove}
-              className="btn-outcrowd px-5 py-2.5 bg-[#0077ff] text-white border border-[#0077ff] font-syne text-xs font-semibold tracking-wider uppercase shadow-lg shadow-[#0077ff]/20"
+              className="btn-outcrowd px-5 py-2.5 bg-[#2563EB] text-white border border-[#2563EB] font-body text-[11px] font-semibold tracking-wider uppercase"
             >
               <div className="explode" />
               <div className="btn-content">
@@ -128,13 +126,13 @@ export const Navbar: React.FC<NavbarProps> = ({
             </a>
           </div>
 
-          {/* Mobile Menu Toggle Button */}
+          {/* Mobile Menu Toggle Button — simple */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className={`md:hidden relative z-50 p-2.5 rounded-full border transition-all duration-300 flex items-center justify-center ${
+            className={`md:hidden relative z-50 p-2.5 rounded-lg border transition-all duration-300 flex items-center justify-center ${
               isMenuOpen
-                ? 'bg-[#0077ff] border-[#0077ff] text-white rotate-90 shadow-lg shadow-[#0077ff]/40'
-                : 'bg-white/5 border-white/15 text-white hover:bg-white/10'
+                ? 'bg-white/10 border-white/15 text-white'
+                : 'bg-white/[0.03] border-white/[0.08] text-white/70 hover:bg-white/[0.06]'
             }`}
             aria-label="Toggle menu"
           >
@@ -143,71 +141,58 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
       </header>
 
-      {/* FULLSCREEN ANIMATED MOBILE MENU DRAWER */}
+      {/* FULLSCREEN MOBILE MENU DRAWER — editorial, clean */}
       <div
-        className={`fixed inset-0 z-40 bg-[#0b0b0b]/96 backdrop-blur-3xl flex flex-col justify-between p-6 sm:p-10 pt-28 transition-all duration-500 ease-out md:hidden ${
+        className={`fixed inset-0 z-40 bg-[#050608]/97 backdrop-blur-xl flex flex-col justify-between p-6 sm:p-10 pt-28 transition-all duration-500 ease-out md:hidden ${
           isMenuOpen
             ? 'opacity-100 translate-y-0 pointer-events-auto'
-            : 'opacity-0 -translate-y-8 pointer-events-none'
+            : 'opacity-0 -translate-y-6 pointer-events-none'
         }`}
       >
-        {/* Ambient Glow background inside drawer */}
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-80 h-80 bg-[#0077ff]/20 rounded-full blur-[100px] pointer-events-none" />
-
-        {/* Mobile Nav Links List */}
-        <div className="flex flex-col gap-5 relative z-10 my-auto">
-          <span className="text-[11px] font-mono text-[#0077ff] tracking-widest uppercase font-semibold mb-1 flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>NAVIGATION MENU</span>
+        {/* Mobile Nav Links List — simple stacked links */}
+        <div className="flex flex-col gap-1 relative z-10 my-auto">
+          <span className="text-[10px] font-body text-white/20 tracking-wider uppercase font-medium mb-4 pl-4">
+            Navigation
           </span>
 
           {navLinks.map((link, idx) => (
             <a
               key={link.href}
               href={link.href}
-              onClick={() => setIsMenuOpen(false)}
-              className={`group flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-[#0077ff] hover:bg-[#15151c] transition-all duration-300 transform ${
-                isMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
+              onClick={() => {
+                if (link.onClick) link.onClick();
+                setIsMenuOpen(false);
+              }}
+              className={`group flex items-center justify-between px-4 py-4 border-b border-white/[0.05] hover:bg-white/[0.02] transition-all duration-300 ${
+                isMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
               }`}
-              style={{ transitionDelay: `${(idx + 1) * 70}ms` }}
+              style={{ transitionDelay: `${(idx + 1) * 60}ms` }}
             >
-              <div className="flex items-center gap-4">
-                <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 group-hover:scale-110 transition-transform">
-                  {link.icon}
-                </div>
-                <div>
-                  <span className="font-syne font-extrabold text-2xl text-white group-hover:text-[#0077ff] transition-colors uppercase tracking-tight block">
-                    {link.label}
-                  </span>
-                  <span className="text-xs font-mono text-white/40 group-hover:text-white/60">
-                    Section {link.number}
-                  </span>
-                </div>
+              <div className="flex items-center gap-3">
+                <span className="text-[10px] font-technical text-white/15">{link.number}</span>
+                <span className="font-display font-bold text-xl text-white/80 group-hover:text-white transition-colors uppercase tracking-tight">
+                  {link.label}
+                </span>
               </div>
 
-              <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-white/50 group-hover:bg-[#0077ff] group-hover:text-white transition-colors">
-                <ArrowUpRight className="w-4 h-4" />
-              </div>
+              <ArrowUpRight className="w-4 h-4 text-white/15 group-hover:text-white/40 transition-colors" />
             </a>
           ))}
         </div>
 
-        {/* Mobile Drawer Footer Actions */}
-        <div className="relative z-10 pt-6 border-t border-white/10 space-y-3">
-          <div className="flex items-center justify-between text-xs font-mono text-white/50 mb-2">
-            <span className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#d4ff00] animate-ping" />
-              Srishti 2.7 — St. Thomas College
-            </span>
-            <span className="text-[#0077ff] font-bold">DECEMBER 4-5</span>
+        {/* Mobile Drawer Footer */}
+        <div className="relative z-10 pt-6 border-t border-white/[0.06] space-y-4">
+          <div className="flex items-center justify-between text-[10px] font-body text-white/25">
+            <span>Srishti 2.7 — St. Thomas College</span>
+            <span className="font-technical text-white/30">DEC 4–5, 2026</span>
           </div>
 
           <a
             href="#cta"
             onClick={() => setIsMenuOpen(false)}
-            className="w-full py-4 text-center bg-gradient-to-r from-[#00d4ff] to-[#0044ff] text-white font-syne font-bold uppercase text-xs rounded-full shadow-lg shadow-[#0077ff]/30 flex items-center justify-center gap-2 active:scale-95 transition-transform"
+            className="w-full py-3.5 text-center bg-[#2563EB] text-white font-display font-bold uppercase text-xs rounded-lg flex items-center justify-center gap-2 active:scale-[0.98] transition-transform"
           >
-            <span>Register & Get Your Pass</span>
+            <span>Register Now</span>
             <ArrowUpRight className="w-4 h-4" />
           </a>
         </div>

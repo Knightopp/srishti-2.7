@@ -5,7 +5,6 @@ import {
   Clock,
   MapPin,
   User,
-  Sparkles,
   Calendar,
   ChevronDown,
   ArrowUpRight,
@@ -15,7 +14,7 @@ import {
   Music,
   Compass,
   Layers,
-  Radio
+  Sparkles,
 } from 'lucide-react';
 import { useFest } from '../context/FestContext';
 
@@ -46,43 +45,43 @@ const getCategoryBadge = (category: string) => {
   const catLower = (category || '').toLowerCase();
   if (catLower.includes('hackathon') || catLower.includes('prototype')) {
     return {
-      categoryColor: 'border-[#00e5ff] text-[#00e5ff] bg-[#00e5ff]/10',
-      icon: <Code className="w-5 h-5 text-[#00e5ff]" />,
+      categoryColor: 'border-white/[0.08] text-white/50 bg-white/[0.03]',
+      icon: <Code className="w-4 h-4 text-white/35" />,
     };
   }
   if (catLower.includes('competition') || catLower.includes('ctf') || catLower.includes('quiz') || catLower.includes('battle')) {
     return {
-      categoryColor: 'border-[#0077ff] text-[#0077ff] bg-[#0077ff]/10',
-      icon: <Sparkles className="w-5 h-5 text-[#0077ff]" />,
+      categoryColor: 'border-white/[0.08] text-white/50 bg-white/[0.03]',
+      icon: <Sparkles className="w-4 h-4 text-white/35" />,
     };
   }
   if (catLower.includes('workshop') || catLower.includes('masterclass') || catLower.includes('learning')) {
     return {
-      categoryColor: 'border-[#00d4ff] text-[#00d4ff] bg-[#00d4ff]/10',
-      icon: <Layers className="w-5 h-5 text-[#00d4ff]" />,
+      categoryColor: 'border-white/[0.08] text-white/50 bg-white/[0.03]',
+      icon: <Layers className="w-4 h-4 text-white/35" />,
     };
   }
   if (catLower.includes('talk') || catLower.includes('keynote')) {
     return {
-      categoryColor: 'border-[#38bdf8] text-[#38bdf8] bg-[#38bdf8]/10',
-      icon: <Zap className="w-5 h-5 text-[#38bdf8]" />,
+      categoryColor: 'border-white/[0.08] text-white/50 bg-white/[0.03]',
+      icon: <Zap className="w-4 h-4 text-white/35" />,
     };
   }
   if (catLower.includes('cultural') || catLower.includes('music') || catLower.includes('dj')) {
     return {
-      categoryColor: 'border-[#00e5ff] text-[#00e5ff] bg-[#00e5ff]/10',
-      icon: <Music className="w-5 h-5 text-[#00e5ff]" />,
+      categoryColor: 'border-white/[0.08] text-white/50 bg-white/[0.03]',
+      icon: <Music className="w-4 h-4 text-white/35" />,
     };
   }
   if (catLower.includes('award') || catLower.includes('valedictory') || catLower.includes('closing')) {
     return {
-      categoryColor: 'border-[#38bdf8] text-[#38bdf8] bg-[#38bdf8]/10',
-      icon: <Award className="w-5 h-5 text-[#38bdf8]" />,
+      categoryColor: 'border-white/[0.08] text-white/50 bg-white/[0.03]',
+      icon: <Award className="w-4 h-4 text-white/35" />,
     };
   }
   return {
-    categoryColor: 'border-[#0077ff] text-[#0077ff] bg-[#0077ff]/10',
-    icon: <Sparkles className="w-5 h-5 text-[#0077ff]" />,
+    categoryColor: 'border-white/[0.08] text-white/50 bg-white/[0.03]',
+    icon: <Sparkles className="w-4 h-4 text-white/35" />,
   };
 };
 
@@ -92,7 +91,7 @@ export interface MapLocation {
   type: string;
   capacity: string;
   floor: string;
-  coordinates: { x: number; y: number }; // percentage position on map canvas
+  coordinates: { x: number; y: number };
   color: string;
   description: string;
 }
@@ -105,7 +104,7 @@ const MAP_LOCATIONS: MapLocation[] = [
     capacity: '800 Seats',
     floor: 'Ground Floor - Block A',
     coordinates: { x: 50, y: 28 },
-    color: '#0077ff',
+    color: '#2563EB',
     description: 'The main auditorium for inaugural ceremony, keynote talks, award functions, and major cultural performances.',
   },
   {
@@ -115,7 +114,7 @@ const MAP_LOCATIONS: MapLocation[] = [
     capacity: '120 Stations',
     floor: 'Level 2 - CS Department',
     coordinates: { x: 22, y: 45 },
-    color: '#00e5ff',
+    color: '#2563EB',
     description: 'Computer lab complex equipped with high-speed workstations for coding contests, hackathons, and hands-on workshops.',
   },
   {
@@ -125,7 +124,7 @@ const MAP_LOCATIONS: MapLocation[] = [
     capacity: '300 Seats',
     floor: 'Level 1 - Block B',
     coordinates: { x: 78, y: 48 },
-    color: '#00d4ff',
+    color: '#2563EB',
     description: 'Modern seminar hall for technical talks, industry expert sessions, and interactive panel discussions.',
   },
   {
@@ -135,7 +134,7 @@ const MAP_LOCATIONS: MapLocation[] = [
     capacity: '1000+ Standing',
     floor: 'Campus Grounds',
     coordinates: { x: 50, y: 78 },
-    color: '#0055ff',
+    color: '#2563EB',
     description: 'Outdoor stage area for cultural performances, band shows, DJ night, and the grand closing ceremony.',
   },
   {
@@ -145,7 +144,7 @@ const MAP_LOCATIONS: MapLocation[] = [
     capacity: '200 Hackers',
     floor: 'Level 2 - Block C',
     coordinates: { x: 26, y: 72 },
-    color: '#38bdf8',
+    color: '#2563EB',
     description: 'Dedicated space for the 6-hour hackathon with team desks, power strips, refreshment station, and mentor helpdesks.',
   },
   {
@@ -155,7 +154,7 @@ const MAP_LOCATIONS: MapLocation[] = [
     capacity: '80 Seats',
     floor: 'Level 3 - Block A',
     coordinates: { x: 74, y: 75 },
-    color: '#0077ff',
+    color: '#2563EB',
     description: 'Intimate conference room for exclusive workshops, product demos, and career guidance sessions.',
   },
 ];
@@ -218,18 +217,12 @@ export const TimelineRoadmap: React.FC = () => {
   const activeLocationEvents = roadmapEvents.filter((ev) => ev.locationId === activeMapPinId);
 
   useEffect(() => {
-    // Refresh ScrollTrigger so pinned sections below (like CaseShowcase) adjust their start positions when Roadmap height changes
-    const timer = setTimeout(() => {
-      ScrollTrigger.refresh();
-    }, 120);
-
-    if (!containerRef.current) return () => clearTimeout(timer);
+    if (!containerRef.current) return;
 
     const ctx = gsap.context(() => {
-      // 0. Roadmap Header Bi-Directional Entrance & Exit Animation
       gsap.fromTo(
         '.roadmap-header-content',
-        { y: 50, opacity: 0 },
+        { y: 40, opacity: 0 },
         {
           y: 0,
           opacity: 1,
@@ -245,7 +238,7 @@ export const TimelineRoadmap: React.FC = () => {
 
       if (viewMode !== 'timeline' || !lineFillRef.current) return;
 
-      // 1. Vertical Line height growth scrub linked to scroll
+      // Vertical Line growth
       gsap.fromTo(
         lineFillRef.current,
         { scaleY: 0 },
@@ -266,7 +259,7 @@ export const TimelineRoadmap: React.FC = () => {
         }
       );
 
-      // 2. Animate cards sliding in from left and right (Bi-directional scrub on forward & reverse scroll)
+      // Animate cards
       const isMobile = window.innerWidth < 768;
 
       cardsRef.current.forEach((card, index) => {
@@ -275,17 +268,11 @@ export const TimelineRoadmap: React.FC = () => {
         const isLeft = card.dataset.side === 'left';
         const nodeDot = nodeDotsRef.current[index];
 
-        // Responsive offset: on mobile cards slide in from right (+50px) or left (-50px)
-        const initialX = isMobile ? (isLeft ? -45 : 45) : (isLeft ? -120 : 120);
+        const initialX = isMobile ? (isLeft ? -35 : 35) : (isLeft ? -80 : 80);
 
-        // Scrubbed Card Entrance & Reverse Exit animation
         gsap.fromTo(
           card,
-          {
-            x: initialX,
-            opacity: 0,
-            scale: 0.9,
-          },
+          { x: initialX, opacity: 0, scale: 0.95 },
           {
             x: 0,
             opacity: 1,
@@ -295,26 +282,23 @@ export const TimelineRoadmap: React.FC = () => {
               trigger: card,
               start: 'top 92%',
               end: 'top 65%',
-              scrub: 0.5, // Enables smooth continuous scrub in BOTH scroll directions!
+              scrub: 0.5,
             },
           }
         );
 
-        // Scrubbed Timeline Node Dot Activation
         if (nodeDot) {
           gsap.fromTo(
             nodeDot,
             {
               scale: 0.6,
-              backgroundColor: '#18181c',
-              borderColor: 'rgba(255,255,255,0.2)',
-              boxShadow: '0 0 0px rgba(0,0,0,0)',
+              backgroundColor: '#13161C',
+              borderColor: 'rgba(255,255,255,0.1)',
             },
             {
-              scale: 1.3,
-              backgroundColor: '#0077ff',
-              borderColor: '#00d4ff',
-              boxShadow: '0 0 20px rgba(0, 119, 255, 0.9)',
+              scale: 1.2,
+              backgroundColor: '#2563EB',
+              borderColor: '#2563EB',
               ease: 'none',
               scrollTrigger: {
                 trigger: card,
@@ -329,7 +313,6 @@ export const TimelineRoadmap: React.FC = () => {
     }, containerRef);
 
     return () => {
-      clearTimeout(timer);
       ctx.revert();
     };
   }, [viewMode, selectedDay, filteredEvents]);
@@ -342,75 +325,70 @@ export const TimelineRoadmap: React.FC = () => {
     <section
       id="roadmap"
       ref={containerRef}
-      className="relative w-full py-24 bg-[#0b0b0b] text-[#f5f5f7] border-t border-white/10 overflow-hidden select-none"
+      className="relative w-full py-24 bg-[#050608] text-[#E8E8EC] border-t border-white/[0.06] overflow-hidden select-none"
     >
-      {/* Background Ambient Glow Gradients */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[750px] h-[750px] bg-[#0077ff]/12 rounded-full blur-[150px] pointer-events-none" />
-      <div className="absolute bottom-1/4 left-1/3 w-[550px] h-[550px] bg-[#00d4ff]/6 rounded-full blur-[140px] pointer-events-none" />
-
       <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
         {/* Section Header */}
         <div className="roadmap-header-content text-center max-w-3xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/12 text-xs font-mono text-[#0077ff] tracking-widest uppercase mb-4">
-            <Radio className="w-3.5 h-3.5 text-[#0077ff] animate-pulse" />
-            <span>02 / EVENT SCHEDULE & VENUE MAP</span>
-          </div>
+          <span className="text-[10px] font-body font-medium text-white/25 tracking-wider uppercase">
+            02 / Event Schedule & Venue Map
+          </span>
 
-          <h2 className="font-syne text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-white uppercase leading-[1.05]">
+          <h2 className="font-display text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white/90 uppercase leading-[1.05] mt-2">
             Event Schedule{' '}
-            <span className="font-serif-custom italic font-normal text-[#0077ff] lowercase text-4xl sm:text-6xl md:text-8xl block sm:inline">
+            <span className="font-serif-custom italic font-normal text-[#2563EB] lowercase text-3xl sm:text-5xl md:text-7xl block sm:inline">
               & venue map
             </span>
           </h2>
 
-          <p className="mt-4 text-base md:text-lg text-white/60 font-light max-w-xl mx-auto">
+          <p className="mt-4 text-sm md:text-base text-white/35 font-light max-w-xl mx-auto">
             Explore the campus venue map, event stages, and the full 2-day schedule for December 4 – 5.
           </p>
 
-          {/* VIEW MODE TOGGLE (Timeline Agenda vs Interactive Event Map) */}
+          {/* VIEW MODE TOGGLE */}
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-            <div className="inline-flex items-center p-1.5 rounded-full bg-[#141419] border border-white/15 shadow-2xl">
+            <div className="inline-flex items-center p-1 rounded-lg bg-[#0D1015] border border-white/[0.06]">
               <button
                 onClick={() => setViewMode('timeline')}
-                className={`flex items-center gap-2 px-6 py-2.5 rounded-full text-xs font-syne font-bold uppercase tracking-wider transition-all duration-300 ${
+                className={`flex items-center gap-2 px-5 py-2 rounded-md text-[11px] font-body font-medium uppercase tracking-wider transition-all duration-300 ${
                   viewMode === 'timeline'
-                    ? 'bg-[#0077ff] text-white shadow-lg shadow-[#0077ff]/30'
-                    : 'text-white/60 hover:text-white hover:bg-white/5'
+                    ? 'bg-[#2563EB] text-white'
+                    : 'text-white/35 hover:text-white/60'
                 }`}
               >
-                <Calendar className="w-4 h-4" />
-                <span>Timeline Schedule</span>
+                <Calendar className="w-3.5 h-3.5" />
+                <span>Timeline</span>
               </button>
 
               <button
                 onClick={() => setViewMode('map')}
-                className={`flex items-center gap-2 px-6 py-2.5 rounded-full text-xs font-syne font-bold uppercase tracking-wider transition-all duration-300 ${
+                className={`flex items-center gap-2 px-5 py-2 rounded-md text-[11px] font-body font-medium uppercase tracking-wider transition-all duration-300 ${
                   viewMode === 'map'
-                    ? 'bg-[#0077ff] text-white shadow-lg shadow-[#0077ff]/30'
-                    : 'text-white/60 hover:text-white hover:bg-white/5'
+                    ? 'bg-[#2563EB] text-white'
+                    : 'text-white/35 hover:text-white/60'
                 }`}
               >
-                <Compass className="w-4 h-4" />
-                <span>Interactive Venue Map</span>
+                <Compass className="w-3.5 h-3.5" />
+                <span>Venue Map</span>
               </button>
             </div>
           </div>
 
-          {/* DAY FILTER TABS (When in Timeline mode) */}
+          {/* DAY FILTER TABS */}
           {viewMode === 'timeline' && (
-            <div className="mt-6 inline-flex items-center gap-2 p-1.5 rounded-full bg-[#121217] border border-white/10 shadow-lg">
+            <div className="mt-5 inline-flex items-center gap-1.5 p-1 rounded-lg bg-[#0D1015] border border-white/[0.06]">
               {[
                 { id: 'all', label: 'All Days' },
-                { id: 'dec-4', label: 'Dec 4, Thu' },
-                { id: 'dec-5', label: 'Dec 5, Fri' },
+                { id: 'dec-4', label: 'Dec 4' },
+                { id: 'dec-5', label: 'Dec 5' },
               ].map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setSelectedDay(tab.id as typeof selectedDay)}
-                  className={`px-4 py-1.5 rounded-full text-[11px] font-syne font-bold uppercase tracking-wider transition-all duration-300 ${
+                  className={`px-4 py-1.5 rounded-md text-[11px] font-body font-medium uppercase tracking-wider transition-all duration-300 ${
                     selectedDay === tab.id
-                      ? 'bg-white/15 text-white border border-white/20'
-                      : 'text-white/50 hover:text-white'
+                      ? 'bg-white/[0.08] text-white/80'
+                      : 'text-white/30 hover:text-white/50'
                   }`}
                 >
                   {tab.label}
@@ -420,31 +398,31 @@ export const TimelineRoadmap: React.FC = () => {
           )}
         </div>
 
-        {/* ------------------------------------------------------------- */}
-        {/* VIEW 1: INTERACTIVE EVENT VENUE MAP */}
-        {/* ------------------------------------------------------------- */}
+        {/* INTERACTIVE EVENT VENUE MAP */}
         {viewMode === 'map' ? (
           <div className="mt-8 animate-fadeIn space-y-8">
-            {/* Interactive Blueprint Map Stage Container */}
-            <div className="relative w-full h-[520px] sm:h-[580px] rounded-3xl bg-gradient-to-br from-[#121218] via-[#0e0e13] to-[#0a0a0d] border border-white/15 p-6 overflow-hidden shadow-2xl">
+            <div className="relative w-full h-[520px] sm:h-[580px] rounded-xl bg-[#0D1015] border border-white/[0.06] p-6 overflow-hidden">
               
-              {/* Floorplan Grid Lines Background */}
-              <div className="absolute inset-0 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:24px_24px] opacity-10 pointer-events-none" />
+              {/* Grid Background */}
+              <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{
+                backgroundImage: 'radial-gradient(rgba(255,255,255,0.3) 1px, transparent 1px)',
+                backgroundSize: '24px 24px',
+              }} />
               
-              {/* Architectural Zone Outlines */}
-              <div className="absolute top-[15%] left-[10%] w-[80%] h-[70%] border border-dashed border-white/15 rounded-2xl pointer-events-none flex items-center justify-center">
-                <span className="text-[10px] font-mono tracking-widest text-white/15 uppercase">
-                  ST. THOMAS COLLEGE - CAMPUS LAYOUT
+              {/* Zone Outline */}
+              <div className="absolute top-[15%] left-[10%] w-[80%] h-[70%] border border-dashed border-white/[0.06] rounded-xl pointer-events-none flex items-center justify-center">
+                <span className="text-[10px] font-body tracking-wider text-white/[0.06] uppercase">
+                  ST. THOMAS COLLEGE — CAMPUS LAYOUT
                 </span>
               </div>
 
-              {/* Map Title Tag */}
-              <div className="absolute top-6 left-6 z-20 flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/60 border border-white/15 backdrop-blur-md text-xs font-mono text-white/80">
-                <Layers className="w-3.5 h-3.5 text-[#0077ff]" />
-                <span>INTERACTIVE CAMPUS VENUE MAP</span>
+              {/* Map Tag */}
+              <div className="absolute top-5 left-5 z-20 flex items-center gap-2 text-[10px] font-body text-white/25">
+                <Layers className="w-3.5 h-3.5 text-white/20" />
+                <span className="tracking-wider uppercase">Interactive Venue Map</span>
               </div>
 
-              {/* MAP PINS & NODES */}
+              {/* MAP PINS */}
               {MAP_LOCATIONS.map((loc) => {
                 const isActive = activeMapPinId === loc.id;
                 return (
@@ -455,28 +433,17 @@ export const TimelineRoadmap: React.FC = () => {
                       left: `${loc.coordinates.x}%`,
                       top: `${loc.coordinates.y}%`,
                     }}
-                    className={`absolute -translate-x-1/2 -translate-y-1/2 group z-30 transition-all duration-300 focus:outline-none`}
+                    className="absolute -translate-x-1/2 -translate-y-1/2 group z-30 transition-all duration-300 focus:outline-none"
                   >
-                    {/* Pulsing Outer Ring */}
                     <div
-                      className={`absolute -inset-3 rounded-full opacity-75 animate-ping ${
-                        isActive ? 'bg-[#0077ff]' : 'bg-transparent'
-                      }`}
-                    />
-
-                    {/* Pin Circle */}
-                    <div
-                      className={`relative flex items-center gap-2 px-3 py-1.5 rounded-full border shadow-2xl transition-all duration-300 ${
+                      className={`relative flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border transition-all duration-300 ${
                         isActive
-                          ? 'bg-[#0077ff] border-white text-white scale-110 shadow-[0_0_20px_rgba(0,119,255,0.8)]'
-                          : 'bg-[#181820] border-white/20 text-white/80 hover:border-white hover:bg-[#20202c]'
+                          ? 'bg-[#2563EB] border-[#2563EB] text-white'
+                          : 'bg-[#13161C] border-white/[0.08] text-white/60 hover:border-white/15 hover:text-white/80'
                       }`}
                     >
-                      <MapPin
-                        className="w-3.5 h-3.5 shrink-0"
-                        style={{ color: isActive ? '#ffffff' : loc.color }}
-                      />
-                      <span className="text-[11px] font-syne font-bold tracking-tight whitespace-nowrap">
+                      <MapPin className="w-3 h-3 shrink-0" />
+                      <span className="text-[10px] font-display font-semibold tracking-tight whitespace-nowrap">
                         {loc.name}
                       </span>
                     </div>
@@ -485,89 +452,76 @@ export const TimelineRoadmap: React.FC = () => {
               })}
 
               {/* Map Legend Footer */}
-              <div className="absolute bottom-6 left-6 right-6 z-20 flex flex-wrap items-center justify-between gap-4 p-4 rounded-2xl bg-black/70 border border-white/10 backdrop-blur-xl text-xs font-mono">
-                <div className="flex items-center gap-4">
-                  <span className="text-white/50">CLICK PINS TO VIEW STAGE SCHEDULE</span>
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-[#0077ff]" />
-                    <span className="text-white/80">Active Venue</span>
-                  </div>
-                </div>
-
-                <div className="text-white/40 text-[11px]">
-                  SRISHTI 2.7 • ST. THOMAS COLLEGE
-                </div>
+              <div className="absolute bottom-5 left-5 right-5 z-20 flex flex-wrap items-center justify-between gap-4 p-3 rounded-lg bg-[#050608]/80 border border-white/[0.06] text-[10px] font-body">
+                <span className="text-white/20 tracking-wider uppercase">Click pins to view schedule</span>
+                <span className="font-technical text-white/15">SRISHTI 2.7</span>
               </div>
             </div>
 
-            {/* SELECTED LOCATION DETAILED PANEL */}
+            {/* SELECTED LOCATION PANEL */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-              {/* Location Info Card */}
-              <div className="lg:col-span-5 p-8 rounded-3xl bg-[#14141a] border border-[#0077ff]/40 shadow-2xl space-y-6">
+              {/* Location Info */}
+              <div className="lg:col-span-5 p-7 rounded-xl bg-[#0D1015] border border-white/[0.06] space-y-5">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-[#0077ff]/15 border border-[#0077ff]/30 text-xs font-mono text-[#0077ff] font-bold">
-                    <MapPin className="w-3.5 h-3.5" />
-                    <span>{activeMapLocation.type}</span>
-                  </div>
-
-                  <span className="text-xs font-mono text-white/40">
+                  <span className="text-[10px] font-body font-medium text-white/30 tracking-wider uppercase">
+                    {activeMapLocation.type}
+                  </span>
+                  <span className="text-[10px] font-body text-white/20">
                     {activeMapLocation.floor}
                   </span>
                 </div>
 
                 <div>
-                  <h3 className="font-syne text-2xl md:text-3xl font-bold text-white uppercase tracking-tight">
+                  <h3 className="font-display text-xl md:text-2xl font-bold text-white/85 uppercase tracking-tight">
                     {activeMapLocation.name}
                   </h3>
-                  <p className="mt-2 text-sm text-white/70 font-light leading-relaxed">
+                  <p className="mt-2 text-sm text-white/40 font-light leading-relaxed">
                     {activeMapLocation.description}
                   </p>
                 </div>
 
-                <div className="pt-4 border-t border-white/10 flex items-center justify-between text-xs font-mono text-white/60">
-                  <span>CAPACITY:</span>
-                  <span className="text-[#d4ff00] font-bold">
+                <div className="pt-4 border-t border-white/[0.06] flex items-center justify-between text-[11px] font-body text-white/30">
+                  <span className="tracking-wider uppercase">Capacity</span>
+                  <span className="text-white/50 font-medium">
                     {activeMapLocation.capacity}
                   </span>
                 </div>
               </div>
 
-              {/* Scheduled Events at this Location */}
-              <div className="lg:col-span-7 p-8 rounded-3xl bg-[#121217] border border-white/10 space-y-6">
-                <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                  <span className="text-xs font-mono text-[#0077ff] font-bold tracking-widest uppercase">
-                    SCHEDULED EVENTS AT {activeMapLocation.name.toUpperCase()}
+              {/* Scheduled Events */}
+              <div className="lg:col-span-7 p-7 rounded-xl bg-[#0D1015] border border-white/[0.06] space-y-5">
+                <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
+                  <span className="text-[10px] font-body font-medium text-white/30 tracking-wider uppercase">
+                    Events at {activeMapLocation.name}
                   </span>
-                  <span className="text-xs font-mono text-white/40">
-                    {activeLocationEvents.length} EVENTS
+                  <span className="text-[10px] font-technical text-white/20">
+                    {activeLocationEvents.length} events
                   </span>
                 </div>
 
-                <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2">
+                <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2">
                   {activeLocationEvents.length > 0 ? (
                     activeLocationEvents.map((ev) => (
                       <div
                         key={ev.id}
-                        className="p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-white/20 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                        className="p-4 rounded-lg bg-white/[0.02] border border-white/[0.06] hover:border-white/[0.1] transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3"
                       >
                         <div className="space-y-1">
-                          <div className="flex items-center gap-2 text-[10px] font-mono text-[#0077ff]">
+                          <div className="flex items-center gap-1.5 text-[10px] font-body text-white/25">
                             <Clock className="w-3 h-3" />
-                            <span>
-                              {ev.dayLabel} • {ev.time}
-                            </span>
+                            <span>{ev.dayLabel} · {ev.time}</span>
                           </div>
-                          <h4 className="font-syne font-bold text-base text-white">
+                          <h4 className="font-display font-bold text-sm text-white/80">
                             {ev.title}
                           </h4>
-                          <p className="text-xs text-white/50 font-light">
-                            Coordinator: {ev.speaker?.name || 'Coordinator'} ({ev.speaker?.role || 'St. Thomas Faculty'})
+                          <p className="text-[11px] text-white/30 font-light">
+                            {ev.speaker?.name || 'Coordinator'}
                           </p>
                         </div>
 
                         <a
                           href="#cta"
-                          className="shrink-0 px-4 py-2 rounded-full bg-[#0077ff] text-white font-syne text-[11px] font-bold uppercase tracking-wider hover:bg-[#0055ff] transition-colors flex items-center gap-1"
+                          className="shrink-0 px-4 py-2 rounded-md bg-[#2563EB] text-white font-body text-[10px] font-medium uppercase tracking-wider hover:bg-[#1D4ED8] transition-colors flex items-center gap-1"
                         >
                           <span>Register</span>
                           <ArrowUpRight className="w-3 h-3" />
@@ -575,7 +529,7 @@ export const TimelineRoadmap: React.FC = () => {
                       </div>
                     ))
                   ) : (
-                    <p className="text-xs text-white/40 italic py-4">
+                    <p className="text-xs text-white/25 italic py-4">
                       No additional public events scheduled at this venue.
                     </p>
                   )}
@@ -584,26 +538,24 @@ export const TimelineRoadmap: React.FC = () => {
             </div>
           </div>
         ) : (
-          /* ------------------------------------------------------------- */
-          /* VIEW 2: SCROLL-DRIVEN TIMELINE ROADMAP (DYNAMIC LINE & CARDS) */
-          /* ------------------------------------------------------------- */
+          /* TIMELINE VIEW */
           <div className="relative mt-16">
-            {/* Central Vertical Line (Desktop Center / Mobile Left) */}
+            {/* Central Vertical Line */}
             <div
               ref={lineTrackRef}
-              className="absolute left-6 md:left-1/2 top-0 bottom-0 w-[2px] -translate-x-1/2 bg-white/10 z-0"
+              className="absolute left-6 md:left-1/2 top-0 bottom-0 w-px -translate-x-1/2 bg-white/[0.06] z-0"
             >
-              {/* Dynamic Growing Gradient Line */}
+              {/* Growing Line */}
               <div
                 ref={lineFillRef}
-                className="w-full h-full bg-gradient-to-b from-[#0077ff] via-[#00e5ff] to-[#d4ff00] origin-top shadow-[0_0_12px_rgba(0,119,255,0.8)]"
+                className="w-full h-full bg-[#2563EB] origin-top"
                 style={{ transform: 'scaleY(0)' }}
               />
 
-              {/* Glowing Laser Tip Follower */}
+              {/* Simple Tip Dot */}
               <div
                 ref={laserTipRef}
-                className="absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-[#d4ff00] border-2 border-white shadow-[0_0_20px_#d4ff00] transition-all duration-75 pointer-events-none"
+                className="absolute left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-white transition-all duration-75 pointer-events-none"
                 style={{ top: '0%' }}
               />
             </div>
@@ -619,38 +571,38 @@ export const TimelineRoadmap: React.FC = () => {
 
                 return (
                   <React.Fragment key={event.id}>
-                    {/* Big Date Header Badge when day changes */}
+                    {/* Date Header */}
                     {isFirstOfDay && (
                       <div className="flex justify-start md:justify-center my-8 pl-12 md:pl-0">
-                        <div className="inline-flex items-center gap-3 px-6 py-2.5 rounded-full bg-[#18181f] border border-[#0077ff]/40 shadow-xl shadow-[#0077ff]/10">
-                          <span className="w-2.5 h-2.5 rounded-full bg-[#d4ff00] animate-ping" />
-                          <span className="font-syne font-black text-xs md:text-sm tracking-widest text-white uppercase">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-[#0D1015] border border-white/[0.06]">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB]" />
+                          <span className="font-display font-bold text-xs md:text-sm tracking-wider text-white/60 uppercase">
                             {event.dayLabel}
                           </span>
                         </div>
                       </div>
                     )}
 
-                    {/* EVENT ITEM CONTAINER */}
+                    {/* EVENT ITEM */}
                     <div
                       className={`relative flex flex-col md:flex-row items-center ${
                         isLeft ? 'md:flex-row-reverse' : ''
                       }`}
                     >
-                      {/* Node Dot on Timeline */}
+                      {/* Node Dot */}
                       <div
                         ref={(el) => {
                           nodeDotsRef.current[index] = el;
                         }}
-                        className="absolute left-6 md:left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-[#18181c] border-2 border-white/20 z-20 flex items-center justify-center transition-all duration-300"
+                        className="absolute left-6 md:left-1/2 -translate-x-1/2 w-5 h-5 rounded-full bg-[#13161C] border-2 border-white/[0.08] z-20 flex items-center justify-center transition-all duration-300"
                       >
-                        <div className="w-2 h-2 rounded-full bg-white" />
+                        <div className="w-1.5 h-1.5 rounded-full bg-white/50" />
                       </div>
 
-                      {/* Left or Right Spacer to keep 50% grid layout on Desktop */}
+                      {/* Spacer */}
                       <div className="w-full md:w-1/2" />
 
-                      {/* EVENT WIDGET CARD */}
+                      {/* EVENT CARD */}
                       <div
                         ref={(el) => {
                           cardsRef.current[index] = el;
@@ -662,88 +614,85 @@ export const TimelineRoadmap: React.FC = () => {
                       >
                         <div
                           onClick={() => toggleExpand(event.id)}
-                          className={`group relative rounded-3xl p-6 sm:p-8 bg-[#121216]/90 backdrop-blur-xl border transition-all duration-500 cursor-pointer overflow-hidden ${
+                          className={`group relative rounded-xl p-6 sm:p-7 bg-[#0D1015] border transition-all duration-400 cursor-pointer overflow-hidden ${
                             isExpanded
-                              ? 'border-[#0077ff] shadow-2xl shadow-[#0077ff]/20 bg-[#16161c]'
-                              : 'border-white/10 hover:border-white/30 hover:bg-[#16161c] hover:shadow-xl hover:shadow-black/50'
+                              ? 'border-white/[0.12] bg-[#10131A]'
+                              : 'border-white/[0.06] hover:border-white/[0.1] hover:bg-[#10131A]'
                           }`}
                         >
-                          {/* Hover Gradient Overlay */}
-                          <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-
-                          {/* Card Header: Category Badge & Time */}
-                          <div className="flex flex-wrap items-center justify-between gap-3 mb-4 relative z-10">
+                          {/* Card Header */}
+                          <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
                             <div
-                              className={`px-3 py-1 rounded-full border text-[11px] font-mono font-bold tracking-wider uppercase flex items-center gap-1.5 ${event.categoryColor}`}
+                              className={`px-2.5 py-1 rounded-md border text-[10px] font-body font-medium tracking-wider uppercase flex items-center gap-1.5 ${event.categoryColor}`}
                             >
                               {event.icon}
                               <span>{event.category}</span>
                             </div>
 
-                            <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-white/80">
-                              <Clock className="w-3.5 h-3.5 text-[#0077ff]" />
+                            <div className="flex items-center gap-1.5 text-[11px] font-body text-white/30">
+                              <Clock className="w-3 h-3 text-white/20" />
                               <span>{event.time}</span>
                             </div>
                           </div>
 
                           {/* Title & Subtitle */}
-                          <div className="relative z-10">
-                            <h3 className="font-syne text-xl sm:text-2xl font-bold text-white group-hover:text-[#0077ff] transition-colors leading-tight">
+                          <div>
+                            <h3 className="font-display text-lg sm:text-xl font-bold text-white/80 group-hover:text-white/95 transition-colors leading-tight">
                               {event.title}
                             </h3>
-                            <p className="text-xs sm:text-sm text-white/50 font-light mt-1">
+                            <p className="text-xs sm:text-sm text-white/30 font-light mt-1">
                               {event.subtitle}
                             </p>
                           </div>
 
                           {/* Description */}
-                          <p className="mt-4 text-xs sm:text-sm text-white/70 font-light leading-relaxed relative z-10">
+                          <p className="mt-3 text-xs sm:text-sm text-white/40 font-light leading-relaxed">
                             {event.description}
                           </p>
 
-                          {/* Location & Speaker Pills */}
-                          <div className="mt-6 pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-3 text-xs font-mono text-white/60 relative z-10">
-                            <div className="flex items-center gap-2">
-                              <MapPin className="w-3.5 h-3.5 text-[#d4ff00]" />
+                          {/* Location & Speaker */}
+                          <div className="mt-5 pt-4 border-t border-white/[0.06] flex flex-wrap items-center justify-between gap-3 text-[11px] font-body text-white/30">
+                            <div className="flex items-center gap-1.5">
+                              <MapPin className="w-3 h-3 text-white/20" />
                               <span>{event.location}</span>
                             </div>
 
-                            <div className="flex items-center gap-2">
-                              <User className="w-3.5 h-3.5 text-[#00e5ff]" />
-                              <span className="text-white/80 font-semibold">
+                            <div className="flex items-center gap-1.5">
+                              <User className="w-3 h-3 text-white/20" />
+                              <span className="text-white/40 font-medium">
                                 {event.speaker?.name || 'Coordinator'}
                               </span>
                             </div>
                           </div>
 
-                          {/* Expandable Details Tray */}
+                          {/* Expandable Details */}
                           {isExpanded && (
-                            <div className="mt-6 pt-6 border-t border-white/10 space-y-4 animate-fadeIn relative z-10">
-                              <span className="text-[11px] font-mono text-[#0077ff] tracking-widest uppercase block font-semibold">
-                                EVENT HIGHLIGHTS & DETAILS
+                            <div className="mt-5 pt-5 border-t border-white/[0.06] space-y-4 animate-fadeIn">
+                              <span className="text-[10px] font-body text-white/25 tracking-wider uppercase block font-medium">
+                                Event Highlights
                               </span>
 
                               <ul className="space-y-2">
                                 {(event.highlights || []).map((item, idx) => (
                                   <li
                                     key={idx}
-                                    className="flex items-center gap-2.5 text-xs text-white/80 font-light"
+                                    className="flex items-center gap-2 text-xs text-white/50 font-light"
                                   >
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#d4ff00]" />
+                                    <span className="w-1 h-1 rounded-full bg-white/20" />
                                     <span>{item}</span>
                                   </li>
                                 ))}
                               </ul>
 
                               <div className="pt-2 flex items-center justify-between">
-                                <span className="text-xs font-mono text-white/40">
-                                  Coordinator: {event.speaker.role}
+                                <span className="text-[11px] font-body text-white/20">
+                                  {event.speaker.role}
                                 </span>
 
                                 <a
                                   href="#cta"
                                   onClick={(e) => e.stopPropagation()}
-                                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#0077ff] text-white font-syne text-xs font-bold uppercase tracking-wider hover:bg-[#0055ff] transition-colors"
+                                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-md bg-[#2563EB] text-white font-body text-[11px] font-medium uppercase tracking-wider hover:bg-[#1D4ED8] transition-colors"
                                 >
                                   <span>Register Now</span>
                                   <ArrowUpRight className="w-3.5 h-3.5" />
@@ -752,16 +701,14 @@ export const TimelineRoadmap: React.FC = () => {
                             </div>
                           )}
 
-                          {/* Card Footer Toggle Prompt */}
-                          <div className="mt-4 flex items-center justify-center gap-1 text-[10px] font-mono text-white/30 group-hover:text-white/60 transition-colors pt-2">
+                          {/* Toggle Prompt */}
+                          <div className="mt-3 flex items-center justify-center gap-1 text-[9px] font-body text-white/15 group-hover:text-white/30 transition-colors pt-1">
                             <span>
-                              {isExpanded
-                                ? 'Click to collapse'
-                                : 'Click to expand event details'}
+                              {isExpanded ? 'Click to collapse' : 'Click to expand'}
                             </span>
                             <ChevronDown
                               className={`w-3 h-3 transition-transform duration-300 ${
-                                isExpanded ? 'rotate-180 text-[#0077ff]' : ''
+                                isExpanded ? 'rotate-180' : ''
                               }`}
                             />
                           </div>

@@ -1,17 +1,35 @@
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@800;900&family=Space+Grotesk:wght@700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Lora:ital,wght@1,400;1,500;1,600;1,700&display=swap');
 @import "tailwindcss";
 
 @layer base {
   :root {
-    --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-    --font-heading: 'Syne', sans-serif;
+    /* Typography System */
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-technical: 'IBM Plex Mono', monospace;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-serif: 'Lora', Georgia, serif;
+
+    /* Surface Tone Hierarchy */
+    --surface-0: #050608;
+    --surface-1: #080A0E;
+    --surface-2: #0D1015;
+    --surface-3: #13161C;
+
+    /* Accent Palette — restrained */
+    --accent-blue: #2563EB;
+    --accent-cyan: #06B6D4;
+
+    /* Text Hierarchy */
+    --text-primary: #E8E8EC;
+    --text-secondary: #9CA3AF;
+    --text-muted: #6B7280;
+    --text-faint: #4B5563;
   }
 
   html {
-    font-family: var(--font-sans);
-    background-color: #0b0b0b;
-    color: #f5f5f7;
+    font-family: var(--font-body);
+    background-color: var(--surface-0);
+    color: var(--text-primary);
     scroll-behavior: auto;
   }
 
@@ -22,35 +40,58 @@
   }
 }
 
-/* Custom Typography Utilities */
+/* =============================================
+   Typography Utility Classes
+   ============================================= */
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-technical {
+  font-family: var(--font-technical);
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
+/* Keep for editorial italic accents */
+.font-serif-custom {
+  font-family: var(--font-serif);
+}
+
+/* Legacy aliases — map old names to new system */
 .font-syne {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-display);
 }
 
 .font-orbitron {
-  font-family: 'Orbitron', 'Space Grotesk', sans-serif;
+  font-family: var(--font-technical);
 }
 
-.font-serif-custom {
-  font-family: 'Lora', Georgia, serif;
-}
+/* =============================================
+   Scrollbar — minimal, dark
+   ============================================= */
 
-/* Hide default browser scrollbar for ultra-clean cinematic feel */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #0b0b0b;
+  background: var(--surface-0);
 }
 ::-webkit-scrollbar-thumb {
-  background: #262626;
+  background: #1E293B;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #0077ff;
+  background: var(--accent-blue);
 }
 
-/* Lenis Recommended CSS Rules */
+/* =============================================
+   Lenis Smooth Scroll
+   ============================================= */
+
 html.lenis, html.lenis body {
   height: auto;
 }
@@ -71,26 +112,29 @@ html.lenis, html.lenis body {
   pointer-events: none;
 }
 
-/* Outcrowd Signature Liquid Explode Hover Button */
+/* =============================================
+   Button — Liquid Explode Hover
+   ============================================= */
+
 .btn-outcrowd {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  border-radius: 9999px;
+  border-radius: 8px;
   transition: color 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease;
 }
 
 .btn-outcrowd .explode {
   position: absolute;
-  width: 12px;
-  height: 12px;
-  background-color: #0077ff;
+  width: 10px;
+  height: 10px;
+  background-color: var(--accent-blue);
   border-radius: 50%;
   pointer-events: none;
   transform: translate(-50%, -50%) scale(0);
-  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+  transition: transform 0.55s cubic-bezier(0.25, 1, 0.5, 1);
   z-index: 0;
 }
 
@@ -106,7 +150,10 @@ html.lenis, html.lenis body {
   gap: 8px;
 }
 
-/* Text Flip Hover Effect */
+/* =============================================
+   Text Flip Hover Effect — editorial nav
+   ============================================= */
+
 .text-flip-wrap {
   position: relative;
   display: inline-block;
@@ -126,7 +173,7 @@ html.lenis, html.lenis body {
   left: 0;
   display: block;
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  color: #0077ff;
+  color: var(--text-primary);
 }
 
 .text-flip-wrap:hover .text-default {
@@ -137,37 +184,10 @@ html.lenis, html.lenis body {
   transform: translateY(-100%);
 }
 
-/* Custom Cursor Badge */
-.custom-cursor-follower {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 140px;
-  height: 140px;
-  margin-top: -70px;
-  margin-left: -70px;
-  border-radius: 50%;
-  background: rgba(0, 119, 255, 0.9);
-  backdrop-filter: blur(8px);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-  z-index: 9999;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  transform: scale(0);
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
-}
+/* =============================================
+   Infinite Marquee Ticker
+   ============================================= */
 
-.custom-cursor-follower.active {
-  transform: scale(1);
-}
-
-/* Continuous Infinite Marquee Ticker (Independent of scroll) */
 @keyframes infiniteMarquee {
   0% {
     transform: translate3d(0, 0, 0);
@@ -181,18 +201,21 @@ html.lenis, html.lenis body {
   display: flex;
   width: max-content;
   will-change: transform;
-  animation: infiniteMarquee 22s linear infinite;
+  animation: infiniteMarquee 28s linear infinite;
 }
 
 .animate-infinite-marquee:hover {
   animation-play-state: paused;
 }
 
-/* Fade in animation keyframe */
+/* =============================================
+   Fade In Animation
+   ============================================= */
+
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(6px);
   }
   to {
     opacity: 1;
@@ -204,14 +227,15 @@ html.lenis, html.lenis body {
   animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Mobile Phone Performance Optimizations */
+/* =============================================
+   Mobile Performance Optimizations
+   ============================================= */
+
 @media (max-width: 768px) {
   * {
-    /* Reduce layer compositing costs on mobile GPUs */
     -webkit-tap-highlight-color: transparent;
   }
 
-  /* Disable heavy GPU-taxing backdrop blurs on mobile phones */
   .backdrop-blur-md,
   .backdrop-blur-xl,
   .backdrop-blur-2xl,
@@ -220,7 +244,6 @@ html.lenis, html.lenis body {
     -webkit-backdrop-filter: none !important;
   }
 
-  /* Enable hardware acceleration for smooth touch scrolling */
   .case-card,
   section {
     will-change: transform;
@@ -229,83 +252,177 @@ html.lenis, html.lenis body {
   }
 }
 
-/* Organic Unstable Widget Floating Keyframes */
-@keyframes floatUnstable1 {
-  0%, 100% {
-    transform: translate3d(0, 0, 0) rotate(-6deg) scale(1);
-  }
-  33% {
-    transform: translate3d(-8px, -14px, 0) rotate(-4deg) scale(1.02);
-  }
-  66% {
-    transform: translate3d(10px, 12px, 0) rotate(-9deg) scale(0.98);
-  }
-}
+/* =============================================
+   Gentle Widget Drift Animations
+   Subtle, slow, no rotation — feels physical
+   ============================================= */
 
-@keyframes floatUnstable2 {
+@keyframes gentleDrift1 {
   0%, 100% {
-    transform: translate3d(0, 0, 0) rotate(5deg) scale(1);
-  }
-  25% {
-    transform: translate3d(12px, -16px, 0) rotate(9deg) scale(1.03);
-  }
-  75% {
-    transform: translate3d(-10px, 14px, 0) rotate(2deg) scale(0.97);
-  }
-}
-
-@keyframes floatUnstable3 {
-  0%, 100% {
-    transform: translate3d(0, 0, 0) rotate(8deg) scale(1);
-  }
-  40% {
-    transform: translate3d(-14px, 10px, 0) rotate(12deg) scale(1.02);
-  }
-  80% {
-    transform: translate3d(8px, -18px, 0) rotate(4deg) scale(0.99);
-  }
-}
-
-@keyframes floatUnstable4 {
-  0%, 100% {
-    transform: translate3d(0, 0, 0) rotate(-7deg) scale(1);
-  }
-  30% {
-    transform: translate3d(14px, 16px, 0) rotate(-11deg) scale(0.98);
-  }
-  70% {
-    transform: translate3d(-12px, -12px, 0) rotate(-3deg) scale(1.03);
-  }
-}
-
-@keyframes particleRise {
-  0% {
-    transform: translateY(0) scale(0.8);
-    opacity: 0;
+    transform: translate3d(0, 0, 0);
   }
   50% {
-    opacity: 0.8;
+    transform: translate3d(-3px, -6px, 0);
   }
-  100% {
-    transform: translateY(-160px) scale(1.2);
-    opacity: 0;
+}
+
+@keyframes gentleDrift2 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(4px, -5px, 0);
+  }
+}
+
+@keyframes gentleDrift3 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(-5px, 4px, 0);
+  }
+}
+
+@keyframes gentleDrift4 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(3px, -4px, 0);
   }
 }
 
 .animate-float-1 {
-  animation: floatUnstable1 6s ease-in-out infinite;
+  animation: gentleDrift1 14s ease-in-out infinite;
 }
 .animate-float-2 {
-  animation: floatUnstable2 7.5s ease-in-out infinite;
+  animation: gentleDrift2 16s ease-in-out infinite;
 }
 .animate-float-3 {
-  animation: floatUnstable3 8s ease-in-out infinite;
+  animation: gentleDrift3 15s ease-in-out infinite;
 }
 .animate-float-4 {
-  animation: floatUnstable4 6.8s ease-in-out infinite;
+  animation: gentleDrift4 13s ease-in-out infinite;
 }
-.animate-particle {
-  animation: particleRise 4s ease-in-out infinite;
+
+/* =============================================
+   SRISHTI Gradient Flow & Shimmer Keyframes
+   ============================================= */
+
+@keyframes srishtiShimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.srishti-gradient-base {
+  background: linear-gradient(
+    90deg,
+    #ffffff 0%,
+    #cbd5e1 20%,
+    #93c5fd 40%,
+    #ffffff 50%,
+    #93c5fd 60%,
+    #cbd5e1 80%,
+    #ffffff 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: srishtiShimmer 6s linear infinite;
+}
+
+.srishti-gradient-blue {
+  background: linear-gradient(
+    90deg,
+    #ffffff 0%,
+    #60a5fa 25%,
+    #2563eb 50%,
+    #38bdf8 75%,
+    #ffffff 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: srishtiShimmer 4s linear infinite;
+}
+
+.srishti-27-glow {
+  background: linear-gradient(
+    90deg,
+    #38bdf8 0%,
+    #2563eb 35%,
+    #60a5fa 70%,
+    #38bdf8 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: srishtiShimmer 5s linear infinite;
+}
+
+/* =============================================
+   Branded Black Ribbon / Tape Styling & Marquee
+   ============================================= */
+
+@keyframes ribbonMarqueeLinear {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes ribbonMarqueeV {
+  0% {
+    transform: translate3d(0, -50%, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.animate-ribbon-marquee-linear {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: ribbonMarqueeLinear 18s linear infinite;
+}
+
+.animate-ribbon-marquee-v {
+  display: flex;
+  flex-direction: column;
+  height: max-content;
+  will-change: transform;
+  animation: ribbonMarqueeV 22s linear infinite;
+}
+
+/* =============================================
+   Ribbon Soft Faded Edge Masks
+   ============================================= */
+
+.ribbon-edge-fade {
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 15%, #000 85%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, #000 15%, #000 85%, transparent 100%);
+}
+
+.ribbon-edge-fade-v {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 10%, #000 90%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 10%, #000 90%, transparent 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-ribbon-marquee-linear {
+    animation-play-state: paused;
+  }
 }
 
 

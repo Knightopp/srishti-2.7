@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Camera, ArrowRight, X, ChevronLeft, ChevronRight, Maximize2, Sparkles } from 'lucide-react';
+import { Camera, ArrowRight, X, ChevronLeft, ChevronRight, Maximize2 } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -107,10 +107,9 @@ export const PhotoGallery: React.FC = () => {
     if (!containerRef.current) return;
 
     const ctx = gsap.context(() => {
-      // 0. Bi-directional Header Scrub Animation
       gsap.fromTo(
         '.gallery-header-content',
-        { y: 40, opacity: 0 },
+        { y: 30, opacity: 0 },
         {
           y: 0,
           opacity: 1,
@@ -124,12 +123,11 @@ export const PhotoGallery: React.FC = () => {
         }
       );
 
-      // 1. Bi-directional Photo Cards Scrub Animation
       const cards = containerRef.current?.querySelectorAll('.gallery-compact-card');
       cards?.forEach((card) => {
         gsap.fromTo(
           card,
-          { y: 60, opacity: 0, scale: 0.93 },
+          { y: 40, opacity: 0, scale: 0.96 },
           {
             y: 0,
             opacity: 1,
@@ -149,7 +147,7 @@ export const PhotoGallery: React.FC = () => {
     return () => ctx.revert();
   }, []);
 
-  // Keyboard navigation for Lightbox modal
+  // Keyboard navigation for Lightbox
   useEffect(() => {
     if (!isModalOpen) return;
 
@@ -180,33 +178,29 @@ export const PhotoGallery: React.FC = () => {
     <section
       id="gallery"
       ref={containerRef}
-      className="relative w-full py-24 bg-[#0b0b0b] text-[#f5f5f7] border-t border-white/10 select-none overflow-hidden"
+      className="relative w-full py-24 bg-[#050608] text-[#E8E8EC] border-t border-white/[0.06] select-none overflow-hidden"
     >
-      {/* Soft Ambient Background Lighting */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[450px] bg-[#0077ff]/10 rounded-full blur-[150px] pointer-events-none" />
-
       <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
         {/* Section Header */}
         <div className="gallery-header-content text-center max-w-3xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/12 text-xs font-mono text-[#0077ff] tracking-widest uppercase mb-4">
-            <Camera className="w-3.5 h-3.5 text-[#0077ff]" />
-            <span>04 / PAST EDITIONS GALLERY</span>
-          </div>
+          <span className="text-[10px] font-body font-medium text-white/25 tracking-wider uppercase">
+            03 / Past Editions Gallery
+          </span>
 
-          <h2 className="font-syne text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-white uppercase leading-[1.05]">
+          <h2 className="font-display text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white/90 uppercase leading-[1.05] mt-2">
             Relive The{' '}
-            <span className="font-serif-custom italic font-normal text-[#0077ff] lowercase text-4xl sm:text-6xl md:text-8xl block sm:inline">
+            <span className="font-serif-custom italic font-normal text-[#2563EB] lowercase text-3xl sm:text-5xl md:text-7xl block sm:inline">
               memories
             </span>
           </h2>
 
-          <p className="mt-3 text-base text-white/60 font-light max-w-lg mx-auto">
+          <p className="mt-3 text-sm text-white/35 font-light max-w-lg mx-auto">
             Highlights from Srishti 2.5 & Srishti 2.6 — hackathons, cultural nights, workshops, and more.
           </p>
         </div>
 
-        {/* COMPACT 3-CARD GALLERY GRID (Minimal Scroll Required) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-stretch">
+        {/* 3-CARD GALLERY GRID */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6 items-stretch">
           {featuredPhotos.map((photo, idx) => {
             const isLastCard = idx === 2;
 
@@ -214,52 +208,48 @@ export const PhotoGallery: React.FC = () => {
               <div
                 key={photo.id}
                 onClick={() => openLightbox(idx)}
-                className="gallery-compact-card group relative rounded-3xl overflow-hidden border border-white/15 bg-[#121217] cursor-pointer shadow-2xl h-[360px] sm:h-[420px] transition-all duration-500 hover:border-[#0077ff]/60 hover:-translate-y-1.5"
+                className="gallery-compact-card group relative rounded-xl overflow-hidden border border-white/[0.06] bg-[#0D1015] cursor-pointer h-[360px] sm:h-[420px] transition-all duration-500 hover:border-white/[0.12] hover:-translate-y-1"
               >
                 {/* Photo Image */}
                 <img
                   src={photo.url}
                   alt={photo.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                  className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700 ease-out"
                   loading="lazy"
                 />
 
-                {/* Dark Vignette Gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0b0b0b] via-[#0b0b0b]/40 to-transparent" />
+                {/* Dark Vignette */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#050608] via-[#050608]/40 to-transparent" />
 
-                {/* Card Tag Header */}
+                {/* Card Tag */}
                 <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-10">
-                  <span className="px-3 py-1 rounded-full bg-black/60 border border-white/15 text-[10px] font-mono text-white/80 uppercase backdrop-blur-md">
+                  <span className="text-[9px] font-body font-medium text-white/40 uppercase tracking-wider">
                     {photo.category}
                   </span>
 
-                  <div className="w-8 h-8 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Maximize2 className="w-4 h-4" />
+                  <div className="w-7 h-7 rounded-md bg-white/[0.06] border border-white/[0.08] flex items-center justify-center text-white/30 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Maximize2 className="w-3.5 h-3.5" />
                   </div>
                 </div>
 
                 {/* Card Bottom Meta */}
                 <div className="absolute bottom-4 left-4 right-4 z-10 space-y-1">
-                  <span className="text-[10px] font-mono text-[#d4ff00] block">
-                    {photo.date} • {photo.location}
+                  <span className="text-[9px] font-body text-white/30 block">
+                    {photo.date} · {photo.location}
                   </span>
-                  <h3 className="font-syne font-bold text-lg text-white group-hover:text-[#0077ff] transition-colors leading-tight">
+                  <h3 className="font-display font-semibold text-base text-white/80 group-hover:text-white transition-colors leading-tight">
                     {photo.title}
                   </h3>
                 </div>
 
-                {/* OVERLAY ON THE 3RD CARD: "MORE / VIEW FULL GALLERY" */}
+                {/* OVERLAY ON 3RD CARD */}
                 {isLastCard && (
-                  <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-[#0077ff]/40 to-[#0b0b0b]/95 backdrop-blur-md flex flex-col items-center justify-center text-center p-6 z-20 group-hover:bg-[#0077ff]/80 transition-all duration-500">
-                    <div className="w-14 h-14 rounded-full bg-white text-black flex items-center justify-center mb-3 shadow-2xl group-hover:scale-110 transition-transform">
-                      <Sparkles className="w-6 h-6 text-[#0077ff]" />
-                    </div>
-
-                    <span className="font-syne font-black text-2xl text-white uppercase tracking-tight">
+                  <div className="absolute inset-0 bg-[#050608]/90 flex flex-col items-center justify-center text-center p-6 z-20 group-hover:bg-[#050608]/80 transition-all duration-500">
+                    <span className="font-display font-bold text-xl text-white/80 uppercase tracking-tight">
                       + More Photos
                     </span>
 
-                    <p className="text-xs text-white/80 font-light mt-1 max-w-[200px]">
+                    <p className="text-xs text-white/35 font-light mt-1 max-w-[200px]">
                       Browse full gallery from Srishti 2.5 & 2.6
                     </p>
 
@@ -268,10 +258,10 @@ export const PhotoGallery: React.FC = () => {
                         e.stopPropagation();
                         openLightbox(2);
                       }}
-                      className="mt-5 inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-white text-black font-syne text-xs font-bold uppercase tracking-wider shadow-2xl hover:bg-[#d4ff00] transition-colors"
+                      className="mt-5 inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-white text-[#050608] font-body text-xs font-semibold uppercase tracking-wider hover:bg-[#2563EB] hover:text-white transition-colors"
                     >
-                      <span>Open Full Gallery</span>
-                      <ArrowRight className="w-4 h-4" />
+                      <span>Open Gallery</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
                     </button>
                   </div>
                 )}
@@ -281,25 +271,23 @@ export const PhotoGallery: React.FC = () => {
         </div>
       </div>
 
-      {/* ------------------------------------------------------------- */}
-      {/* FULL-SCREEN LIGHTBOX MODAL */}
-      {/* ------------------------------------------------------------- */}
+      {/* LIGHTBOX MODAL */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/95 backdrop-blur-2xl flex flex-col justify-between p-4 sm:p-8 animate-fadeIn">
+        <div className="fixed inset-0 z-50 bg-[#050608]/97 backdrop-blur-lg flex flex-col justify-between p-4 sm:p-8 animate-fadeIn">
           {/* Modal Top Bar */}
-          <div className="flex items-center justify-between border-b border-white/10 pb-4 relative z-20">
+          <div className="flex items-center justify-between border-b border-white/[0.06] pb-4 relative z-20">
             <div className="flex items-center gap-3">
-              <Camera className="w-5 h-5 text-[#0077ff]" />
-              <span className="font-syne font-bold text-base text-white uppercase">
-                Srishti Gallery
+              <Camera className="w-4 h-4 text-white/30" />
+              <span className="font-display font-semibold text-sm text-white/70 uppercase">
+                Gallery
               </span>
-              <span className="px-2.5 py-0.5 rounded-full bg-white/10 text-[10px] font-mono text-white/60">
-                {activePhotoIndex + 1} of {filteredModalPhotos.length}
+              <span className="text-[10px] font-technical text-white/30">
+                {activePhotoIndex + 1}/{filteredModalPhotos.length}
               </span>
             </div>
 
-            {/* Category Filter Pills inside Modal */}
-            <div className="hidden md:flex items-center gap-2">
+            {/* Category Filters */}
+            <div className="hidden md:flex items-center gap-1.5">
               {['All', 'Srishti 2.5', 'Srishti 2.6', 'Backstage'].map((cat) => (
                 <button
                   key={cat}
@@ -307,10 +295,10 @@ export const PhotoGallery: React.FC = () => {
                     setFilterCategory(cat);
                     setActivePhotoIndex(0);
                   }}
-                  className={`px-3 py-1 rounded-full text-xs font-mono transition-all ${
+                  className={`px-3 py-1 rounded-md text-[11px] font-body transition-all ${
                     filterCategory === cat
-                      ? 'bg-[#0077ff] text-white font-bold'
-                      : 'text-white/50 hover:text-white hover:bg-white/5'
+                      ? 'bg-white/[0.08] text-white/80 font-medium'
+                      : 'text-white/30 hover:text-white/50'
                   }`}
                 >
                   {cat}
@@ -318,30 +306,28 @@ export const PhotoGallery: React.FC = () => {
               ))}
             </div>
 
-            {/* Close Button */}
+            {/* Close */}
             <button
               onClick={() => setIsModalOpen(false)}
-              className="p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
+              className="p-2 rounded-md bg-white/[0.04] hover:bg-white/[0.08] text-white/50 transition-colors"
               aria-label="Close Lightbox"
             >
-              <X className="w-6 h-6" />
+              <X className="w-5 h-5" />
             </button>
           </div>
 
           {/* Modal Main Stage */}
           <div className="relative flex-1 flex items-center justify-center my-4 overflow-hidden">
-            {/* Previous Arrow Button */}
             <button
               onClick={prevPhoto}
-              className="absolute left-2 sm:left-6 z-30 p-3 rounded-full bg-black/60 border border-white/20 text-white hover:bg-[#0077ff] hover:border-[#0077ff] transition-all backdrop-blur-md"
+              className="absolute left-2 sm:left-6 z-30 p-2.5 rounded-md bg-[#0D1015] border border-white/[0.08] text-white/50 hover:bg-white/[0.06] hover:text-white/80 transition-all"
               aria-label="Previous Photo"
             >
-              <ChevronLeft className="w-6 h-6" />
+              <ChevronLeft className="w-5 h-5" />
             </button>
 
-            {/* Active Image Container */}
             {filteredModalPhotos[activePhotoIndex] && (
-              <div className="max-w-5xl max-h-[72vh] rounded-2xl overflow-hidden border border-white/15 shadow-2xl relative">
+              <div className="max-w-5xl max-h-[72vh] rounded-xl overflow-hidden border border-white/[0.08] relative">
                 <img
                   src={filteredModalPhotos[activePhotoIndex].url}
                   alt={filteredModalPhotos[activePhotoIndex].title}
@@ -350,26 +336,25 @@ export const PhotoGallery: React.FC = () => {
               </div>
             )}
 
-            {/* Next Arrow Button */}
             <button
               onClick={nextPhoto}
-              className="absolute right-2 sm:right-6 z-30 p-3 rounded-full bg-black/60 border border-white/20 text-white hover:bg-[#0077ff] hover:border-[#0077ff] transition-all backdrop-blur-md"
+              className="absolute right-2 sm:right-6 z-30 p-2.5 rounded-md bg-[#0D1015] border border-white/[0.08] text-white/50 hover:bg-white/[0.06] hover:text-white/80 transition-all"
               aria-label="Next Photo"
             >
-              <ChevronRight className="w-6 h-6" />
+              <ChevronRight className="w-5 h-5" />
             </button>
           </div>
 
           {/* Modal Bottom Caption */}
           {filteredModalPhotos[activePhotoIndex] && (
-            <div className="max-w-3xl mx-auto text-center border-t border-white/10 pt-4 space-y-1 relative z-20">
-              <span className="text-xs font-mono text-[#d4ff00]">
-                {filteredModalPhotos[activePhotoIndex].date} • {filteredModalPhotos[activePhotoIndex].location}
+            <div className="max-w-3xl mx-auto text-center border-t border-white/[0.06] pt-4 space-y-1 relative z-20">
+              <span className="text-[10px] font-body text-white/25">
+                {filteredModalPhotos[activePhotoIndex].date} · {filteredModalPhotos[activePhotoIndex].location}
               </span>
-              <h4 className="font-syne font-bold text-xl text-white">
+              <h4 className="font-display font-semibold text-lg text-white/80">
                 {filteredModalPhotos[activePhotoIndex].title}
               </h4>
-              <p className="text-xs text-white/60 font-light max-w-xl mx-auto">
+              <p className="text-xs text-white/35 font-light max-w-xl mx-auto">
                 {filteredModalPhotos[activePhotoIndex].description}
               </p>
             </div>

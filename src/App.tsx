@@ -91,7 +91,7 @@ export function AppContent() {
   }
 
   return (
-    <div className="relative w-full min-h-screen bg-[#0b0b0b] text-[#f5f5f7] antialiased overflow-x-hidden">
+    <div className="relative w-full min-h-screen bg-[#050608] text-[#E8E8EC] antialiased overflow-x-hidden">
       {/* 1. Global Navigation */}
       <Navbar onNavigateToRegister={() => navigateTo('register')} onNavigateToAdmin={() => navigateTo('admin')} />
 
