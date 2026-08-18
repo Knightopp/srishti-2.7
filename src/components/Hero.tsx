@@ -50,22 +50,6 @@ const HeroCountdown = memo(() => {
   );
 });
 
-// =============================================
-// Branded Black Ribbon / Tape Marquee Sequence
-// =============================================
-const RibbonTextSequence = memo(() => (
-  <div className="flex items-center shrink-0 select-none">
-    {Array.from({ length: 12 }).map((_, i) => (
-      <span
-        key={i}
-        className="inline-flex items-center gap-6 px-4 font-technical font-bold text-[10px] sm:text-[11px] md:text-[12px] tracking-[0.24em] text-white/90 uppercase whitespace-nowrap"
-      >
-        <span>SRISHTI 2.7</span>
-        <span className="text-[#38bdf8]/60 text-[8px] font-normal">•</span>
-      </span>
-    ))}
-  </div>
-));
 
 // Vertical text sequence for side ribbons
 const VerticalRibbonTextSequence = memo(() => (
