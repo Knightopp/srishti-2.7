@@ -21,6 +21,9 @@ export const Navbar: React.FC<NavbarProps> = ({
   useEffect(() => {
     if (!headerRef.current) return;
 
+    // ── MOBILE: no scroll morph on mobile ──
+    if (window.innerWidth < 768) return;
+
     const ctx = gsap.context(() => {
       // Create master scrub timeline synced to the 1200px Hero zoom
       const tl = gsap.timeline({

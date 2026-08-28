@@ -146,6 +146,22 @@ export const TimelineRoadmap: React.FC = () => {
   useEffect(() => {
     if (!containerRef.current) return;
 
+    // ── MOBILE: show everything immediately, no scroll animations ──
+    const isMobile = window.innerWidth < 768;
+    if (isMobile) {
+      // Make header content and all cards immediately visible
+      const headerEl = containerRef.current.querySelector('.roadmap-header-content');
+      if (headerEl) gsap.set(headerEl, { y: 0, opacity: 1 });
+      if (lineFillRef.current) gsap.set(lineFillRef.current, { scaleY: 1 });
+      cardsRef.current.forEach((card) => {
+        if (card) gsap.set(card, { x: 0, opacity: 1 });
+      });
+      nodeDotsRef.current.forEach((dot) => {
+        if (dot) gsap.set(dot, { opacity: 1 });
+      });
+      return;
+    }
+
     const ctx = gsap.context(() => {
       gsap.fromTo(
         '.roadmap-header-content',
@@ -181,19 +197,16 @@ export const TimelineRoadmap: React.FC = () => {
         }
       );
 
-      // Animate cards
-      const isMobile = window.innerWidth < 768;
-
+      // Animate cards (desktop only)
       cardsRef.current.forEach((card, index) => {
         if (!card) return;
 
         const isLeft = card.dataset.side === 'left';
         const nodeDot = nodeDotsRef.current[index];
-        const initialX = isMobile ? (isLeft ? -20 : 20) : (isLeft ? -40 : 40);
 
         gsap.fromTo(
           card,
-          { x: initialX, opacity: 0 },
+          { x: isLeft ? -40 : 40, opacity: 0 },
           {
             x: 0,
             opacity: 1,

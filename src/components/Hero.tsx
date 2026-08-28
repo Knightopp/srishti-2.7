@@ -82,6 +82,19 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
   useEffect(() => {
     if (!heroRef.current) return;
 
+    // ── MOBILE: skip all scroll-based animations entirely ──
+    const isMobile = window.innerWidth < 768;
+    if (isMobile) {
+      // Show ribbons and everything immediately, no scroll effects
+      if (leftSideRibbonRef.current) {
+        gsap.set(leftSideRibbonRef.current, { clipPath: 'inset(0% 0% 0% 0%)' });
+      }
+      if (rightSideRibbonRef.current) {
+        gsap.set(rightSideRibbonRef.current, { clipPath: 'inset(0% 0% 0% 0%)' });
+      }
+      return;
+    }
+
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({
         scrollTrigger: {
