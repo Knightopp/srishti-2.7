@@ -101,7 +101,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         <header
           ref={headerRef}
           style={{
-            maxWidth: '980px',
+            maxWidth: '740px',
             width: '100%',
             borderRadius: '16px',
             paddingTop: '11px',
