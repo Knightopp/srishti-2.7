@@ -108,7 +108,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             backgroundColor: 'rgba(8, 12, 20, 0.82)',
             borderColor: 'rgba(255, 255, 255, 0.08)',
           }}
-          className="global-navbar pointer-events-auto backdrop-blur-2xl border shadow-[0_12px_45px_rgba(0,0,0,0.6)] flex items-center select-none will-change-transform h-14 overflow-hidden"
+          className="global-navbar pointer-events-auto backdrop-blur-2xl border shadow-[0_12px_45px_rgba(0,0,0,0.6)] flex items-center justify-between select-none will-change-transform h-14 overflow-hidden"
         >
           {/* COL 1 — Brand Logo, fixed left */}
           <a href="#" className="flex items-center gap-2 group shrink-0">
