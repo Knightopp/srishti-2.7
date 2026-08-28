@@ -1,5 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { ArrowUpRight, Menu, X, Calendar, Sparkles, Compass, Mail, Camera } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { ArrowUpRight, Menu, X } from 'lucide-react';
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface NavbarProps {
   onNavigateToRegister?: () => void;
@@ -10,15 +14,67 @@ export const Navbar: React.FC<NavbarProps> = ({
   onNavigateToRegister,
   onNavigateToAdmin: _onNavigateToAdmin,
 }) => {
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
+  const secondaryGroupRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 30);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    if (!headerRef.current) return;
+
+    const ctx = gsap.context(() => {
+      // Create master scrub timeline synced to the 1200px Hero zoom
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: document.body,
+          start: 'top top',
+          end: '+=1200',
+          scrub: 0.3,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      // 1. Smoothly morph header capsule — shrinks to fit only permanent items
+      tl.to(
+        headerRef.current,
+        {
+          maxWidth: '540px',
+          borderRadius: '9999px',
+          paddingLeft: '18px',
+          paddingRight: '18px',
+          paddingTop: '8px',
+          paddingBottom: '8px',
+          backgroundColor: 'rgba(8, 12, 20, 0.95)',
+          borderColor: 'rgba(255, 255, 255, 0.14)',
+          ease: 'power1.inOut',
+          duration: 1.0,
+        },
+        0.0
+      );
+
+      // 2. Secondary nav links fade out (opacity first, then collapse width)
+      if (secondaryGroupRef.current) {
+        tl.to(
+          secondaryGroupRef.current,
+          { opacity: 0, ease: 'power2.out', duration: 0.30 },
+          0.0
+        );
+        tl.to(
+          secondaryGroupRef.current,
+          {
+            width: 0,
+            minWidth: 0,
+            paddingLeft: 0,
+            paddingRight: 0,
+            gap: 0,
+            ease: 'power1.inOut',
+            duration: 0.40,
+          },
+          0.25
+        );
+      }
+    });
+
+    return () => ctx.revert();
   }, []);
 
   // Lock body scroll when mobile menu is open
@@ -33,81 +89,70 @@ export const Navbar: React.FC<NavbarProps> = ({
     };
   }, [isMenuOpen]);
 
-  // Liquid Explode MouseMove Handler — only for Register CTA
-  const handleExplodeMove = (e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>) => {
-    const button = e.currentTarget;
-    const explode = button.querySelector('.explode') as HTMLElement;
-    if (!explode) return;
-
-    const rect = button.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    explode.style.left = `${x}px`;
-    explode.style.top = `${y}px`;
-  };
-
-  const navLinks = [
-    { href: '#roadmap', label: 'Schedule', number: '01', icon: <Calendar className="w-4 h-4 text-white/40" /> },
-    { href: '#cases', label: 'Highlights', number: '02', icon: <Sparkles className="w-4 h-4 text-white/40" /> },
-    { href: '#gallery', label: 'Gallery', number: '03', icon: <Camera className="w-4 h-4 text-white/40" /> },
-    { href: '#philosophy', label: 'About', number: '04', icon: <Compass className="w-4 h-4 text-white/40" /> },
-    { href: '#register', label: 'Register', number: '05', icon: <Mail className="w-4 h-4 text-white/40" />, onClick: onNavigateToRegister },
-  ];
-
   return (
     <>
-      <header
-        className={`global-navbar fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
-          isScrolled
-            ? 'py-3 bg-[#050608]/92 backdrop-blur-lg border-b border-white/[0.06]'
-            : 'py-5 md:py-6 bg-transparent'
-        }`}
-      >
-
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 md:px-12 flex items-center justify-between">
-          {/* Srishti 2.7 Brand Logo */}
-          <a href="#" className="flex items-center gap-2.5 group relative z-50">
-            <div className="w-8 h-8 rounded-lg bg-white/[0.04] border border-white/[0.08] p-1 flex items-center justify-center transition-all duration-300">
-              <img src="/srishti-logo-transparent.png" alt="Srishti 2.7 Logo" className="w-full h-full object-contain opacity-70" />
+      {/* =============================================
+          FLOATING ROUNDED NAVBAR (SMOOTH FADE + EQUAL GAPS)
+          ============================================= */}
+      <div className="fixed top-3 sm:top-5 left-0 right-0 z-50 flex justify-center pointer-events-none px-4">
+        <header
+          ref={headerRef}
+          style={{
+            maxWidth: '980px',
+            width: '100%',
+            borderRadius: '16px',
+            paddingTop: '11px',
+            paddingBottom: '11px',
+            paddingLeft: '22px',
+            paddingRight: '22px',
+            backgroundColor: 'rgba(8, 12, 20, 0.82)',
+            borderColor: 'rgba(255, 255, 255, 0.08)',
+          }}
+          className="global-navbar pointer-events-auto backdrop-blur-2xl border shadow-[0_12px_45px_rgba(0,0,0,0.6)] flex items-center select-none will-change-transform h-14 overflow-hidden"
+        >
+          {/* COL 1 — Brand Logo, fixed left */}
+          <a href="#" className="flex items-center gap-2 group shrink-0">
+            <div className="w-7 h-7 rounded-lg bg-white/[0.04] border border-white/[0.08] p-1 flex items-center justify-center transition-all duration-200 group-hover:border-cyan-400/40 shrink-0">
+              <img
+                src="/srishti-logo-transparent.png"
+                alt="Srishti Logo"
+                className="w-full h-full object-contain"
+              />
             </div>
-            <span className="font-display font-semibold text-base md:text-lg tracking-tight text-white/90">
-              srishti<span className="font-technical font-bold text-[#2563EB] ml-0.5">2.7</span>
+            <span className="font-display font-bold text-sm tracking-tight text-white flex items-center leading-none whitespace-nowrap">
+              srishti
+              <span className="text-gradient-27 font-technical font-black ml-1">2.7</span>
             </span>
           </a>
 
-          {/* Desktop Navigation Links — plain typography */}
-          <nav className="hidden md:flex items-center gap-7 text-[11px] font-body font-medium tracking-wider uppercase text-white/40">
-            {navLinks.map((link) => (
-              <a 
-                key={link.href} 
-                href={link.href} 
-                onClick={(e) => {
-                  if (link.onClick) {
-                    e.preventDefault();
-                    link.onClick();
-                  }
-                }}
-                className="text-flip-wrap"
-              >
-                <span className="text-default">{link.label}</span>
-                <span className="text-hover">{link.label}</span>
-              </a>
-            ))}
-          </nav>
-
-          {/* CTA Buttons (Desktop) */}
-          <div className="hidden md:flex items-center gap-3">
-            {/* Event Highlights — secondary, restrained */}
-            <a
-              href="#cases"
-              className="px-4 py-2 border border-white/[0.08] rounded-md text-white/50 font-body text-[11px] font-medium tracking-wider uppercase hover:border-white/20 hover:text-white/80 transition-all duration-300 flex items-center gap-2"
-            >
-              <span>Highlights</span>
-              <ArrowUpRight className="w-3 h-3 text-white/30" />
+          {/* COL 2 — Nav links, fills center, perfectly centered */}
+          <nav className="hidden md:flex flex-1 items-center justify-center gap-5 text-xs font-body font-semibold uppercase tracking-wider text-white/50">
+            <a href="#cases" className="hover:text-white transition-colors whitespace-nowrap shrink-0">
+              Events
+            </a>
+            <a href="#roadmap" className="hover:text-white transition-colors whitespace-nowrap shrink-0">
+              Schedule
+            </a>
+            <a href="#contact" className="hover:text-white transition-colors whitespace-nowrap shrink-0">
+              Contact
             </a>
 
-            {/* Register Now — primary CTA */}
+            {/* Collapsible secondary links */}
+            <div
+              ref={secondaryGroupRef}
+              className="flex items-center gap-5 overflow-hidden whitespace-nowrap"
+            >
+              <a href="#gallery" className="hover:text-white transition-colors shrink-0">
+                Gallery
+              </a>
+              <a href="#philosophy" className="hover:text-white transition-colors shrink-0">
+                About
+              </a>
+            </div>
+          </nav>
+
+          {/* COL 3 — Register button, fixed right, always visible */}
+          <div className="hidden md:flex items-center shrink-0">
             <a
               href="#register"
               onClick={(e) => {
@@ -116,81 +161,94 @@ export const Navbar: React.FC<NavbarProps> = ({
                   onNavigateToRegister();
                 }
               }}
-              onMouseMove={handleExplodeMove}
-              className="btn-outcrowd px-5 py-2.5 bg-[#2563EB] text-white border border-[#2563EB] font-body text-[11px] font-semibold tracking-wider uppercase"
+              className="px-4 py-2 rounded-full bg-gradient-27-glow text-white font-body text-xs font-bold uppercase tracking-wider hover:opacity-90 transition-opacity flex items-center justify-center gap-1.5 cursor-pointer shadow-lg shrink-0 leading-none whitespace-nowrap"
             >
-              <div className="explode" />
-              <div className="btn-content">
-                <span>Register Now</span>
-              </div>
+              <span>Register</span>
+              <ArrowUpRight className="w-3.5 h-3.5" />
             </a>
           </div>
 
-          {/* Mobile Menu Toggle Button — simple */}
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className={`md:hidden relative z-50 p-2.5 rounded-lg border transition-all duration-300 flex items-center justify-center ${
-              isMenuOpen
-                ? 'bg-white/10 border-white/15 text-white'
-                : 'bg-white/[0.03] border-white/[0.08] text-white/70 hover:bg-white/[0.06]'
-            }`}
-            aria-label="Toggle menu"
-          >
-            {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
-        </div>
-      </header>
+          {/* Mobile Menu Controls */}
+          <div className="flex md:hidden items-center gap-2 h-full">
+            <a
+              href="#register"
+              onClick={(e) => {
+                if (onNavigateToRegister) {
+                  e.preventDefault();
+                  onNavigateToRegister();
+                }
+              }}
+              className="px-3 py-1.5 rounded-lg bg-gradient-27 text-white font-body text-[11px] font-bold uppercase tracking-wider leading-none flex items-center justify-center"
+            >
+              Register
+            </a>
 
-      {/* FULLSCREEN MOBILE MENU DRAWER — editorial, clean */}
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="p-1.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white/70 hover:text-white transition-colors cursor-pointer flex items-center justify-center"
+              aria-label="Toggle menu"
+            >
+              {isMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+            </button>
+          </div>
+        </header>
+      </div>
+
+      {/* FULLSCREEN MOBILE MENU DRAWER */}
       <div
-        className={`fixed inset-0 z-40 bg-[#050608]/97 backdrop-blur-xl flex flex-col justify-between p-6 sm:p-10 pt-28 transition-all duration-500 ease-out md:hidden ${
+        className={`fixed inset-0 z-40 bg-[#050608]/98 backdrop-blur-2xl flex flex-col justify-between p-6 sm:p-8 pt-24 transition-all duration-300 md:hidden ${
           isMenuOpen
             ? 'opacity-100 translate-y-0 pointer-events-auto'
-            : 'opacity-0 -translate-y-6 pointer-events-none'
+            : 'opacity-0 -translate-y-4 pointer-events-none'
         }`}
       >
-        {/* Mobile Nav Links List — simple stacked links */}
-        <div className="flex flex-col gap-1 relative z-10 my-auto">
-          <span className="text-[10px] font-body text-white/20 tracking-wider uppercase font-medium mb-4 pl-4">
-            Navigation
+        <div className="flex flex-col gap-1 my-auto">
+          <span className="text-[10px] font-technical text-white/30 tracking-widest uppercase font-semibold mb-4 px-2">
+            NAVIGATION MATRIX
           </span>
 
-          {navLinks.map((link, idx) => (
+          {[
+            { href: '#cases', label: 'Events', number: '01' },
+            { href: '#roadmap', label: 'Schedule', number: '02' },
+            { href: '#gallery', label: 'Gallery', number: '03' },
+            { href: '#philosophy', label: 'About', number: '04' },
+            { href: '#contact', label: 'Contact', number: '05' },
+          ].map((link) => (
             <a
               key={link.href}
               href={link.href}
               onClick={() => {
-                if (link.onClick) link.onClick();
                 setIsMenuOpen(false);
               }}
-              className={`group flex items-center justify-between px-4 py-4 border-b border-white/[0.05] hover:bg-white/[0.02] transition-all duration-300 ${
-                isMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
-              }`}
-              style={{ transitionDelay: `${(idx + 1) * 60}ms` }}
+              className="flex items-center justify-between px-3 py-3.5 border-b border-white/[0.04] text-white/80 hover:text-white transition-colors"
             >
               <div className="flex items-center gap-3">
-                <span className="text-[10px] font-technical text-white/15">{link.number}</span>
-                <span className="font-display font-bold text-xl text-white/80 group-hover:text-white transition-colors uppercase tracking-tight">
+                <span className="text-xs font-technical text-cyan-400 font-bold">{link.number}</span>
+                <span className="font-display font-bold text-lg text-white uppercase tracking-tight">
                   {link.label}
                 </span>
               </div>
-
-              <ArrowUpRight className="w-4 h-4 text-white/15 group-hover:text-white/40 transition-colors" />
+              <ArrowUpRight className="w-4 h-4 text-white/30" />
             </a>
           ))}
         </div>
 
-        {/* Mobile Drawer Footer */}
-        <div className="relative z-10 pt-6 border-t border-white/[0.06] space-y-4">
-          <div className="flex items-center justify-between text-[10px] font-body text-white/25">
-            <span>Srishti 2.7 — St. Thomas College</span>
-            <span className="font-technical text-white/30">DEC 4–5, 2026</span>
+        <div className="pt-6 border-t border-white/[0.06] space-y-3">
+          <div className="flex items-center justify-between text-[10px] font-technical text-white/40">
+            <span>SRISHTI 2.7 • ST. THOMAS COLLEGE</span>
+            <span>DEC 4–5, 2026</span>
           </div>
 
           <a
-            href="#cta"
-            onClick={() => setIsMenuOpen(false)}
-            className="w-full py-3.5 text-center bg-[#2563EB] text-white font-display font-bold uppercase text-xs rounded-lg flex items-center justify-center gap-2 active:scale-[0.98] transition-transform"
+            href="#register"
+            onClick={(e) => {
+              if (onNavigateToRegister) {
+                e.preventDefault();
+                onNavigateToRegister();
+              }
+              setIsMenuOpen(false);
+            }}
+            className="w-full py-3 text-center bg-gradient-27-glow text-white font-body font-bold uppercase text-xs rounded-xl flex items-center justify-center gap-2"
           >
             <span>Register Now</span>
             <ArrowUpRight className="w-4 h-4" />

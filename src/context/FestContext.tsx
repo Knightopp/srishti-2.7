@@ -479,7 +479,7 @@ export const FestProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const saved = localStorage.getItem('srishti_events');
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
+        if (Array.isArray(parsed) && parsed.length >= DEFAULT_EVENTS.length) {
           return parsed.map((e: any, idx: number) => sanitizeEvent(e, idx));
         }
       }

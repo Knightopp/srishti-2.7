@@ -11,7 +11,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateToAdmin }) => {
   };
 
   return (
-    <footer className="w-full bg-[#050608] text-[#E8E8EC] border-t border-white/[0.06] py-16 select-none">
+    <footer id="contact" className="w-full bg-[#050608] text-[#E8E8EC] border-t border-white/[0.06] py-16 select-none">
       <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col gap-12">
         {/* Top Row: Brand & Info */}
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 pb-12 border-b border-white/[0.06]">

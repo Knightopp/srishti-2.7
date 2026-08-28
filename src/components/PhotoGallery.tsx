@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Camera, ArrowRight, X, ChevronLeft, ChevronRight, Maximize2 } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, Maximize2, ArrowUpRight } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -28,7 +28,7 @@ const GALLERY_PHOTOS: GalleryPhoto[] = [
   {
     id: 'photo-2',
     title: 'Srishti 2.6 — Hackathon Arena in Action',
-    category: 'Srishti 2.6',
+    category: 'Technical',
     date: 'Dec 2025',
     location: 'Innovation Hub',
     url: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1200&q=80',
@@ -37,7 +37,7 @@ const GALLERY_PHOTOS: GalleryPhoto[] = [
   {
     id: 'photo-3',
     title: 'Srishti 2.5 — Cultural Night & DJ Set',
-    category: 'Srishti 2.5',
+    category: 'Cultural',
     date: 'Dec 2024',
     location: 'Open Air Stage',
     url: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1200&q=80',
@@ -46,7 +46,7 @@ const GALLERY_PHOTOS: GalleryPhoto[] = [
   {
     id: 'photo-4',
     title: 'Srishti 2.5 — Coding Contest Finals',
-    category: 'Srishti 2.5',
+    category: 'Technical',
     date: 'Dec 2024',
     location: 'CS Lab Complex',
     url: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80',
@@ -55,7 +55,7 @@ const GALLERY_PHOTOS: GalleryPhoto[] = [
   {
     id: 'photo-5',
     title: 'Srishti 2.6 — AI Workshop Session',
-    category: 'Srishti 2.6',
+    category: 'Technical',
     date: 'Dec 2025',
     location: 'Conference Room',
     url: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1200&q=80',
@@ -73,7 +73,7 @@ const GALLERY_PHOTOS: GalleryPhoto[] = [
   {
     id: 'photo-7',
     title: 'Srishti 2.6 — Tech Quiz Buzzer Round',
-    category: 'Srishti 2.6',
+    category: 'Technical',
     date: 'Dec 2025',
     location: 'Seminar Hall',
     url: 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=1200&q=80',
@@ -97,7 +97,7 @@ export const PhotoGallery: React.FC = () => {
 
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const featuredPhotos = GALLERY_PHOTOS.slice(0, 3);
+  const featuredPhotos = GALLERY_PHOTOS.slice(0, 4);
 
   const filteredModalPhotos = filterCategory === 'All'
     ? GALLERY_PHOTOS
@@ -122,32 +122,11 @@ export const PhotoGallery: React.FC = () => {
           },
         }
       );
-
-      const cards = containerRef.current?.querySelectorAll('.gallery-compact-card');
-      cards?.forEach((card) => {
-        gsap.fromTo(
-          card,
-          { y: 40, opacity: 0, scale: 0.96 },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: card,
-              start: 'top 92%',
-              end: 'top 68%',
-              scrub: 0.5,
-            },
-          }
-        );
-      });
     }, containerRef);
 
     return () => ctx.revert();
   }, []);
 
-  // Keyboard navigation for Lightbox
   useEffect(() => {
     if (!isModalOpen) return;
 
@@ -178,127 +157,109 @@ export const PhotoGallery: React.FC = () => {
     <section
       id="gallery"
       ref={containerRef}
-      className="relative w-full py-24 bg-[#050608] text-[#E8E8EC] border-t border-white/[0.06] select-none overflow-hidden"
+      className="relative w-full py-20 sm:py-28 bg-[#050608] text-[#E8E8EC] border-t border-white/[0.08] select-none overflow-hidden"
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
+        
         {/* Section Header */}
-        <div className="gallery-header-content text-center max-w-3xl mx-auto mb-14">
-          <span className="text-[10px] font-body font-medium text-white/25 tracking-wider uppercase">
-            03 / Past Editions Gallery
-          </span>
-
-          <h2 className="font-display text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white/90 uppercase leading-[1.05] mt-2">
-            Relive The{' '}
-            <span className="font-serif-custom italic font-normal text-[#2563EB] lowercase text-3xl sm:text-5xl md:text-7xl block sm:inline">
-              memories
+        <div className="gallery-header-content flex flex-col md:flex-row md:items-end justify-between gap-6 pb-10 border-b border-white/[0.08]">
+          <div className="space-y-2">
+            <span className="text-[10px] md:text-[11px] font-technical text-white/40 tracking-widest uppercase block font-semibold">
+              03 // PAST EDITIONS GALLERY
             </span>
-          </h2>
+            <h2 className="font-display text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white uppercase leading-[1.05]">
+              Relive The{' '}
+              <span className="font-serif italic font-normal text-gradient-27 lowercase text-3xl sm:text-5xl md:text-7xl block sm:inline">
+                memories
+              </span>
+            </h2>
+            <p className="text-xs sm:text-sm text-white/50 font-light max-w-lg">
+              Highlights from Srishti 2.5 & Srishti 2.6 — hackathons, cultural nights, workshops, and celebrations.
+            </p>
+          </div>
 
-          <p className="mt-3 text-sm text-white/35 font-light max-w-lg mx-auto">
-            Highlights from Srishti 2.5 & Srishti 2.6 — hackathons, cultural nights, workshops, and more.
-          </p>
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded bg-white/[0.04] border border-white/[0.12] text-white/80 hover:text-white hover:border-cyan-400/40 text-xs font-body font-semibold uppercase tracking-wider transition-colors cursor-pointer self-start md:self-end"
+          >
+            <span>View All ({GALLERY_PHOTOS.length}) Photos</span>
+            <ArrowUpRight className="w-4 h-4" />
+          </button>
         </div>
 
-        {/* 3-CARD GALLERY GRID */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6 items-stretch">
-          {featuredPhotos.map((photo, idx) => {
-            const isLastCard = idx === 2;
+        {/* 4-CARD GALLERY GRID */}
+        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 items-stretch">
+          {featuredPhotos.map((photo, idx) => (
+            <div
+              key={photo.id}
+              onClick={() => openLightbox(idx)}
+              className="gallery-compact-card group relative rounded-lg overflow-hidden border border-white/[0.08] bg-[#0A0D14] cursor-pointer h-[320px] sm:h-[380px] transition-all duration-300 hover:border-cyan-400/40 hover:-translate-y-1"
+            >
+              {/* Photo Image */}
+              <img
+                src={photo.url}
+                alt={photo.title}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                loading="lazy"
+              />
 
-            return (
-              <div
-                key={photo.id}
-                onClick={() => openLightbox(idx)}
-                className="gallery-compact-card group relative rounded-xl overflow-hidden border border-white/[0.06] bg-[#0D1015] cursor-pointer h-[360px] sm:h-[420px] transition-all duration-500 hover:border-white/[0.12] hover:-translate-y-1"
-              >
-                {/* Photo Image */}
-                <img
-                  src={photo.url}
-                  alt={photo.title}
-                  className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700 ease-out"
-                  loading="lazy"
-                />
+              {/* Dark Vignette */}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#050608] via-[#050608]/40 to-transparent" />
 
-                {/* Dark Vignette */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#050608] via-[#050608]/40 to-transparent" />
+              {/* Card Tag */}
+              <div className="absolute top-3.5 left-3.5 right-3.5 flex items-center justify-between z-10">
+                <span className="px-2 py-0.5 rounded bg-black/60 backdrop-blur-md text-[9px] font-technical text-cyan-300 uppercase">
+                  {photo.category}
+                </span>
 
-                {/* Card Tag */}
-                <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-10">
-                  <span className="text-[9px] font-body font-medium text-white/40 uppercase tracking-wider">
-                    {photo.category}
-                  </span>
-
-                  <div className="w-7 h-7 rounded-md bg-white/[0.06] border border-white/[0.08] flex items-center justify-center text-white/30 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Maximize2 className="w-3.5 h-3.5" />
-                  </div>
+                <div className="w-7 h-7 rounded bg-black/60 border border-white/10 flex items-center justify-center text-white/60 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Maximize2 className="w-3.5 h-3.5" />
                 </div>
-
-                {/* Card Bottom Meta */}
-                <div className="absolute bottom-4 left-4 right-4 z-10 space-y-1">
-                  <span className="text-[9px] font-body text-white/30 block">
-                    {photo.date} · {photo.location}
-                  </span>
-                  <h3 className="font-display font-semibold text-base text-white/80 group-hover:text-white transition-colors leading-tight">
-                    {photo.title}
-                  </h3>
-                </div>
-
-                {/* OVERLAY ON 3RD CARD */}
-                {isLastCard && (
-                  <div className="absolute inset-0 bg-[#050608]/90 flex flex-col items-center justify-center text-center p-6 z-20 group-hover:bg-[#050608]/80 transition-all duration-500">
-                    <span className="font-display font-bold text-xl text-white/80 uppercase tracking-tight">
-                      + More Photos
-                    </span>
-
-                    <p className="text-xs text-white/35 font-light mt-1 max-w-[200px]">
-                      Browse full gallery from Srishti 2.5 & 2.6
-                    </p>
-
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        openLightbox(2);
-                      }}
-                      className="mt-5 inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-white text-[#050608] font-body text-xs font-semibold uppercase tracking-wider hover:bg-[#2563EB] hover:text-white transition-colors"
-                    >
-                      <span>Open Gallery</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                )}
               </div>
-            );
-          })}
+
+              {/* Card Bottom Meta */}
+              <div className="absolute bottom-3.5 left-3.5 right-3.5 z-10 space-y-1">
+                <span className="text-[9px] font-technical text-white/40 block">
+                  {photo.date} • {photo.location}
+                </span>
+                <h3 className="font-display font-bold text-sm sm:text-base text-white group-hover:text-cyan-200 transition-colors leading-snug">
+                  {photo.title}
+                </h3>
+              </div>
+            </div>
+          ))}
         </div>
+
       </div>
 
-      {/* LIGHTBOX MODAL */}
+      {/* FULLSCREEN LIGHTBOX MODAL */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 bg-[#050608]/97 backdrop-blur-lg flex flex-col justify-between p-4 sm:p-8 animate-fadeIn">
+        <div className="fixed inset-0 z-50 bg-[#050608]/98 backdrop-blur-2xl flex flex-col justify-between p-4 sm:p-8 animate-fadeIn">
           {/* Modal Top Bar */}
-          <div className="flex items-center justify-between border-b border-white/[0.06] pb-4 relative z-20">
+          <div className="flex items-center justify-between pb-4 border-b border-white/[0.08]">
             <div className="flex items-center gap-3">
-              <Camera className="w-4 h-4 text-white/30" />
-              <span className="font-display font-semibold text-sm text-white/70 uppercase">
-                Gallery
+              <span className="text-xs font-technical text-cyan-400 font-bold uppercase">
+                GALLERY EXPLORER
               </span>
-              <span className="text-[10px] font-technical text-white/30">
-                {activePhotoIndex + 1}/{filteredModalPhotos.length}
+              <span className="text-white/20">•</span>
+              <span className="text-xs font-technical text-white/50">
+                {activePhotoIndex + 1} / {filteredModalPhotos.length}
               </span>
             </div>
 
             {/* Category Filters */}
-            <div className="hidden md:flex items-center gap-1.5">
-              {['All', 'Srishti 2.5', 'Srishti 2.6', 'Backstage'].map((cat) => (
+            <div className="hidden sm:flex items-center gap-2">
+              {['All', 'Srishti 2.6', 'Srishti 2.5', 'Technical', 'Cultural'].map((cat) => (
                 <button
                   key={cat}
                   onClick={() => {
                     setFilterCategory(cat);
                     setActivePhotoIndex(0);
                   }}
-                  className={`px-3 py-1 rounded-md text-[11px] font-body transition-all ${
+                  className={`px-3 py-1 rounded text-xs font-body font-semibold uppercase tracking-wider transition-colors cursor-pointer ${
                     filterCategory === cat
-                      ? 'bg-white/[0.08] text-white/80 font-medium'
-                      : 'text-white/30 hover:text-white/50'
+                      ? 'bg-gradient-27 text-white'
+                      : 'bg-white/[0.04] text-white/40 hover:text-white'
                   }`}
                 >
                   {cat}
@@ -306,11 +267,10 @@ export const PhotoGallery: React.FC = () => {
               ))}
             </div>
 
-            {/* Close */}
             <button
               onClick={() => setIsModalOpen(false)}
-              className="p-2 rounded-md bg-white/[0.04] hover:bg-white/[0.08] text-white/50 transition-colors"
-              aria-label="Close Lightbox"
+              className="p-2 rounded bg-white/[0.06] text-white/70 hover:text-white hover:bg-white/[0.1] transition-colors cursor-pointer"
+              aria-label="Close modal"
             >
               <X className="w-5 h-5" />
             </button>
@@ -318,47 +278,57 @@ export const PhotoGallery: React.FC = () => {
 
           {/* Modal Main Stage */}
           <div className="relative flex-1 flex items-center justify-center my-4 overflow-hidden">
-            <button
-              onClick={prevPhoto}
-              className="absolute left-2 sm:left-6 z-30 p-2.5 rounded-md bg-[#0D1015] border border-white/[0.08] text-white/50 hover:bg-white/[0.06] hover:text-white/80 transition-all"
-              aria-label="Previous Photo"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-
             {filteredModalPhotos[activePhotoIndex] && (
-              <div className="max-w-5xl max-h-[72vh] rounded-xl overflow-hidden border border-white/[0.08] relative">
+              <div className="max-w-4xl max-h-[75vh] w-full flex flex-col items-center">
                 <img
                   src={filteredModalPhotos[activePhotoIndex].url}
                   alt={filteredModalPhotos[activePhotoIndex].title}
-                  className="w-full h-full object-contain max-h-[72vh]"
+                  className="max-h-[60vh] w-auto max-w-full object-contain rounded-lg border border-white/[0.1]"
                 />
+                <div className="mt-4 text-center space-y-1">
+                  <h4 className="font-display font-bold text-lg text-white">
+                    {filteredModalPhotos[activePhotoIndex].title}
+                  </h4>
+                  <p className="text-xs text-white/50 max-w-lg mx-auto font-light">
+                    {filteredModalPhotos[activePhotoIndex].description}
+                  </p>
+                </div>
               </div>
             )}
 
+            {/* Nav Arrows */}
+            <button
+              onClick={prevPhoto}
+              className="absolute left-2 sm:left-6 p-3 rounded-full bg-black/60 border border-white/10 text-white/70 hover:text-white hover:border-cyan-400 transition-colors cursor-pointer"
+              aria-label="Previous photo"
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </button>
             <button
               onClick={nextPhoto}
-              className="absolute right-2 sm:right-6 z-30 p-2.5 rounded-md bg-[#0D1015] border border-white/[0.08] text-white/50 hover:bg-white/[0.06] hover:text-white/80 transition-all"
-              aria-label="Next Photo"
+              className="absolute right-2 sm:right-6 p-3 rounded-full bg-black/60 border border-white/10 text-white/70 hover:text-white hover:border-cyan-400 transition-colors cursor-pointer"
+              aria-label="Next photo"
             >
-              <ChevronRight className="w-5 h-5" />
+              <ChevronRight className="w-6 h-6" />
             </button>
           </div>
 
-          {/* Modal Bottom Caption */}
-          {filteredModalPhotos[activePhotoIndex] && (
-            <div className="max-w-3xl mx-auto text-center border-t border-white/[0.06] pt-4 space-y-1 relative z-20">
-              <span className="text-[10px] font-body text-white/25">
-                {filteredModalPhotos[activePhotoIndex].date} · {filteredModalPhotos[activePhotoIndex].location}
-              </span>
-              <h4 className="font-display font-semibold text-lg text-white/80">
-                {filteredModalPhotos[activePhotoIndex].title}
-              </h4>
-              <p className="text-xs text-white/35 font-light max-w-xl mx-auto">
-                {filteredModalPhotos[activePhotoIndex].description}
-              </p>
-            </div>
-          )}
+          {/* Modal Thumbnail Strip */}
+          <div className="flex items-center gap-2 overflow-x-auto pt-3 border-t border-white/[0.08] scrollbar-none no-scrollbar">
+            {filteredModalPhotos.map((p, idx) => (
+              <div
+                key={p.id}
+                onClick={() => setActivePhotoIndex(idx)}
+                className={`shrink-0 w-16 h-12 rounded overflow-hidden cursor-pointer border transition-all ${
+                  idx === activePhotoIndex
+                    ? 'border-cyan-400 scale-105'
+                    : 'border-white/[0.1] opacity-50 hover:opacity-100'
+                }`}
+              >
+                <img src={p.url} alt={p.title} className="w-full h-full object-cover" />
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </section>

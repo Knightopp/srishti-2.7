@@ -1,142 +1,71 @@
-import React, { useRef, useEffect } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import React from 'react';
 import { Award, Zap, Users, ShieldCheck } from 'lucide-react';
 
-gsap.registerPlugin(ScrollTrigger);
-
 export const StudioPhilosophy: React.FC = () => {
-  const sectionRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!sectionRef.current) return;
-
-    const ctx = gsap.context(() => {
-      // Background Theme Morph: Dark → Off-white → Dark
-      ScrollTrigger.create({
-        trigger: sectionRef.current,
-        start: 'top 50%',
-        end: 'bottom 50%',
-        onEnter: () => {
-          gsap.to('body', { backgroundColor: '#f5f5f7', color: '#0b0b0b', duration: 0.8, ease: 'power2.out' });
-        },
-        onLeaveBack: () => {
-          gsap.to('body', { backgroundColor: '#050608', color: '#E8E8EC', duration: 0.8, ease: 'power2.out' });
-        },
-        onLeave: () => {
-          gsap.to('body', { backgroundColor: '#050608', color: '#E8E8EC', duration: 0.8, ease: 'power2.out' });
-        },
-      });
-
-      // Text Lines Scrub
-      const lines = sectionRef.current?.querySelectorAll('.philosophy-text-line');
-      lines?.forEach((line) => {
-        gsap.fromTo(
-          line,
-          { y: 40, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: line,
-              start: 'top 90%',
-              end: 'top 65%',
-              scrub: 0.5,
-            },
-          }
-        );
-      });
-
-      // Metrics Cards Scrub
-      const metrics = sectionRef.current?.querySelectorAll('.philosophy-metric-card');
-      metrics?.forEach((card) => {
-        gsap.fromTo(
-          card,
-          { y: 30, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: card,
-              start: 'top 92%',
-              end: 'top 70%',
-              scrub: 0.5,
-            },
-          }
-        );
-      });
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
-
   return (
     <section
       id="philosophy"
-      ref={sectionRef}
-      className="relative w-full py-36 transition-colors duration-700 select-none overflow-hidden"
+      className="relative w-full py-24 sm:py-32 bg-[#050608] text-[#E8E8EC] border-t border-white/[0.08] select-none overflow-hidden"
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         {/* Section Tag */}
-        <div className="mb-12">
-          <span className="text-[10px] font-body font-medium text-[#2563EB] tracking-wider uppercase block mb-3">
-            04 / About Srishti
+        <div className="mb-8">
+          <span className="text-[10px] md:text-[11px] font-technical text-white/40 tracking-widest uppercase block font-semibold">
+            04 // ABOUT SRISHTI
           </span>
         </div>
 
         {/* Main Quote Statement */}
         <div className="max-w-5xl space-y-6">
-          <h2 className="font-display text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight uppercase leading-[0.95] text-current">
+          <h2 className="font-display text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight uppercase leading-[0.95] text-white">
             <span className="philosophy-text-line block">Where code meets</span>
-            <span className="philosophy-text-line block font-serif-custom italic font-normal text-[#2563EB] lowercase text-5xl sm:text-7xl md:text-8xl lg:text-9xl my-2">
+            <span className="philosophy-text-line block font-serif italic font-normal text-gradient-27 lowercase text-5xl sm:text-7xl md:text-8xl lg:text-9xl my-2">
               creativity.
             </span>
             <span className="philosophy-text-line block">That is Srishti.</span>
           </h2>
 
-          <p className="philosophy-text-line text-lg md:text-2xl font-light leading-relaxed max-w-3xl opacity-70 pt-6">
-            Srishti is the flagship techno-cultural fest of the Computer Science Department at St. Thomas College. Since its inception, Srishti has been a platform for students to showcase their technical brilliance, creative talent, and collaborative spirit through hackathons, coding contests, workshops, and cultural performances.
+          <p className="philosophy-text-line text-sm sm:text-base md:text-xl font-light leading-relaxed max-w-3xl text-white/60 pt-4">
+            Srishti is the flagship techno-cultural fest of the Computer Science Department at St. Thomas College. Since its inception, Srishti has been a crucible where innovation, competitive spirit, and collaborative energy collide across hackathons, cybersecurity operations, creative showcases, and cultural celebrations.
           </p>
         </div>
 
         {/* Fest Metrics Grid */}
-        <div className="mt-24 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 pt-12 border-t border-current/10">
-          <div className="philosophy-metric-card space-y-2">
-            <div className="flex items-center gap-2 text-[#2563EB]">
+        <div className="mt-16 sm:mt-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-10 border-t border-white/[0.08]">
+          <div className="philosophy-metric-card p-6 rounded-lg bg-[#0A0D14] border border-white/[0.06] space-y-2">
+            <div className="flex items-center gap-2 text-cyan-400">
               <Award className="w-4 h-4" />
-              <span className="text-[10px] font-body font-medium tracking-wider uppercase">Editions</span>
+              <span className="text-[10px] font-technical tracking-wider uppercase font-semibold">Editions</span>
             </div>
-            <span className="font-display font-bold text-5xl md:text-6xl block">7th</span>
-            <span className="text-xs font-body opacity-45 uppercase block">Year of Srishti</span>
+            <span className="font-display font-bold text-4xl md:text-5xl block text-white">7th</span>
+            <span className="text-xs font-body text-white/40 uppercase block">Year of Srishti</span>
           </div>
 
-          <div className="philosophy-metric-card space-y-2">
-            <div className="flex items-center gap-2 text-[#2563EB]">
+          <div className="philosophy-metric-card p-6 rounded-lg bg-[#0A0D14] border border-white/[0.06] space-y-2">
+            <div className="flex items-center gap-2 text-cyan-400">
               <Zap className="w-4 h-4" />
-              <span className="text-[10px] font-body font-medium tracking-wider uppercase">Events</span>
+              <span className="text-[10px] font-technical tracking-wider uppercase font-semibold">Events</span>
             </div>
-            <span className="font-display font-bold text-5xl md:text-6xl block">15+</span>
-            <span className="text-xs font-body opacity-45 uppercase block">Technical & Cultural Events</span>
+            <span className="font-display font-bold text-4xl md:text-5xl block text-white">15+</span>
+            <span className="text-xs font-body text-white/40 uppercase block">Technical & Cultural</span>
           </div>
 
-          <div className="philosophy-metric-card space-y-2">
-            <div className="flex items-center gap-2 text-[#2563EB]">
+          <div className="philosophy-metric-card p-6 rounded-lg bg-[#0A0D14] border border-white/[0.06] space-y-2">
+            <div className="flex items-center gap-2 text-cyan-400">
               <Users className="w-4 h-4" />
-              <span className="text-[10px] font-body font-medium tracking-wider uppercase">Reach</span>
+              <span className="text-[10px] font-technical tracking-wider uppercase font-semibold">Reach</span>
             </div>
-            <span className="font-display font-bold text-5xl md:text-6xl block">500+</span>
-            <span className="text-xs font-body opacity-45 uppercase block">Expected Participants</span>
+            <span className="font-display font-bold text-4xl md:text-5xl block text-white">500+</span>
+            <span className="text-xs font-body text-white/40 uppercase block">Participants</span>
           </div>
 
-          <div className="philosophy-metric-card space-y-2">
-            <div className="flex items-center gap-2 text-[#2563EB]">
+          <div className="philosophy-metric-card p-6 rounded-lg bg-[#0A0D14] border border-white/[0.06] space-y-2">
+            <div className="flex items-center gap-2 text-cyan-400">
               <ShieldCheck className="w-4 h-4" />
-              <span className="text-[10px] font-body font-medium tracking-wider uppercase">Prizes</span>
+              <span className="text-[10px] font-technical tracking-wider uppercase font-semibold">Prizes</span>
             </div>
-            <span className="font-display font-bold text-5xl md:text-6xl block">₹50K+</span>
-            <span className="text-xs font-body opacity-45 uppercase block">Total Prize Pool</span>
+            <span className="font-display font-bold text-4xl md:text-5xl block text-gradient-27">₹50K+</span>
+            <span className="text-xs font-body text-white/40 uppercase block">Prize Pool</span>
           </div>
         </div>
       </div>
@@ -145,3 +74,4 @@ export const StudioPhilosophy: React.FC = () => {
 };
 
 export default StudioPhilosophy;
+

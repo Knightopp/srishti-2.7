@@ -1,23 +1,24 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Lora:ital,wght@1,400;1,500;1,600;1,700&display=swap');
 @import "tailwindcss";
 
 @layer base {
   :root {
-    /* Typography System */
-    --font-display: 'Space Grotesk', sans-serif;
+    /* Editorial Typography System */
+    --font-impact: 'Montserrat', sans-serif;
+    --font-display: 'Syne', 'Montserrat', sans-serif;
     --font-technical: 'IBM Plex Mono', monospace;
     --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-serif: 'Lora', Georgia, serif;
 
-    /* Surface Tone Hierarchy */
+    /* Surface Tone Hierarchy — Rich Dark Editorial Canvas */
     --surface-0: #050608;
     --surface-1: #080A0E;
     --surface-2: #0D1015;
     --surface-3: #13161C;
 
-    /* Accent Palette — restrained */
+    /* Accent Palette — signature Srishti 2.7 gradient */
     --accent-blue: #2563EB;
-    --accent-cyan: #06B6D4;
+    --accent-sky: #38BDF8;
+    --accent-cyan: #7DD3FC;
 
     /* Text Hierarchy */
     --text-primary: #E8E8EC;
@@ -37,12 +38,37 @@
     overflow-x: hidden;
     margin: 0;
     padding: 0;
+    background-color: #050608 !important;
+    color: #E8E8EC !important;
   }
 }
 
 /* =============================================
+   Srishti 2.7 Signature Gradient Utilities
+   ============================================= */
+.text-gradient-27 {
+  background: linear-gradient(135deg, #FFFFFF 0%, #BAE6FD 30%, #38BDF8 65%, #2563EB 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.bg-gradient-27 {
+  background: linear-gradient(135deg, #38BDF8 0%, #2563EB 60%, #1D4ED8 100%);
+}
+
+.bg-gradient-27-glow {
+  background: linear-gradient(135deg, #7DD3FC 0%, #38BDF8 40%, #2563EB 100%);
+}
+
+
+
+/* =============================================
    Typography Utility Classes
    ============================================= */
+
+.font-impact {
+  font-family: var(--font-impact);
+}
 
 .font-display {
   font-family: var(--font-display);
@@ -415,8 +441,8 @@ html.lenis, html.lenis body {
 }
 
 .ribbon-edge-fade-v {
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 10%, #000 90%, transparent 100%);
-  mask-image: linear-gradient(to bottom, transparent 0%, #000 10%, #000 90%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 10%, #000 70%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 10%, #000 70%, transparent 100%);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -424,5 +450,60 @@ html.lenis, html.lenis body {
     animation-play-state: paused;
   }
 }
+
+/* =============================================
+   HERO HIGH IMPACT STYLING (BLUE THEME)
+   ============================================= */
+
+@keyframes floatLogo {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-8px) scale(1.02);
+  }
+}
+
+.animate-float-logo {
+  animation: floatLogo 4.5s ease-in-out infinite;
+}
+
+.hero-logo-emblem {
+  filter: drop-shadow(0 0 20px rgba(56, 189, 248, 0.6)) drop-shadow(0 0 40px rgba(37, 99, 235, 0.35));
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.hero-logo-emblem:hover {
+  filter: drop-shadow(0 0 30px rgba(56, 189, 248, 0.85)) drop-shadow(0 0 55px rgba(37, 99, 235, 0.55));
+}
+
+/* Srishti Title & 2.7 Number Impact Gradients (Blue Palette) */
+.srishti-impact-title {
+  color: #FFFFFF;
+  text-shadow: 0 2px 25px rgba(0, 0, 0, 0.9), 0 0 35px rgba(37, 99, 235, 0.25);
+}
+
+.srishti-impact-number {
+  background: linear-gradient(
+    135deg,
+    #FFFFFF 0%,
+    #E0F2FE 20%,
+    #7DD3FC 45%,
+    #38BDF8 70%,
+    #2563EB 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 25px rgba(37, 99, 235, 0.45));
+}
+
+.srishti-impact-subtitle {
+  color: rgba(255, 255, 255, 0.75);
+  letter-spacing: 0.22em;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+
 
 
