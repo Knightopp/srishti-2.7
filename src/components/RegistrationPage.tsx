@@ -277,25 +277,80 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
     }
   }, [submittedRecord]);
 
+  const downloadDataUrlAsFile = (dataUrl: string, filename: string) => {
+    try {
+      const parts = dataUrl.split(';base64,');
+      const contentType = parts[0].split(':')[1] || 'image/png';
+      const raw = window.atob(parts[1]);
+      const rawLength = raw.length;
+      const uInt8Array = new Uint8Array(rawLength);
+
+      for (let i = 0; i < rawLength; ++i) {
+        uInt8Array[i] = raw.charCodeAt(i);
+      }
+
+      const blob = new Blob([uInt8Array], { type: contentType });
+      const url = URL.createObjectURL(blob);
+      
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      
+      setTimeout(() => {
+        if (document.body.contains(link)) {
+          document.body.removeChild(link);
+        }
+        URL.revokeObjectURL(url);
+      }, 200);
+    } catch (err) {
+      console.error('Blob download error, using fallback link:', err);
+      const link = document.createElement('a');
+      link.href = dataUrl;
+      link.download = filename;
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+      setTimeout(() => {
+        if (document.body.contains(link)) {
+          document.body.removeChild(link);
+        }
+      }, 200);
+    }
+  };
+
   const getOrGeneratePassCanvasUrl = async (): Promise<string | null> => {
     if (passImageUrl) return passImageUrl;
     const cardElement = document.getElementById('printable-pass-card');
-    if (!cardElement) return null;
-    try {
-      const canvas = await html2canvas(cardElement, {
-        scale: 3,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: '#FFFFFF',
-        logging: false,
-      });
-      const url = canvas.toDataURL('image/png');
-      setPassImageUrl(url);
-      return url;
-    } catch (err) {
-      console.error('Error generating pass image:', err);
-      return null;
+    if (cardElement) {
+      try {
+        const canvas = await html2canvas(cardElement, {
+          scale: 3,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: '#FFFFFF',
+          logging: false,
+        });
+        const url = canvas.toDataURL('image/png');
+        setPassImageUrl(url);
+        return url;
+      } catch (err) {
+        console.error('html2canvas error, falling back to canvas generator:', err);
+      }
     }
+
+    if (submittedRecord) {
+      try {
+        const fallbackUrl = await generatePassImage(submittedRecord);
+        setPassImageUrl(fallbackUrl);
+        return fallbackUrl;
+      } catch (err) {
+        console.error('Fallback canvas generator error:', err);
+      }
+    }
+
+    return null;
   };
 
   const handleDownloadPass = async () => {
@@ -303,13 +358,10 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
     try {
       const imgUrl = await getOrGeneratePassCanvasUrl();
       if (imgUrl) {
-        const link = document.createElement('a');
-        link.href = imgUrl;
-        link.download = `SRISHTI-2.7-PASS-${submittedRecord?.passId || 'DELEGATE'}.png`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        downloadDataUrlAsFile(imgUrl, `SRISHTI-2.7-PASS-${submittedRecord?.passId || 'DELEGATE'}.png`);
       }
+    } catch (err) {
+      console.error('Download error:', err);
     } finally {
       setIsDownloading(false);
     }
