@@ -87,8 +87,14 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
   };
 
   const handlePrintCardOnly = async () => {
+    document.body.classList.add('is-printing-card');
     const cardElement = document.getElementById('printable-pass-card');
-    if (!cardElement) return;
+
+    if (!cardElement) {
+      window.print();
+      setTimeout(() => document.body.classList.remove('is-printing-card'), 1000);
+      return;
+    }
 
     try {
       const canvas = await html2canvas(cardElement, {
@@ -110,10 +116,13 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
               <title>SRISHTI 2.7 DELEGATE PASS - ${submittedRecord?.fullName || ''}</title>
               <style>
                 @page { size: portrait; margin: 0; }
+                *, html, body {
+                  background: #ffffff !important;
+                  background-color: #ffffff !important;
+                }
                 body, html {
                   margin: 0;
                   padding: 0;
-                  background: #ffffff !important;
                   display: flex;
                   align-items: center;
                   justify-content: center;
@@ -134,10 +143,14 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
           </html>
         `);
         printWindow.document.close();
+      } else {
+        window.print();
       }
     } catch (err) {
       console.error('Error rendering print window:', err);
       window.print();
+    } finally {
+      setTimeout(() => document.body.classList.remove('is-printing-card'), 1000);
     }
   };
 
