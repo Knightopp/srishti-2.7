@@ -16,9 +16,9 @@ export const CTA: React.FC<CTAProps> = ({ onNavigateToRegister }) => {
           05 // REGISTRATION PORTAL
         </span>
 
-        <h2 className="font-display text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight uppercase leading-[0.9] text-white max-w-5xl mx-auto">
-          Ready To <br />
-          <span className="font-serif italic font-normal text-gradient-27 lowercase text-5xl sm:text-7xl md:text-8xl lg:text-[9rem]">
+        <h2 className="font-impact font-black text-4xl sm:text-6xl md:text-7xl lg:text-[5.5rem] tracking-tight uppercase leading-[0.88] text-white max-w-5xl mx-auto">
+          READY TO <br />
+          <span className="font-serif italic font-normal text-gradient-27 lowercase text-5xl sm:text-7xl md:text-8xl lg:text-[7.5rem]">
             join us?
           </span>
         </h2>

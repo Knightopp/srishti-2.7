@@ -17,15 +17,15 @@ export const StudioPhilosophy: React.FC = () => {
 
         {/* Main Quote Statement */}
         <div className="max-w-5xl space-y-6">
-          <h2 className="font-display text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight uppercase leading-[0.95] text-white">
-            <span className="philosophy-text-line block">Where code meets</span>
-            <span className="philosophy-text-line block font-serif italic font-normal text-gradient-27 lowercase text-5xl sm:text-7xl md:text-8xl lg:text-9xl my-2">
+          <h2 className="font-impact font-black text-4xl sm:text-6xl md:text-7xl lg:text-[5.5rem] tracking-tight uppercase leading-[0.88] text-white">
+            <span className="philosophy-text-line block">WHERE CODE MEETS</span>
+            <span className="philosophy-text-line block font-serif italic font-normal text-gradient-27 lowercase text-5xl sm:text-7xl md:text-8xl lg:text-[7.5rem] my-2">
               creativity.
             </span>
-            <span className="philosophy-text-line block">That is Srishti.</span>
+            <span className="philosophy-text-line block">THAT IS SRISHTI.</span>
           </h2>
 
-          <p className="philosophy-text-line text-sm sm:text-base md:text-xl font-light leading-relaxed max-w-3xl text-white/60 pt-4">
+          <p className="philosophy-text-line text-sm sm:text-base md:text-lg font-light leading-relaxed max-w-3xl text-white/60 pt-4">
             Srishti is the flagship techno-cultural fest of the Computer Science Department at St. Thomas College. Since its inception, Srishti has been a crucible where innovation, competitive spirit, and collaborative energy collide across hackathons, cybersecurity operations, creative showcases, and cultural celebrations.
           </p>
         </div>
@@ -37,7 +37,7 @@ export const StudioPhilosophy: React.FC = () => {
               <Award className="w-4 h-4" />
               <span className="text-[10px] font-technical tracking-wider uppercase font-semibold">Editions</span>
             </div>
-            <span className="font-display font-bold text-4xl md:text-5xl block text-white">7th</span>
+            <span className="font-impact font-black text-4xl md:text-5xl block text-white tracking-tight">7th</span>
             <span className="text-xs font-body text-white/40 uppercase block">Year of Srishti</span>
           </div>
 
@@ -46,7 +46,7 @@ export const StudioPhilosophy: React.FC = () => {
               <Zap className="w-4 h-4" />
               <span className="text-[10px] font-technical tracking-wider uppercase font-semibold">Events</span>
             </div>
-            <span className="font-display font-bold text-4xl md:text-5xl block text-white">15+</span>
+            <span className="font-impact font-black text-4xl md:text-5xl block text-white tracking-tight">15+</span>
             <span className="text-xs font-body text-white/40 uppercase block">Technical & Cultural</span>
           </div>
 
@@ -55,7 +55,7 @@ export const StudioPhilosophy: React.FC = () => {
               <Users className="w-4 h-4" />
               <span className="text-[10px] font-technical tracking-wider uppercase font-semibold">Reach</span>
             </div>
-            <span className="font-display font-bold text-4xl md:text-5xl block text-white">500+</span>
+            <span className="font-impact font-black text-4xl md:text-5xl block text-white tracking-tight">500+</span>
             <span className="text-xs font-body text-white/40 uppercase block">Participants</span>
           </div>
 
@@ -64,7 +64,7 @@ export const StudioPhilosophy: React.FC = () => {
               <ShieldCheck className="w-4 h-4" />
               <span className="text-[10px] font-technical tracking-wider uppercase font-semibold">Prizes</span>
             </div>
-            <span className="font-display font-bold text-4xl md:text-5xl block text-gradient-27">₹50K+</span>
+            <span className="font-impact font-black text-4xl md:text-5xl block text-gradient-27 tracking-tight">₹50K+</span>
             <span className="text-xs font-body text-white/40 uppercase block">Prize Pool</span>
           </div>
         </div>

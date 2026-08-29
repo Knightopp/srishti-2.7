@@ -170,7 +170,7 @@ export const TimelineRoadmap: React.FC<TimelineRoadmapProps> = ({
       if (validCards.length === 0) return;
 
       const windowH = window.innerHeight;
-      const targetActivationY = windowH * 0.60;
+      const targetActivationY = windowH * 0.65;
 
       const firstCard = validCards[0];
       const lastCard = validCards[validCards.length - 1];
@@ -183,10 +183,10 @@ export const TimelineRoadmap: React.FC<TimelineRoadmapProps> = ({
       // End line at vertical center of last card
       const endPointY = lastRect.top + 28;
 
-      const totalSpan = Math.max(1, endPointY - startPointY);
+      const totalSpan = Math.max(1, (endPointY - startPointY) + (windowH * 0.15));
       const scrolledDist = targetActivationY - startPointY;
 
-      // Calculate exact progress (0% when before first card, 100% when at or past last card)
+      // Calculate smooth progress
       let progress = 0;
       if (validCards.length === 1) {
         progress = startPointY <= targetActivationY ? 1 : 0;
@@ -261,8 +261,8 @@ export const TimelineRoadmap: React.FC<TimelineRoadmapProps> = ({
             <span>02 // OFFICIAL SCHEDULE & VENUE DIRECTORY</span>
           </div>
 
-          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight uppercase leading-tight text-white">
-            SCHEDULE & <span className="text-gradient-27">CAMPUS MAP</span>
+          <h2 className="font-impact font-black text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tight uppercase leading-tight text-white">
+            SCHEDULE & <span className="text-gradient-27 font-impact font-black">CAMPUS MAP</span>
           </h2>
 
           <p className="mt-3 text-xs sm:text-sm md:text-base text-white/60 font-body max-w-xl mx-auto font-light leading-relaxed">
@@ -548,7 +548,7 @@ export const TimelineRoadmap: React.FC<TimelineRoadmapProps> = ({
                 
                 {/* Active Glowing Laser Spine Fill */}
                 <div
-                  className="w-full timeline-deep-glow-line origin-top transition-all duration-100 ease-out"
+                  className="w-full timeline-deep-glow-line origin-top transition-all duration-500 ease-out"
                   style={{ height: `${laserHeightPercent}%` }}
                 />
               </div>
