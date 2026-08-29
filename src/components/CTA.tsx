@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowUpRight, Calendar } from 'lucide-react';
+import { getRegistrationUrl } from '../config/links';
 
 interface CTAProps {
   onNavigateToRegister?: () => void;
@@ -30,7 +31,9 @@ export const CTA: React.FC<CTAProps> = ({ onNavigateToRegister }) => {
         {/* Buttons */}
         <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
           <a
-            href="#register"
+            href={getRegistrationUrl()}
+            target="_blank"
+            rel="noopener noreferrer"
             onClick={(e) => {
               if (onNavigateToRegister) {
                 e.preventDefault();

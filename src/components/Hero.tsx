@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowUpRight } from 'lucide-react';
 import srishtiLogo from '../assets/images/srishti-logo.png';
+import { getRegistrationUrl } from '../config/links';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -263,7 +264,9 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
           </div>
         </div>
         <a
-          href="#register"
+          href={getRegistrationUrl()}
+          target="_blank"
+          rel="noopener noreferrer"
           onClick={(e) => { if (onNavigateToRegister) { e.preventDefault(); onNavigateToRegister(); } }}
           className="flex items-center gap-1 text-white/60 hover:text-white font-body font-semibold uppercase transition-colors text-[10px] sm:text-xs tracking-wider"
         >

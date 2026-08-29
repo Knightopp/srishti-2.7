@@ -1,5 +1,6 @@
 import { ArrowUp } from 'lucide-react';
 import srishtiLogo from '../assets/images/srishti-logo.png';
+import { getRegistrationUrl } from '../config/links';
 
 interface FooterProps {
   onNavigateToAdmin?: () => void;
@@ -109,7 +110,9 @@ export const Footer: React.FC<FooterProps> = ({
             <span className="text-[10px] font-body text-white/20 tracking-wider block font-semibold">Quick Connect</span>
             <a href="mailto:srishti@stthomas.ac.in" className="block hover:text-white/80 transition-colors">Email Support</a>
             <a
-              href="#register"
+              href={getRegistrationUrl()}
+              target="_blank"
+              rel="noopener noreferrer"
               onClick={(e) => {
                 if (onNavigateToRegister) {
                   e.preventDefault();

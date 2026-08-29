@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowUpRight, Menu, X } from 'lucide-react';
 import srishtiLogo from '../assets/images/srishti-logo.png';
+import { getRegistrationUrl } from '../config/links';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -207,7 +208,9 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* COL 3 — Register button, fixed right, always visible */}
           <div className="hidden md:flex items-center shrink-0">
             <a
-              href="#register"
+              href={getRegistrationUrl()}
+              target="_blank"
+              rel="noopener noreferrer"
               onClick={(e) => {
                 if (onNavigateToRegister) {
                   e.preventDefault();
@@ -224,7 +227,9 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Mobile Menu Controls */}
           <div className="flex md:hidden items-center gap-2 h-full">
             <a
-              href="#register"
+              href={getRegistrationUrl()}
+              target="_blank"
+              rel="noopener noreferrer"
               onClick={(e) => {
                 if (onNavigateToRegister) {
                   e.preventDefault();
@@ -297,7 +302,9 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           <a
-            href="#register"
+            href={getRegistrationUrl()}
+            target="_blank"
+            rel="noopener noreferrer"
             onClick={(e) => {
               if (onNavigateToRegister) {
                 e.preventDefault();
