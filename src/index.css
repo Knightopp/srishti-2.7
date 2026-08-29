@@ -571,40 +571,57 @@ html.lenis, html.lenis body {
    PRINT ONLY THE VERTICAL FESTIVAL PASS CARD
    ============================================= */
 @media print {
-  * {
+  *,
+  *::before,
+  *::after {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
     color-adjust: exact !important;
   }
 
-  body {
+  html,
+  body,
+  #root,
+  main,
+  div {
     background: #ffffff !important;
-    color: #000000 !important;
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+  }
+
+  header,
+  footer,
+  nav,
+  button,
+  .no-print {
+    display: none !important;
+    visibility: hidden !important;
   }
 
   body * {
-    visibility: hidden !important;
+    visibility: hidden;
   }
-  
+
   #printable-pass-card,
   #printable-pass-card * {
     visibility: visible !important;
   }
   
   #printable-pass-card {
-    position: fixed !important;
+    position: absolute !important;
     left: 50% !important;
     top: 50% !important;
     transform: translate(-50%, -50%) !important;
-    width: 320px !important;
+    width: 380px !important;
+    max-width: 90% !important;
     margin: 0 !important;
-    padding: 24px !important;
+    padding: 32px 28px !important;
     box-shadow: none !important;
-    border: 1px solid #cbd5e1 !important;
-    border-radius: 20px !important;
+    border: 2px solid #0f172a !important;
+    border-radius: 24px !important;
     page-break-inside: avoid !important;
     background-color: #ffffff !important;
-    color: #0F172A !important;
+    color: #0f172a !important;
   }
 
   #printable-pass-card img {
