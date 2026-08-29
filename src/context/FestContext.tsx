@@ -631,6 +631,7 @@ export const FestProvider: React.FC<{ children: React.ReactNode }> = ({ children
         sponsors,
         registrations,
         settings,
+        passBaseUrl: `${window.location.origin}${window.location.pathname}`,
         updatedAt: new Date().toISOString(),
       };
       

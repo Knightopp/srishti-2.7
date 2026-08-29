@@ -50,10 +50,18 @@ export function AppContent() {
       } else if (hash.includes('admin') || path.includes('admin')) {
         setCurrentView('admin');
         window.scrollTo({ top: 0, behavior: 'instant' });
-      } else if (hash.includes('pass') || path.includes('pass') || search.includes('pass=')) {
-        if (hash.includes('/')) {
-          const parts = window.location.hash.split('/');
-          setPassIdParam(parts[1]);
+      } else if (hash.includes('pass') || path.includes('pass') || search.includes('pass')) {
+        let extractedPassId = '';
+        if (window.location.hash.includes('/')) {
+          extractedPassId = window.location.hash.split('/')[1] || '';
+        } else if (window.location.hash.includes('=')) {
+          extractedPassId = window.location.hash.split('=')[1] || '';
+        } else if (window.location.search.includes('pass=')) {
+          const urlParams = new URLSearchParams(window.location.search);
+          extractedPassId = urlParams.get('pass') || '';
+        }
+        if (extractedPassId) {
+          setPassIdParam(extractedPassId);
         }
         setCurrentView('pass');
         window.scrollTo({ top: 0, behavior: 'instant' });
