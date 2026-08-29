@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowUpRight, Menu, X } from 'lucide-react';
+import srishtiLogo from '../assets/images/srishti-logo.png';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -133,7 +134,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           >
             <div className="w-7 h-7 rounded-lg bg-white/[0.04] border border-white/[0.08] p-1 flex items-center justify-center transition-all duration-200 group-hover:border-cyan-400/40 shrink-0">
               <img
-                src="/srishti-logo-transparent.png"
+                src={srishtiLogo}
                 alt="Srishti Logo"
                 className="w-full h-full object-contain"
               />

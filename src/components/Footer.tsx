@@ -1,4 +1,5 @@
 import { ArrowUp } from 'lucide-react';
+import srishtiLogo from '../assets/images/srishti-logo.png';
 
 interface FooterProps {
   onNavigateToAdmin?: () => void;
@@ -26,11 +27,15 @@ export const Footer: React.FC<FooterProps> = ({
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 pb-12 border-b border-white/[0.06]">
           <div className="space-y-2">
             <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-md bg-gradient-27 flex items-center justify-center text-white font-display font-bold text-xs">
-                S
+              <div className="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20 p-1 flex items-center justify-center shrink-0">
+                <img
+                  src={srishtiLogo}
+                  alt="Srishti Logo"
+                  className="w-full h-full object-contain"
+                />
               </div>
-              <span className="font-display font-semibold text-lg tracking-tight text-white/85">
-                srishti<span className="text-gradient-27 font-technical ml-0.5 font-black">2.7</span>
+              <span className="font-display font-bold text-lg tracking-tight text-white flex items-center leading-none">
+                srishti<span className="text-gradient-27 font-technical font-black ml-1">2.7</span>
               </span>
             </div>
             <p className="text-xs text-white/40 font-light">
