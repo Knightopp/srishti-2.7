@@ -256,7 +256,7 @@ export const generatePassImage = async (record: RegistrationRecord): Promise<str
   ctx.lineTo(820, qrSectionY);
   ctx.stroke();
 
-  const qrPayload = `SRISHTI-2.7|PASS:${record.passId}|NAME:${record.fullName}|COLLEGE:${record.college}|UTR:${record.paymentUtr}`;
+  const qrPayload = typeof window !== 'undefined' ? `${window.location.origin}${window.location.pathname}#pass/${record.passId}` : `https://srishti-2-7.vercel.app/#pass/${record.passId}`;
   try {
     // Generate QR with Level 'H' Error Correction
     const qrDataUrl = await QRCode.toDataURL(qrPayload, {
@@ -1100,7 +1100,7 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
               {/* QR Code & Pass Credentials */}
               <div className="space-y-3 pt-2 border-t border-slate-200">
                 <div className="w-20 h-20 bg-white p-1 rounded-xl mx-auto flex items-center justify-center shrink-0 shadow-sm border border-slate-200">
-                  <CustomSrishtiQR value={`SRISHTI-2.7|PASS:${submittedRecord.passId}|NAME:${submittedRecord.fullName}|COLLEGE:${submittedRecord.college}|UTR:${submittedRecord.paymentUtr}`} size={160} />
+                  <CustomSrishtiQR value={`${window.location.origin}${window.location.pathname}#pass/${submittedRecord.passId}`} size={160} />
                 </div>
 
                 <div className="space-y-0.5">

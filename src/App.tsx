@@ -16,6 +16,7 @@ import ContactPage from './components/ContactPage';
 import EventsPage from './components/EventsPage';
 import EventDetailPage from './components/EventDetailPage';
 import SchedulePage from './components/SchedulePage';
+import { PassVerificationPage } from './components/PassVerificationPage';
 import { FestProvider } from './context/FestContext';
 
 export type AppView = 
@@ -25,6 +26,7 @@ export type AppView =
   | 'schedule' 
   | 'contact' 
   | 'register' 
+  | 'pass'
   | 'admin' 
   | 'copper';
 
@@ -34,17 +36,26 @@ export function AppContent() {
   const [currentView, setCurrentView] = useState<AppView>('home');
   const [activeEventId, setActiveEventId] = useState<string>('');
   const [registerEventId, setRegisterEventId] = useState<string | undefined>(undefined);
+  const [passIdParam, setPassIdParam] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     const checkRoute = () => {
       const hash = window.location.hash.toLowerCase();
       const path = window.location.pathname.toLowerCase();
+      const search = window.location.search.toLowerCase();
       
       if (hash.includes('copper') || path.includes('copper')) {
         setCurrentView('copper');
         window.scrollTo({ top: 0, behavior: 'instant' });
       } else if (hash.includes('admin') || path.includes('admin')) {
         setCurrentView('admin');
+        window.scrollTo({ top: 0, behavior: 'instant' });
+      } else if (hash.includes('pass') || path.includes('pass') || search.includes('pass=')) {
+        if (hash.includes('/')) {
+          const parts = window.location.hash.split('/');
+          setPassIdParam(parts[1]);
+        }
+        setCurrentView('pass');
         window.scrollTo({ top: 0, behavior: 'instant' });
       } else if (hash.startsWith('#event/') || hash.startsWith('#events/')) {
         const parts = window.location.hash.split('/');
@@ -100,6 +111,10 @@ export function AppContent() {
       setRegisterEventId(param);
       window.location.hash = param ? `register/${param}` : 'register';
       setCurrentView('register');
+    } else if (view === 'pass') {
+      setPassIdParam(param);
+      window.location.hash = param ? `pass/${param}` : 'pass';
+      setCurrentView('pass');
     } else {
       window.location.hash = view;
       setCurrentView(view);
@@ -123,6 +138,17 @@ export function AppContent() {
         initialEventId={registerEventId}
         onBackToHome={() => navigateTo('home')}
         onNavigateToAdmin={() => navigateTo('admin')}
+      />
+    );
+  }
+
+  // 3. Dedicated Public Pass Verification Page View
+  if (currentView === 'pass') {
+    return (
+      <PassVerificationPage
+        passIdParam={passIdParam}
+        onBackToHome={() => navigateTo('home')}
+        onNavigateToRegister={() => navigateTo('register')}
       />
     );
   }
