@@ -31,16 +31,8 @@ export const EventsPage: React.FC<EventsPageProps> = ({
 
   // Extract all distinct categories dynamically from active events
   const categories = useMemo(() => {
-    const set = new Set<string>();
-    events.forEach((e) => {
-      if (e.category) {
-        // extract primary keyword if multi-word
-        const cat = e.category.toUpperCase();
-        set.add(cat);
-      }
-    });
-    return ['ALL', 'HACKATHON', 'CODING', 'SECURITY', 'DESIGN', 'WORKSHOP', 'CULTURAL', ...Array.from(set).slice(0, 4)];
-  }, [events]);
+    return ['ALL', 'CODING', 'ROBOTICS', 'WEB & AI', 'IDEATHON', 'GAMES', 'DANCE & ARTS'];
+  }, []);
 
   // Filter events
   const filteredEvents = useMemo(() => {
@@ -56,10 +48,13 @@ export const EventsPage: React.FC<EventsPageProps> = ({
         e.category.toLowerCase().includes(q);
 
       // Category match
-      const matchCategory =
-        selectedCategory === 'ALL' ||
-        e.category.toUpperCase().includes(selectedCategory) ||
-        (e.tags && e.tags.some((t) => t.toUpperCase().includes(selectedCategory)));
+      let matchCategory = selectedCategory === 'ALL';
+      if (selectedCategory === 'CODING') matchCategory = ['codex', 'debugging', 'blind-coding'].includes(e.id);
+      if (selectedCategory === 'ROBOTICS') matchCategory = e.id === 'tracebot';
+      if (selectedCategory === 'WEB & AI') matchCategory = e.id === 'ai-webdev';
+      if (selectedCategory === 'IDEATHON') matchCategory = e.id === 'ideathon';
+      if (selectedCategory === 'GAMES') matchCategory = ['treasure-hunt', 'mind-game', 'tech-quiz'].includes(e.id);
+      if (selectedCategory === 'DANCE & ARTS') matchCategory = ['waltz', 'face-painting'].includes(e.id);
 
       // Day match
       const matchDay =
@@ -253,12 +248,19 @@ export const EventsPage: React.FC<EventsPageProps> = ({
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0A0D14] via-transparent to-transparent" />
 
                   {/* Top Badges */}
-                  <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
-                    <span className="px-2.5 py-1 rounded bg-black/60 backdrop-blur-md border border-white/10 text-[10px] font-technical text-cyan-300 font-bold uppercase">
-                      {event.category}
-                    </span>
+                  <div className="absolute top-3 left-3 right-3 flex items-center justify-between gap-1.5">
+                    <div className="flex items-center gap-1.5 truncate">
+                      <span className="px-2.5 py-1 rounded bg-black/60 backdrop-blur-md border border-white/10 text-[10px] font-technical text-cyan-300 font-bold uppercase truncate">
+                        {event.category}
+                      </span>
+                      {event.teamSize && (
+                        <span className="px-2 py-0.5 rounded bg-sky-500/20 backdrop-blur-md border border-sky-400/30 text-[9px] font-technical text-sky-200 font-bold whitespace-nowrap">
+                          {event.teamSize}
+                        </span>
+                      )}
+                    </div>
 
-                    <span className="px-2.5 py-1 rounded bg-black/60 backdrop-blur-md border border-white/10 text-[10px] font-technical text-emerald-300 font-bold">
+                    <span className="px-2.5 py-1 rounded bg-black/60 backdrop-blur-md border border-white/10 text-[10px] font-technical text-emerald-300 font-bold shrink-0">
                       {event.fee === 0 ? 'FREE' : `₹${event.fee}`}
                     </span>
                   </div>

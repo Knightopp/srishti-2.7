@@ -158,6 +158,12 @@ export const EventDetailPage: React.FC<EventDetailPageProps> = ({
                   {currentEvent.stageLabel || 'KEY EVENT'}
                 </span>
 
+                {currentEvent.teamSize && (
+                  <span className="px-3 py-1 rounded-full bg-sky-500/15 border border-sky-400/40 text-sky-200 font-technical text-xs font-bold uppercase tracking-wider">
+                    {currentEvent.teamSize}
+                  </span>
+                )}
+
                 <span className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-300 font-technical text-xs font-bold uppercase">
                   {currentEvent.fee === 0 ? 'FREE ENTRY' : `FEE: ₹${currentEvent.fee}`}
                 </span>
