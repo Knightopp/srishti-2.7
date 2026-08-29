@@ -549,24 +549,14 @@ html.lenis, html.lenis body {
   background: linear-gradient(
     180deg,
     #38BDF8 0%,
-    #00F0FF 20%,
-    #2563EB 50%,
-    #38BDF8 80%,
-    #00F0FF 100%
+    #00F0FF 50%,
+    #2563EB 100%
   );
-  box-shadow:
-    0 0 8px #00F0FF,
-    0 0 16px rgba(0, 240, 255, 0.8),
-    0 0 28px rgba(56, 189, 248, 0.6),
-    0 0 45px rgba(37, 99, 235, 0.4);
-  animation: timelinePulseGlow 3s ease-in-out infinite;
+  box-shadow: 0 0 6px #00F0FF, 0 0 12px rgba(56, 189, 248, 0.5);
 }
 
 .timeline-node-active-ring {
-  box-shadow:
-    0 0 0 2px rgba(0, 240, 255, 0.9),
-    0 0 14px #00F0FF,
-    0 0 28px rgba(56, 189, 248, 0.7);
+  box-shadow: 0 0 8px #00F0FF, 0 0 14px rgba(56, 189, 248, 0.5);
 }
 
 .animate-laser-sweep {

@@ -170,26 +170,24 @@ export const TimelineRoadmap: React.FC<TimelineRoadmapProps> = ({
       if (validCards.length === 0) return;
 
       const windowH = window.innerHeight;
-      const targetPoint = windowH * 0.70;
+      const triggerY = windowH * 0.70;
 
       const firstCard = validCards[0];
       const lastCard = validCards[validCards.length - 1];
 
-      const firstRect = firstCard.getBoundingClientRect();
-      const lastRect = lastCard.getBoundingClientRect();
+      const startY = firstCard.getBoundingClientRect().top + 28;
+      const endY = lastCard.getBoundingClientRect().top + 28;
 
-      const startY = firstRect.top + 28;
-      const endY = lastRect.top + 28;
+      // Expand total scroll span so line drawing is smooth, gradual, and easy to follow
+      const lineLength = Math.max(1, endY - startY);
+      const totalScrollSpan = lineLength + (windowH * 0.45);
+      const currentScrolled = triggerY - startY;
 
-      const totalSpan = Math.max(1, (endY - startY) + (windowH * 0.25));
-      const scrolled = targetPoint - startY;
-
-      // Direct, responsive correlation to scroll
       let progress = 0;
       if (validCards.length === 1) {
-        progress = startY <= targetPoint ? 1 : 0;
+        progress = startY <= triggerY ? 1 : 0;
       } else {
-        progress = Math.max(0, Math.min(1, scrolled / totalSpan));
+        progress = Math.max(0, Math.min(1, currentScrolled / totalScrollSpan));
       }
 
       const percent = progress * 100;
@@ -200,7 +198,7 @@ export const TimelineRoadmap: React.FC<TimelineRoadmapProps> = ({
       validCards.forEach((card, idx) => {
         const cRect = card.getBoundingClientRect();
         const nodeY = cRect.top + 28;
-        if (nodeY <= targetPoint + 10) {
+        if (nodeY <= triggerY) {
           reached.push(idx);
         }
       });
@@ -539,15 +537,12 @@ export const TimelineRoadmap: React.FC<TimelineRoadmapProps> = ({
               className="absolute left-4 md:left-1/2 -translate-x-1/2 z-0 pointer-events-none"
               style={{ top: '28px', bottom: '28px' }}
             >
-              {/* Soft ambient aura */}
-              <div className="absolute inset-y-0 w-8 -left-3.5 bg-cyan-500/[0.10] blur-md rounded-full pointer-events-none" />
-
               {/* Inactive Line Backbone (2px clean rail) */}
               <div className="w-[2px] h-full bg-white/[0.08] relative overflow-hidden rounded-full">
                 
                 {/* Active Glowing Laser Spine Fill */}
                 <div
-                  className="w-full timeline-deep-glow-line origin-top transition-all duration-75 ease-out"
+                  className="w-full timeline-deep-glow-line origin-top transition-all duration-300 ease-out"
                   style={{ height: `${laserHeightPercent}%` }}
                 />
               </div>
@@ -587,11 +582,6 @@ export const TimelineRoadmap: React.FC<TimelineRoadmapProps> = ({
                         className="absolute left-4 md:left-1/2 -translate-x-1/2 z-20 flex items-center justify-center pointer-events-none"
                         style={{ top: '28px' }}
                       >
-                        {/* Radar Pulse Ring (ONLY active when reached by laser line) */}
-                        {isNodeActive && (
-                          <div className="absolute w-7 h-7 rounded-full bg-cyan-400/25 animate-node-ping pointer-events-none" />
-                        )}
-
                         {/* Core Node Dot: Dark dormant when unreached, neon cyan when active */}
                         <div
                           className={`w-4 h-4 rounded-full flex items-center justify-center transition-all duration-300 ${
