@@ -812,10 +812,7 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
                         }`}
                       >
                         <div className="flex items-start justify-between gap-2">
-                          <div className="space-y-1">
-                            <span className="text-[10px] font-technical font-bold text-cyan-400 uppercase tracking-wider block">
-                              {evt.category}
-                            </span>
+                          <div>
                             <h3 className="font-impact font-black text-base text-white tracking-tight leading-snug">
                               {evt.title}
                             </h3>
