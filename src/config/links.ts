@@ -5,7 +5,7 @@
 
 // URL for the dedicated standalone Registration & Passes host
 export const REGISTRATION_PORTAL_URL = 
-  import.meta.env.VITE_REGISTRATION_URL || 'http://localhost:5174';
+  import.meta.env.VITE_REGISTRATION_URL || 'https://srishti-registration-gamma.vercel.app';
 
 /**
  * Helper to build registration URL with optional pre-selected event
