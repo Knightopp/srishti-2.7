@@ -254,26 +254,27 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
 
   const [submittedRecord, setSubmittedRecord] = useState<RegistrationRecord | null>(null);
 
-  // Capture high-resolution 3x pass image from exact HTML card matching user's design
+  // Capture 100% exact 1-to-1 high-res image of the webpage card
   useEffect(() => {
     if (submittedRecord) {
-      setTimeout(async () => {
+      const timer = setTimeout(async () => {
         const cardElement = document.getElementById('printable-pass-card');
         if (cardElement) {
           try {
             const canvas = await html2canvas(cardElement, {
-              scale: 3,
+              scale: 4, // 4x ultra high-res crisp capture
               useCORS: true,
               allowTaint: true,
-              backgroundColor: '#FFFFFF',
+              backgroundColor: null,
               logging: false,
             });
             setPassImageUrl(canvas.toDataURL('image/png'));
           } catch (err) {
-            console.error('Error generating pass image:', err);
+            console.error('Error capturing pass image:', err);
           }
         }
-      }, 150);
+      }, 300);
+      return () => clearTimeout(timer);
     }
   }, [submittedRecord]);
 
@@ -323,34 +324,22 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
   const getOrGeneratePassCanvasUrl = async (): Promise<string | null> => {
     if (passImageUrl) return passImageUrl;
     const cardElement = document.getElementById('printable-pass-card');
-    if (cardElement) {
-      try {
-        const canvas = await html2canvas(cardElement, {
-          scale: 3,
-          useCORS: true,
-          allowTaint: true,
-          backgroundColor: '#FFFFFF',
-          logging: false,
-        });
-        const url = canvas.toDataURL('image/png');
-        setPassImageUrl(url);
-        return url;
-      } catch (err) {
-        console.error('html2canvas error, falling back to canvas generator:', err);
-      }
+    if (!cardElement) return null;
+    try {
+      const canvas = await html2canvas(cardElement, {
+        scale: 4,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: null,
+        logging: false,
+      });
+      const url = canvas.toDataURL('image/png');
+      setPassImageUrl(url);
+      return url;
+    } catch (err) {
+      console.error('html2canvas capture error:', err);
+      return null;
     }
-
-    if (submittedRecord) {
-      try {
-        const fallbackUrl = await generatePassImage(submittedRecord);
-        setPassImageUrl(fallbackUrl);
-        return fallbackUrl;
-      } catch (err) {
-        console.error('Fallback canvas generator error:', err);
-      }
-    }
-
-    return null;
   };
 
   const handleDownloadPass = async () => {
