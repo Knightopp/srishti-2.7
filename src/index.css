@@ -2,11 +2,12 @@
 
 @layer base {
   :root {
-    /* Editorial Typography System */
-    --font-impact: 'Montserrat', sans-serif;
-    --font-display: 'Syne', 'Montserrat', sans-serif;
+    /* Typography System: Clean, Modern Grotesk */
+    --font-impact: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-display: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-technical: 'IBM Plex Mono', monospace;
-    --font-serif: 'Instrument Serif', 'Playfair Display', 'Lora', Georgia, serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-serif: 'Instrument Serif', 'Playfair Display', Georgia, serif;
 
     /* Surface Tone Hierarchy — Rich Dark Editorial Canvas */
     --surface-0: #050608;
