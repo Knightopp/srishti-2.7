@@ -6,8 +6,7 @@
     --font-impact: 'Montserrat', sans-serif;
     --font-display: 'Syne', 'Montserrat', sans-serif;
     --font-technical: 'IBM Plex Mono', monospace;
-    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    --font-serif: 'Lora', Georgia, serif;
+    --font-serif: 'Instrument Serif', 'Playfair Display', 'Lora', Georgia, serif;
 
     /* Surface Tone Hierarchy — Rich Dark Editorial Canvas */
     --surface-0: #050608;

@@ -170,7 +170,7 @@ export const TimelineRoadmap: React.FC<TimelineRoadmapProps> = ({
       if (validCards.length === 0) return;
 
       const windowH = window.innerHeight;
-      const targetActivationY = windowH * 0.65;
+      const targetPoint = windowH * 0.70;
 
       const firstCard = validCards[0];
       const lastCard = validCards[validCards.length - 1];
@@ -178,30 +178,29 @@ export const TimelineRoadmap: React.FC<TimelineRoadmapProps> = ({
       const firstRect = firstCard.getBoundingClientRect();
       const lastRect = lastCard.getBoundingClientRect();
 
-      // Start line at vertical center of first card
-      const startPointY = firstRect.top + 28;
-      // End line at vertical center of last card
-      const endPointY = lastRect.top + 28;
+      const startY = firstRect.top + 28;
+      const endY = lastRect.top + 28;
 
-      const totalSpan = Math.max(1, (endPointY - startPointY) + (windowH * 0.15));
-      const scrolledDist = targetActivationY - startPointY;
+      const totalSpan = Math.max(1, (endY - startY) + (windowH * 0.25));
+      const scrolled = targetPoint - startY;
 
-      // Calculate smooth progress
+      // Direct, responsive correlation to scroll
       let progress = 0;
       if (validCards.length === 1) {
-        progress = startPointY <= targetActivationY ? 1 : 0;
+        progress = startY <= targetPoint ? 1 : 0;
       } else {
-        progress = Math.max(0, Math.min(1, scrolledDist / totalSpan));
+        progress = Math.max(0, Math.min(1, scrolled / totalSpan));
       }
 
-      setLaserHeightPercent(progress * 100);
+      const percent = progress * 100;
+      setLaserHeightPercent(percent);
 
-      // Light up only cards that have crossed the line's reach
+      // Light up each node when the laser line tip reaches it
       const reached: number[] = [];
       validCards.forEach((card, idx) => {
         const cRect = card.getBoundingClientRect();
         const nodeY = cRect.top + 28;
-        if (nodeY <= targetActivationY) {
+        if (nodeY <= targetPoint + 10) {
           reached.push(idx);
         }
       });
@@ -548,7 +547,7 @@ export const TimelineRoadmap: React.FC<TimelineRoadmapProps> = ({
                 
                 {/* Active Glowing Laser Spine Fill */}
                 <div
-                  className="w-full timeline-deep-glow-line origin-top transition-all duration-500 ease-out"
+                  className="w-full timeline-deep-glow-line origin-top transition-all duration-75 ease-out"
                   style={{ height: `${laserHeightPercent}%` }}
                 />
               </div>

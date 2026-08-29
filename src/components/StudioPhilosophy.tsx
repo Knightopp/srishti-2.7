@@ -17,9 +17,9 @@ export const StudioPhilosophy: React.FC = () => {
 
         {/* Main Quote Statement */}
         <div className="max-w-5xl space-y-6">
-          <h2 className="font-impact font-black text-4xl sm:text-6xl md:text-7xl lg:text-[5.5rem] tracking-tight uppercase leading-[0.88] text-white">
+          <h2 className="font-impact font-black text-4xl sm:text-6xl md:text-7xl lg:text-[5.5rem] tracking-tight uppercase leading-[0.92] text-white">
             <span className="philosophy-text-line block">WHERE CODE MEETS</span>
-            <span className="philosophy-text-line block font-serif italic font-normal text-gradient-27 lowercase text-5xl sm:text-7xl md:text-8xl lg:text-[7.5rem] my-2">
+            <span className="philosophy-text-line inline-block font-serif italic font-normal text-gradient-27 lowercase text-5xl sm:text-7xl md:text-8xl lg:text-[7.5rem] my-1 leading-[1.1] pb-3 pr-3 overflow-visible">
               creativity.
             </span>
             <span className="philosophy-text-line block">THAT IS SRISHTI.</span>
