@@ -9,15 +9,14 @@ import PhotoGallery from './components/PhotoGallery';
 import StudioPhilosophy from './components/StudioPhilosophy';
 import CTA from './components/CTA';
 import Footer from './components/Footer';
-import RegistrationPage from './components/RegistrationPage';
 import AdminPanel from './components/AdminPanel';
 import CopperPanel from './components/CopperPanel';
 import ContactPage from './components/ContactPage';
 import EventsPage from './components/EventsPage';
 import EventDetailPage from './components/EventDetailPage';
 import SchedulePage from './components/SchedulePage';
-import { PassVerificationPage } from './components/PassVerificationPage';
 import { FestProvider } from './context/FestContext';
+import { getRegistrationUrl, getPassVerificationUrl, openRegistrationPortal } from './config/links';
 
 export type AppView = 
   | 'home' 
@@ -25,8 +24,6 @@ export type AppView =
   | 'event-detail' 
   | 'schedule' 
   | 'contact' 
-  | 'register' 
-  | 'pass'
   | 'admin' 
   | 'copper';
 
@@ -35,8 +32,6 @@ export function AppContent() {
 
   const [currentView, setCurrentView] = useState<AppView>('home');
   const [activeEventId, setActiveEventId] = useState<string>('');
-  const [registerEventId, setRegisterEventId] = useState<string | undefined>(undefined);
-  const [passIdParam, setPassIdParam] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     const checkRoute = () => {
@@ -51,6 +46,7 @@ export function AppContent() {
         setCurrentView('admin');
         window.scrollTo({ top: 0, behavior: 'instant' });
       } else if (hash.includes('pass') || path.includes('pass') || search.includes('pass')) {
+        // Immediate redirect to dedicated registration / pass verification host
         let extractedPassId = '';
         if (window.location.hash.includes('/')) {
           extractedPassId = window.location.hash.split('/')[1] || '';
@@ -60,11 +56,15 @@ export function AppContent() {
           const urlParams = new URLSearchParams(window.location.search);
           extractedPassId = urlParams.get('pass') || '';
         }
-        if (extractedPassId) {
-          setPassIdParam(extractedPassId);
+        window.location.href = getPassVerificationUrl(extractedPassId);
+      } else if (hash.includes('register') || path.includes('register')) {
+        // Immediate redirect to dedicated registration host
+        let registerEventId = '';
+        if (hash.includes('/')) {
+          const parts = window.location.hash.split('/');
+          registerEventId = parts[1] || '';
         }
-        setCurrentView('pass');
-        window.scrollTo({ top: 0, behavior: 'instant' });
+        window.location.href = getRegistrationUrl(registerEventId);
       } else if (hash.startsWith('#event/') || hash.startsWith('#events/')) {
         const parts = window.location.hash.split('/');
         const id = parts[1] || '';
@@ -80,13 +80,6 @@ export function AppContent() {
       } else if (hash.includes('contact') || path.includes('contact')) {
         setCurrentView('contact');
         window.scrollTo({ top: 0, behavior: 'instant' });
-      } else if (hash.includes('register') || path.includes('register')) {
-        if (hash.includes('/')) {
-          const parts = window.location.hash.split('/');
-          setRegisterEventId(parts[1]);
-        }
-        setCurrentView('register');
-        window.scrollTo({ top: 0, behavior: 'instant' });
       } else {
         setCurrentView('home');
       }
@@ -101,7 +94,15 @@ export function AppContent() {
     };
   }, []);
 
-  const navigateTo = (view: AppView, param?: string) => {
+  const navigateTo = (view: AppView | 'register' | 'pass', param?: string) => {
+    if (view === 'register') {
+      openRegistrationPortal(param);
+      return;
+    } 
+    if (view === 'pass') {
+      window.open(getPassVerificationUrl(param), '_blank', 'noopener,noreferrer');
+      return;
+    }
     if (view === 'home') {
       window.location.hash = '';
       setCurrentView('home');
@@ -115,14 +116,6 @@ export function AppContent() {
       setActiveEventId(param);
       window.location.hash = `event/${param}`;
       setCurrentView('event-detail');
-    } else if (view === 'register') {
-      setRegisterEventId(param);
-      window.location.hash = param ? `register/${param}` : 'register';
-      setCurrentView('register');
-    } else if (view === 'pass') {
-      setPassIdParam(param);
-      window.location.hash = param ? `pass/${param}` : 'pass';
-      setCurrentView('pass');
     } else {
       window.location.hash = view;
       setCurrentView(view);
@@ -139,29 +132,7 @@ export function AppContent() {
     );
   }
 
-  // 2. Dedicated Registration & Multi-Pass Checkout View
-  if (currentView === 'register') {
-    return (
-      <RegistrationPage
-        initialEventId={registerEventId}
-        onBackToHome={() => navigateTo('home')}
-        onNavigateToAdmin={() => navigateTo('admin')}
-      />
-    );
-  }
-
-  // 3. Dedicated Public Pass Verification Page View
-  if (currentView === 'pass') {
-    return (
-      <PassVerificationPage
-        passIdParam={passIdParam}
-        onBackToHome={() => navigateTo('home')}
-        onNavigateToRegister={() => navigateTo('register')}
-      />
-    );
-  }
-
-  // 3. Dedicated Admin & System Panel View
+  // 2. Dedicated Admin & System Panel View
   if (currentView === 'admin') {
     return (
       <AdminPanel
@@ -171,7 +142,7 @@ export function AppContent() {
     );
   }
 
-  // 4. Dedicated Events Catalog Hub Page
+  // 3. Dedicated Events Catalog Hub Page
   if (currentView === 'events') {
     return (
       <EventsPage
@@ -182,7 +153,7 @@ export function AppContent() {
     );
   }
 
-  // 5. Dynamic Dedicated Event Detail Page (Loads ANY event dynamically!)
+  // 4. Dynamic Dedicated Event Detail Page
   if (currentView === 'event-detail') {
     return (
       <EventDetailPage
@@ -195,7 +166,7 @@ export function AppContent() {
     );
   }
 
-  // 6. Dedicated Schedule & Campus Map Page
+  // 5. Dedicated Schedule & Campus Map Page
   if (currentView === 'schedule') {
     return (
       <SchedulePage
@@ -206,7 +177,7 @@ export function AppContent() {
     );
   }
 
-  // 7. Dedicated Contact Page
+  // 6. Dedicated Contact Page
   if (currentView === 'contact') {
     return (
       <ContactPage
@@ -216,7 +187,7 @@ export function AppContent() {
     );
   }
 
-  // 8. Main Home Landing Page
+  // 7. Main Home Landing Page
   return (
     <div className="relative w-full min-h-screen bg-[#050608] text-[#E8E8EC] antialiased overflow-x-hidden">
       {/* 1. Global Navigation Bar */}
@@ -248,7 +219,7 @@ export function AppContent() {
         <SponsorsTicker />
       </section>
 
-      {/* 5. Event Map & Timeline Roadmap Section with Deep Neon Glow & St. Thomas College Maps */}
+      {/* 5. Event Map & Timeline Roadmap Section */}
       <section className="relative w-full">
         <TimelineRoadmap 
           onNavigateToRegister={(id) => navigateTo('register', id)}
