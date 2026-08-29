@@ -1,10 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ChevronDown, ArrowUpRight, MapPin, ExternalLink, Navigation, Calendar, Clock, Sparkles } from 'lucide-react';
 import { useFest } from '../context/FestContext';
-
-gsap.registerPlugin(ScrollTrigger);
 
 export interface TimelineEvent {
   id: string;
@@ -115,7 +111,7 @@ export const TimelineRoadmap: React.FC<TimelineRoadmapProps> = ({
   const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
   const nodeDotsRef = useRef<(HTMLDivElement | null)[]>([]);
 
-  // Memoize roadmap events to prevent reference churn and flickering
+  // Stable memoized roadmap events
   const roadmapEvents: TimelineEvent[] = useMemo(() => {
     return events.map((e, index) => ({
       id: e.id,
@@ -161,104 +157,54 @@ export const TimelineRoadmap: React.FC<TimelineRoadmapProps> = ({
     return roadmapEvents.filter((ev) => ev.locationId === activeMapPinId);
   }, [roadmapEvents, activeMapPinId]);
 
+  // Robust real-time scroll synchronization without flicker or disappearing elements
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (viewMode !== 'timeline') return;
 
-    const isMobile = window.innerWidth < 768;
-    if (isMobile) {
-      if (lineFillRef.current) gsap.set(lineFillRef.current, { scaleY: 1 });
-      cardsRef.current.forEach((card) => {
-        if (card) gsap.set(card, { x: 0, opacity: 1 });
-      });
-      nodeDotsRef.current.forEach((dot) => {
-        if (dot) gsap.set(dot, { scale: 1, opacity: 1 });
-      });
-      return;
-    }
+    const handleScroll = () => {
+      if (!eventsListRef.current) return;
+      const rect = eventsListRef.current.getBoundingClientRect();
+      const windowH = window.innerHeight;
 
-    const ctx = gsap.context(() => {
-      // Header reveal
-      gsap.fromTo(
-        '.roadmap-header-content',
-        { y: 20, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.6,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: '.roadmap-header-content',
-            start: 'top 90%',
-            toggleActions: 'play none none none',
-          },
-        }
-      );
+      // Start drawing laser line when top of list reaches 65% down viewport
+      // Complete laser line when bottom of list reaches 50% down viewport
+      const startThreshold = windowH * 0.65;
+      const endThreshold = windowH * 0.45;
 
-      if (viewMode !== 'timeline' || !lineFillRef.current || !eventsListRef.current) return;
+      const totalTravel = Math.max(1, rect.height + (startThreshold - endThreshold));
+      const currentTravel = startThreshold - rect.top;
 
-      // 1. GRowing glowing line as user scrolls down through the events
-      gsap.fromTo(
-        lineFillRef.current,
-        { scaleY: 0 },
-        {
-          scaleY: 1,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: eventsListRef.current,
-            start: 'top 75%',
-            end: 'bottom 80%',
-            scrub: 0.4,
-          },
-        }
-      );
+      const progress = Math.max(0, Math.min(1, currentTravel / totalTravel));
 
-      // 2. Animate each card & node dot synchronized to scroll
-      cardsRef.current.forEach((card, index) => {
+      if (lineFillRef.current) {
+        lineFillRef.current.style.transform = `scaleY(${progress})`;
+      }
+
+      // Synchronize node dots: light up when scroll/line reaches that card
+      cardsRef.current.forEach((card, idx) => {
         if (!card) return;
+        const cardRect = card.getBoundingClientRect();
+        const dot = nodeDotsRef.current[idx];
+        if (!dot) return;
 
-        const isLeft = card.dataset.side === 'left';
-        const nodeDot = nodeDotsRef.current[index];
-
-        // Card slide-in
-        gsap.fromTo(
-          card,
-          { x: isLeft ? -35 : 35, opacity: 0 },
-          {
-            x: 0,
-            opacity: 1,
-            duration: 0.5,
-            ease: 'power2.out',
-            scrollTrigger: {
-              trigger: card,
-              start: 'top 85%',
-              toggleActions: 'play reverse play reverse',
-            },
-          }
-        );
-
-        // Node illumination (lights up ONLY when line/scroll reaches this point)
-        if (nodeDot) {
-          gsap.fromTo(
-            nodeDot,
-            { scale: 0.5, opacity: 0.15 },
-            {
-              scale: 1,
-              opacity: 1,
-              duration: 0.4,
-              ease: 'back.out(2)',
-              scrollTrigger: {
-                trigger: card,
-                start: 'top 78%',
-                toggleActions: 'play reverse play reverse',
-              },
-            }
-          );
+        const isReached = cardRect.top <= windowH * 0.68;
+        if (isReached) {
+          dot.style.transform = 'scale(1)';
+          dot.style.opacity = '1';
+        } else {
+          dot.style.transform = 'scale(0.55)';
+          dot.style.opacity = '0.2';
         }
       });
-    }, containerRef);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll, { passive: true });
+    handleScroll();
 
     return () => {
-      ctx.revert();
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
     };
   }, [viewMode, selectedDay, filteredEvents.length]);
 
@@ -296,7 +242,7 @@ export const TimelineRoadmap: React.FC<TimelineRoadmapProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 relative z-10">
         
         {/* =============================================
-            SECTION HEADER
+            SECTION HEADER (Always Solid & Visible)
             ============================================= */}
         <div className="roadmap-header-content text-center max-w-3xl mx-auto mb-10 sm:mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-[10px] sm:text-xs font-technical font-semibold tracking-wider uppercase mb-3">
@@ -354,7 +300,7 @@ export const TimelineRoadmap: React.FC<TimelineRoadmapProps> = ({
                   onClick={() => setSelectedDay(tab.id as typeof selectedDay)}
                   className={`px-3.5 py-1.5 rounded-md text-xs font-body font-semibold tracking-wider transition-all cursor-pointer flex items-center gap-1.5 ${
                     selectedDay === tab.id
-                      ? 'bg-white/10 text-cyan-300 border border-cyan-400/30 shadow-sm'
+                      ? 'bg-white/10 text-cyan-300 border border-cyan-400/30 shadow-sm font-bold'
                       : 'text-white/40 hover:text-white/80 hover:bg-white/[0.02]'
                   }`}
                 >
@@ -573,29 +519,26 @@ export const TimelineRoadmap: React.FC<TimelineRoadmapProps> = ({
           </div>
         ) : (
           /* =============================================
-             TIMELINE VIEW — DEEP GLOWING LASER SPINE
+             TIMELINE VIEW — ACCURATE SCROLL-LINKED LASER SPINE
              ============================================= */
           <div ref={eventsListRef} className="relative mt-8 sm:mt-10">
 
-            {/* Central Vertical Glowing Laser Line Track */}
-            {/* Starts exactly at the top event and extends to the bottom event */}
-            <div className="absolute left-4 md:left-1/2 top-6 bottom-6 -translate-x-1/2 z-0 pointer-events-none flex flex-col items-center">
+            {/* Central Vertical Laser Line Track */}
+            {/* Anchored strictly from top node to bottom node */}
+            <div className="absolute left-4 md:left-1/2 top-4 bottom-4 -translate-x-1/2 z-0 pointer-events-none flex flex-col items-center">
               
               {/* Outer ambient soft glow aura */}
-              <div className="absolute inset-y-0 w-10 -left-4.5 bg-cyan-500/[0.15] blur-md rounded-full pointer-events-none" />
+              <div className="absolute inset-y-0 w-10 -left-4.5 bg-cyan-500/[0.12] blur-md rounded-full pointer-events-none" />
 
               {/* Inactive Line Backbone */}
-              <div className="w-[3px] h-full bg-cyan-950/40 rounded-full relative overflow-hidden">
+              <div className="w-[3px] h-full bg-cyan-950/50 rounded-full relative overflow-hidden">
                 
-                {/* Active Glowing Laser Spine Fill (Draws downward on scroll) */}
+                {/* Active Glowing Laser Spine Fill (Dynamically driven by real scroll) */}
                 <div
                   ref={lineFillRef}
-                  className="w-full h-full timeline-deep-glow-line origin-top"
+                  className="w-full h-full timeline-deep-glow-line origin-top transition-transform duration-75 ease-out"
                   style={{ transform: 'scaleY(0)' }}
                 />
-
-                {/* Animated traveling energy spark */}
-                <div className="absolute left-0 right-0 h-24 bg-gradient-to-b from-transparent via-white to-transparent opacity-80 animate-laser-sweep" />
               </div>
 
               {/* Glowing Top & Bottom Terminators */}
@@ -622,19 +565,19 @@ export const TimelineRoadmap: React.FC<TimelineRoadmapProps> = ({
                       </div>
                     )}
 
-                    {/* EVENT ITEM ROW */}
+                    {/* EVENT ITEM ROW (Always visible, solid, zero flicker) */}
                     <div
                       className={`relative flex flex-col md:flex-row items-center ${
                         isLeft ? 'md:flex-row-reverse' : ''
                       }`}
                     >
-                      {/* Node Marker with Deep Halo (Dormant by default, lights up on scroll) */}
+                      {/* Node Marker with Deep Halo (Dormant -> Lights up when scroll reaches) */}
                       <div
                         ref={(el) => {
                           nodeDotsRef.current[index] = el;
                         }}
-                        className="absolute left-4 md:left-1/2 -translate-x-1/2 z-20 flex items-center justify-center pointer-events-none will-change-transform"
-                        style={{ transform: 'scale(0.5)', opacity: 0.15 }}
+                        className="absolute left-4 md:left-1/2 -translate-x-1/2 z-20 flex items-center justify-center pointer-events-none transition-all duration-300 ease-out"
+                        style={{ transform: 'scale(0.55)', opacity: 0.2 }}
                       >
                         {/* Radar Pulse Ring */}
                         <div className="absolute w-6 h-6 rounded-full bg-cyan-400/30 animate-node-ping pointer-events-none" />
@@ -654,13 +597,13 @@ export const TimelineRoadmap: React.FC<TimelineRoadmapProps> = ({
                           cardsRef.current[index] = el;
                         }}
                         data-side={isLeft ? 'left' : 'right'}
-                        className={`w-full md:w-1/2 pl-12 md:pl-0 will-change-transform ${
+                        className={`w-full md:w-1/2 pl-12 md:pl-0 ${
                           isLeft ? 'md:pr-8 lg:pr-12' : 'md:pl-8 lg:pl-12'
                         }`}
                       >
                         <div
                           onClick={() => toggleExpand(event.id)}
-                          className={`group rounded-xl p-5 sm:p-6 bg-[#0A0D14]/90 border backdrop-blur-md transition-all duration-300 cursor-pointer shadow-xl relative overflow-hidden ${
+                          className={`group rounded-xl p-5 sm:p-6 bg-[#0A0D14] border transition-all duration-200 cursor-pointer shadow-xl relative overflow-hidden ${
                             isExpanded
                               ? 'border-cyan-400/50 bg-[#0D121F] shadow-[0_0_30px_rgba(0,240,255,0.12)]'
                               : 'border-white/[0.08] hover:border-cyan-400/30 hover:bg-[#0E131E]'
