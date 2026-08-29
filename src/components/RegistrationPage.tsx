@@ -323,34 +323,76 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
 
   const getOrGeneratePassCanvasUrl = async (): Promise<string | null> => {
     if (passImageUrl) return passImageUrl;
+
     const cardElement = document.getElementById('printable-pass-card');
-    if (!cardElement) return null;
-    try {
-      const canvas = await html2canvas(cardElement, {
-        scale: 4,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: null,
-        logging: false,
-      });
-      const url = canvas.toDataURL('image/png');
-      setPassImageUrl(url);
-      return url;
-    } catch (err) {
-      console.error('html2canvas capture error:', err);
-      return null;
+    if (cardElement) {
+      try {
+        const canvas = await html2canvas(cardElement, {
+          scale: 3,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: '#FFFFFF',
+          logging: false,
+        });
+        const url = canvas.toDataURL('image/png');
+        if (url && url.length > 100) {
+          setPassImageUrl(url);
+          return url;
+        }
+      } catch (err) {
+        console.error('html2canvas capture error, trying native canvas:', err);
+      }
     }
+
+    if (submittedRecord) {
+      try {
+        const fallbackUrl = await generatePassImage(submittedRecord);
+        setPassImageUrl(fallbackUrl);
+        return fallbackUrl;
+      } catch (err) {
+        console.error('Native canvas generator error:', err);
+      }
+    }
+
+    return null;
   };
 
   const handleDownloadPass = async () => {
     setIsDownloading(true);
     try {
-      const imgUrl = await getOrGeneratePassCanvasUrl();
+      let imgUrl = await getOrGeneratePassCanvasUrl();
+      if (!imgUrl && submittedRecord) {
+        imgUrl = await generatePassImage(submittedRecord);
+      }
+
       if (imgUrl) {
-        downloadDataUrlAsFile(imgUrl, `SRISHTI-2.7-PASS-${submittedRecord?.passId || 'DELEGATE'}.png`);
+        const filename = `SRISHTI-2.7-PASS-${submittedRecord?.passId || 'DELEGATE'}.png`;
+
+        // Direct anchor download trigger
+        const link = document.createElement('a');
+        link.href = imgUrl;
+        link.download = filename;
+        link.setAttribute('download', filename);
+        document.body.appendChild(link);
+        link.click();
+
+        setTimeout(() => {
+          if (document.body.contains(link)) {
+            document.body.removeChild(link);
+          }
+        }, 300);
+
+        // Blob URL stream download trigger
+        downloadDataUrlAsFile(imgUrl, filename);
+      } else {
+        alert('Pass image is being generated. Please click Download again in 2 seconds.');
       }
     } catch (err) {
       console.error('Download error:', err);
+      if (submittedRecord) {
+        const fallbackUrl = await generatePassImage(submittedRecord);
+        downloadDataUrlAsFile(fallbackUrl, `SRISHTI-2.7-PASS-${submittedRecord.passId}.png`);
+      }
     } finally {
       setIsDownloading(false);
     }
