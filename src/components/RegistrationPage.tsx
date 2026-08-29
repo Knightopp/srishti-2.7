@@ -16,19 +16,25 @@ import { useFest, type RegistrationRecord } from '../context/FestContext';
 interface RegistrationPageProps {
   onBackToHome: () => void;
   onNavigateToAdmin?: () => void;
+  initialEventId?: string;
 }
 
 export const RegistrationPage: React.FC<RegistrationPageProps> = ({
   onBackToHome,
   onNavigateToAdmin,
+  initialEventId,
 }) => {
   const { events, addRegistration, settings } = useFest();
 
-  // Multi-select events state (default first event selected)
+  // Multi-select events state (default initialEventId or first event selected)
   const participatingEvents = events.filter((e) => e.isParticipating !== false);
   const registerableList = participatingEvents.length > 0 ? participatingEvents : events;
 
   const [selectedEventIds, setSelectedEventIds] = useState<string[]>(() => {
+    if (initialEventId) {
+      const exists = events.some((e) => e.id.toLowerCase() === initialEventId.toLowerCase());
+      if (exists) return [initialEventId];
+    }
     const firstPart = events.find((e) => e.isParticipating !== false);
     return firstPart ? [firstPart.id] : [events[0]?.id || 'code-clash'];
   });

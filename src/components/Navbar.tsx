@@ -8,11 +8,21 @@ gsap.registerPlugin(ScrollTrigger);
 interface NavbarProps {
   onNavigateToRegister?: () => void;
   onNavigateToAdmin?: () => void;
+  onNavigateToEvents?: () => void;
+  onNavigateToSchedule?: () => void;
+  onNavigateToContact?: () => void;
+  onNavigateToHome?: () => void;
+  currentView?: string;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
   onNavigateToRegister,
   onNavigateToAdmin: _onNavigateToAdmin,
+  onNavigateToEvents,
+  onNavigateToSchedule,
+  onNavigateToContact,
+  onNavigateToHome,
+  currentView = 'home',
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
@@ -114,7 +124,16 @@ export const Navbar: React.FC<NavbarProps> = ({
           className="global-navbar pointer-events-auto backdrop-blur-2xl border shadow-[0_12px_45px_rgba(0,0,0,0.6)] flex items-center justify-between select-none will-change-transform h-14 overflow-hidden"
         >
           {/* COL 1 — Brand Logo, fixed left */}
-          <a href="#" className="flex items-center gap-2 group shrink-0">
+          <a
+            href="#"
+            onClick={(e) => {
+              if (onNavigateToHome) {
+                e.preventDefault();
+                onNavigateToHome();
+              }
+            }}
+            className="flex items-center gap-2 group shrink-0"
+          >
             <div className="w-7 h-7 rounded-lg bg-white/[0.04] border border-white/[0.08] p-1 flex items-center justify-center transition-all duration-200 group-hover:border-cyan-400/40 shrink-0">
               <img
                 src="/srishti-logo-transparent.png"
@@ -130,13 +149,46 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* COL 2 — Nav links, fills center, perfectly centered */}
           <nav className="hidden md:flex flex-1 items-center justify-center gap-5 text-xs font-body font-semibold uppercase tracking-wider text-white/50">
-            <a href="#cases" className="hover:text-white transition-colors whitespace-nowrap shrink-0">
+            <a
+              href="#events"
+              onClick={(e) => {
+                if (onNavigateToEvents) {
+                  e.preventDefault();
+                  onNavigateToEvents();
+                }
+              }}
+              className={`hover:text-white transition-colors whitespace-nowrap shrink-0 ${
+                currentView === 'events' ? 'text-cyan-400 font-bold' : ''
+              }`}
+            >
               Events
             </a>
-            <a href="#roadmap" className="hover:text-white transition-colors whitespace-nowrap shrink-0">
+            <a
+              href="#schedule"
+              onClick={(e) => {
+                if (onNavigateToSchedule) {
+                  e.preventDefault();
+                  onNavigateToSchedule();
+                }
+              }}
+              className={`hover:text-white transition-colors whitespace-nowrap shrink-0 ${
+                currentView === 'schedule' ? 'text-cyan-400 font-bold' : ''
+              }`}
+            >
               Schedule
             </a>
-            <a href="#contact" className="hover:text-white transition-colors whitespace-nowrap shrink-0">
+            <a
+              href="#contact"
+              onClick={(e) => {
+                if (onNavigateToContact) {
+                  e.preventDefault();
+                  onNavigateToContact();
+                }
+              }}
+              className={`hover:text-white transition-colors whitespace-nowrap shrink-0 ${
+                currentView === 'contact' ? 'text-cyan-400 font-bold' : ''
+              }`}
+            >
               Contact
             </a>
 
@@ -211,16 +263,20 @@ export const Navbar: React.FC<NavbarProps> = ({
           </span>
 
           {[
-            { href: '#cases', label: 'Events', number: '01' },
-            { href: '#roadmap', label: 'Schedule', number: '02' },
-            { href: '#gallery', label: 'Gallery', number: '03' },
-            { href: '#philosophy', label: 'About', number: '04' },
-            { href: '#contact', label: 'Contact', number: '05' },
+            { href: '#events', label: 'Events Hub', number: '01', action: onNavigateToEvents },
+            { href: '#schedule', label: 'Schedule & Map', number: '02', action: onNavigateToSchedule },
+            { href: '#contact', label: 'Contact Helpdesk', number: '03', action: onNavigateToContact },
+            { href: '#gallery', label: 'Festival Gallery', number: '04' },
+            { href: '#philosophy', label: 'About Srishti', number: '05' },
           ].map((link) => (
             <a
               key={link.href}
               href={link.href}
-              onClick={() => {
+              onClick={(e) => {
+                if (link.action) {
+                  e.preventDefault();
+                  link.action();
+                }
                 setIsMenuOpen(false);
               }}
               className="flex items-center justify-between px-3 py-3.5 border-b border-white/[0.04] text-white/80 hover:text-white transition-colors"

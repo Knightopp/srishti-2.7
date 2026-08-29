@@ -3,10 +3,14 @@ import { ArrowUpRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useFest } from '../context/FestContext';
 
 interface CaseShowcaseProps {
-  onNavigateToRegister?: () => void;
+  onNavigateToRegister?: (eventId?: string) => void;
+  onSelectEventDetail?: (eventId: string) => void;
 }
 
-export const CaseShowcase: React.FC<CaseShowcaseProps> = ({ onNavigateToRegister }) => {
+export const CaseShowcase: React.FC<CaseShowcaseProps> = ({ 
+  onNavigateToRegister,
+  onSelectEventDetail,
+}) => {
   const { events } = useFest();
   const [activeCategory, setActiveCategory] = useState<string>('ALL');
   const [selectedEventId, setSelectedEventId] = useState<string>('');
@@ -212,10 +216,30 @@ export const CaseShowcase: React.FC<CaseShowcaseProps> = ({ onNavigateToRegister
               </div>
 
               {/* CTA Action */}
-              <div className="pt-4">
+              <div className="pt-4 flex flex-wrap items-center gap-3">
                 <button
-                  onClick={onNavigateToRegister}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded bg-gradient-27-glow text-white font-body font-bold text-xs uppercase tracking-wider hover:scale-105 transition-transform cursor-pointer"
+                  onClick={() => {
+                    if (onSelectEventDetail && currentEvent) {
+                      onSelectEventDetail(currentEvent.id);
+                    } else if (currentEvent) {
+                      window.location.hash = `event/${currentEvent.id}`;
+                    }
+                  }}
+                  className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-lg bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.1] text-white font-body font-semibold text-xs transition-all cursor-pointer"
+                >
+                  <span>View Full Details</span>
+                  <ArrowUpRight className="w-3.5 h-3.5 text-cyan-400" />
+                </button>
+
+                <button
+                  onClick={() => {
+                    if (onNavigateToRegister && currentEvent) {
+                      onNavigateToRegister(currentEvent.id);
+                    } else if (onNavigateToRegister) {
+                      onNavigateToRegister();
+                    }
+                  }}
+                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-gradient-27 text-white font-body font-bold text-xs uppercase tracking-wider hover:scale-105 transition-transform cursor-pointer shadow-[0_0_15px_rgba(56,189,248,0.35)]"
                 >
                   <span>Register For Event</span>
                   <ArrowUpRight className="w-4 h-4" />
