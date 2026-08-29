@@ -6,9 +6,14 @@ import {
   Download, 
   Check,
   Ticket,
-  Copy
+  X,
+  Sun,
+  Moon,
+  Loader2,
+  ShieldCheck
 } from 'lucide-react';
 import { useFest, type RegistrationRecord } from '../context/FestContext';
+import srishtiLogo from '../assets/images/srishti-logo.png';
 
 interface RegistrationPageProps {
   onBackToHome: () => void;
@@ -36,6 +41,9 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
   });
 
   const [copiedUpi, setCopiedUpi] = useState(false);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [cardMode, setCardMode] = useState<'dark' | 'light'>('dark');
 
   const [formData, setFormData] = useState({
     fullName: '',
@@ -168,44 +176,57 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
     };
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Open Payment Scanner Modal after verifying form fields
+  const handleOpenPaymentModal = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.fullName || !formData.email || !formData.college || !formData.phone) {
-      alert('Please fill in all required personal information fields.');
+      alert('Please fill in all required personal details first.');
       return;
     }
+    setIsPaymentModalOpen(true);
+  };
+
+  // Execute payment verification & submit registration
+  const handleVerifyAndSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (!formData.paymentUtr || formData.paymentUtr.length < 6) {
-      alert('Please enter a valid 12-digit UTR or transaction reference number.');
+      alert('Please enter a valid 12-digit UTR / Transaction reference number.');
       return;
     }
 
-    const telemetry = await getDeepDeviceTelemetry();
+    setIsVerifying(true);
 
-    const record = addRegistration({
-      fullName: formData.fullName,
-      email: formData.email,
-      phone: formData.phone,
-      college: formData.college,
-      department: formData.department,
-      year: formData.year,
-      teamName: formData.teamName,
-      selectedEventIds,
-      selectedEventNames: selectedEvents.map((e) => e.title),
-      totalFee,
-      paymentUtr: formData.paymentUtr,
-      ipAddress: telemetry.ipAddress,
-      deviceInfo: telemetry.deviceInfo,
-      locationInfo: telemetry.locationInfo,
-      screenResolution: telemetry.screenResolution,
-      ispProvider: telemetry.ispProvider,
-      cpuCores: telemetry.cpuCores,
-      deviceMemory: telemetry.deviceMemory,
-      connectionType: telemetry.connectionType,
-      languageTimezone: telemetry.languageTimezone,
-      userAgentRaw: telemetry.userAgentRaw,
-    });
+    setTimeout(async () => {
+      const telemetry = await getDeepDeviceTelemetry();
 
-    setSubmittedRecord(record);
+      const record = addRegistration({
+        fullName: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+        college: formData.college,
+        department: formData.department,
+        year: formData.year,
+        teamName: formData.teamName,
+        selectedEventIds,
+        selectedEventNames: selectedEvents.map((e) => e.title),
+        totalFee,
+        paymentUtr: formData.paymentUtr,
+        ipAddress: telemetry.ipAddress,
+        deviceInfo: telemetry.deviceInfo,
+        locationInfo: telemetry.locationInfo,
+        screenResolution: telemetry.screenResolution,
+        ispProvider: telemetry.ispProvider,
+        cpuCores: telemetry.cpuCores,
+        deviceMemory: telemetry.deviceMemory,
+        connectionType: telemetry.connectionType,
+        languageTimezone: telemetry.languageTimezone,
+        userAgentRaw: telemetry.userAgentRaw,
+      });
+
+      setIsVerifying(false);
+      setIsPaymentModalOpen(false);
+      setSubmittedRecord(record);
+    }, 1200);
   };
 
   return (
@@ -221,9 +242,7 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
         </button>
 
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-md bg-gradient-27 flex items-center justify-center text-white font-display font-bold text-xs">
-            S
-          </div>
+          <img src={srishtiLogo} alt="Srishti Logo" className="w-6 h-6 object-contain" />
           <span className="font-display font-bold text-sm tracking-tight text-white hidden sm:inline">
             srishti<span className="text-gradient-27 font-technical font-black ml-1">2.7</span>
           </span>
@@ -241,14 +260,14 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
               REGISTER FOR <span className="text-gradient-27 font-impact font-black">SRISHTI 2.7</span>
             </h1>
             <p className="text-sm sm:text-base text-white/60 font-body font-light leading-relaxed max-w-xl">
-              Choose your events, enter your details, complete the payment, and receive your official Srishti 2.7 festival pass.
+              Choose your events, enter your details, scan to pay via PhonePe / UPI, and instantly receive your official Srishti pass.
             </p>
           </div>
 
           {/* Main 2-Column Composition */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-            {/* Left Column: Form Flow */}
-            <form onSubmit={handleSubmit} className="lg:col-span-7 space-y-14">
+            {/* Left Column: Events & Personal Form */}
+            <form onSubmit={handleOpenPaymentModal} className="lg:col-span-7 space-y-14">
               {/* STEP 01 — SELECT EVENTS */}
               <section className="space-y-6">
                 <div className="flex items-baseline justify-between border-b border-white/10 pb-3">
@@ -407,68 +426,12 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
                     </select>
                   </div>
                 </div>
-              </section>
-
-              {/* STEP 03 — PAYMENT */}
-              <section className="space-y-6">
-                <div className="border-b border-white/10 pb-3">
-                  <span className="text-xs font-technical text-cyan-400 font-bold uppercase tracking-wider block mb-1">
-                    STEP 03
-                  </span>
-                  <h2 className="font-impact font-black text-2xl text-white uppercase tracking-tight">
-                    PAYMENT
-                  </h2>
-                </div>
-
-                <div className="p-6 rounded-xl bg-[#0A0D14] border border-white/10 space-y-6">
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
-                    <div className="w-28 h-28 bg-white p-2 rounded-lg flex items-center justify-center shrink-0">
-                      {settings.upiQrImage ? (
-                        <img src={settings.upiQrImage} alt="UPI QR Code" className="w-full h-full object-contain" />
-                      ) : (
-                        <QrCode className="w-full h-full text-black" />
-                      )}
-                    </div>
-
-                    <div className="space-y-2 text-xs font-body flex-1">
-                      <span className="text-white/50 block font-light">Scan QR code or pay via UPI ID:</span>
-                      <div className="flex items-center gap-3">
-                        <strong className="font-technical text-cyan-300 text-sm font-bold">{settings.upiId || 'srishti@stthomas.upi'}</strong>
-                        <button
-                          type="button"
-                          onClick={copyUpi}
-                          className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-white/5 border border-white/15 text-white/80 hover:text-white text-[10px] font-technical transition-colors cursor-pointer"
-                        >
-                          <Copy className="w-3 h-3" />
-                          <span>{copiedUpi ? 'COPIED' : 'COPY'}</span>
-                        </button>
-                      </div>
-                      <p className="text-xs text-white/50 font-light pt-1 leading-relaxed">
-                        Pay total <strong className="text-white font-semibold">₹{totalFee}</strong> using GPay, PhonePe, or Paytm. Enter your 12-digit UTR / Transaction reference number below.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="space-y-1.5 pt-2 border-t border-white/5">
-                    <label className="text-xs font-body text-cyan-300 font-semibold block">
-                      12-Digit Transaction UTR / Ref No. *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="e.g. 984210459821"
-                      value={formData.paymentUtr}
-                      onChange={(e) => setFormData({ ...formData, paymentUtr: e.target.value })}
-                      className="w-full px-4 py-3 rounded-lg bg-[#050608] border border-white/20 text-white placeholder-white/20 text-xs font-technical focus:outline-none focus:border-cyan-400 transition-colors"
-                    />
-                  </div>
-                </div>
 
                 <button
                   type="submit"
                   className="w-full py-4 rounded-lg bg-gradient-27 text-white font-impact font-black uppercase text-sm tracking-wider hover:opacity-90 active:scale-[0.99] transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg"
                 >
-                  <span>COMPLETE REGISTRATION →</span>
+                  <span>PROCEED TO PAYMENT (₹{totalFee}) →</span>
                 </button>
               </section>
             </form>
@@ -482,7 +445,7 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
 
                 <div className="space-y-2">
                   <span className="text-[10px] font-technical text-cyan-400 font-bold uppercase tracking-wider block">
-                    STEP 04
+                    PASS PREVIEW
                   </span>
                   <h3 className="font-impact font-black text-xl text-white uppercase tracking-tight">
                     YOUR FESTIVAL PASS
@@ -490,7 +453,7 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
                 </div>
 
                 <p className="text-xs text-white/50 font-body font-light leading-relaxed max-w-xs mx-auto">
-                  Complete your event selection, personal details, and UPI payment UTR number to generate your official Srishti 2.7 pass.
+                  Click 'Proceed to Payment' to scan QR via PhonePe and verify your 12-digit UTR to generate your official pass.
                 </p>
 
                 <div className="pt-4 border-t border-white/5 text-left text-xs font-body space-y-2 text-white/40">
@@ -508,7 +471,7 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
           </div>
         </main>
       ) : (
-        /* Submission Confirmation — Generated Official Festival Pass */
+        /* Submission Confirmation — Minimalist, Cool Festival Pass (Light & Dark Mode Switcher) */
         <main className="max-w-2xl mx-auto px-4 py-16 text-center space-y-8 relative z-10">
           <div className="w-16 h-16 rounded-full bg-cyan-400/10 border border-cyan-400/30 flex items-center justify-center mx-auto text-cyan-400 shadow-xl">
             <CheckCircle2 className="w-8 h-8" />
@@ -516,59 +479,140 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
 
           <div className="space-y-2">
             <span className="text-xs font-technical text-cyan-400 font-bold tracking-widest uppercase block">
-              REGISTRATION COMPLETE
+              PAYMENT VERIFIED & PASS ISSUED
             </span>
             <h2 className="font-impact font-black text-3xl sm:text-4xl text-white uppercase tracking-tight">
               YOUR OFFICIAL PASS IS READY
             </h2>
             <p className="text-xs sm:text-sm text-white/60 max-w-md mx-auto font-body font-light leading-relaxed">
-              Thank you, <strong className="text-white font-semibold">{submittedRecord.fullName}</strong>. Your transaction reference UTR <strong className="text-cyan-300 font-technical">{submittedRecord.paymentUtr}</strong> has been logged.
+              Thank you, <strong className="text-white font-semibold">{submittedRecord.fullName}</strong>. UTR <strong className="text-cyan-300 font-technical">{submittedRecord.paymentUtr}</strong> verified.
             </p>
           </div>
 
-          {/* OFFICIAL FESTIVAL PASS CREDENTIAL */}
-          <div className="p-8 rounded-2xl bg-[#090C12] border border-cyan-400/40 shadow-2xl text-left space-y-6 relative overflow-hidden">
-            <div className="flex items-center justify-between border-b border-white/10 pb-4">
-              <div>
-                <span className="font-impact font-black text-lg text-white uppercase tracking-tight block">
-                  SRISHTI <span className="text-gradient-27 font-impact font-black">2.7</span>
-                </span>
-                <span className="text-[10px] font-technical text-white/40 block">ST. THOMAS COLLEGE (AUTONOMOUS)</span>
+          {/* LIGHT / DARK CARD MODE SWITCHER */}
+          <div className="flex items-center justify-center gap-2">
+            <button
+              onClick={() => setCardMode('dark')}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-body font-semibold transition-all cursor-pointer ${
+                cardMode === 'dark'
+                  ? 'bg-cyan-400 text-black shadow-md'
+                  : 'bg-white/5 border border-white/10 text-white/60 hover:text-white'
+              }`}
+            >
+              <Moon className="w-3.5 h-3.5" />
+              <span>Dark Card</span>
+            </button>
+            <button
+              onClick={() => setCardMode('light')}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-body font-semibold transition-all cursor-pointer ${
+                cardMode === 'light'
+                  ? 'bg-white text-black shadow-md'
+                  : 'bg-white/5 border border-white/10 text-white/60 hover:text-white'
+              }`}
+            >
+              <Sun className="w-3.5 h-3.5" />
+              <span>Light Card</span>
+            </button>
+          </div>
+
+          {/* MINIMALIST & COOL FESTIVAL PASS CARD */}
+          <div
+            className={`p-8 rounded-2xl shadow-2xl text-left space-y-6 relative overflow-hidden transition-all duration-300 ${
+              cardMode === 'dark'
+                ? 'bg-[#0A0C10] border border-white/15 text-white'
+                : 'bg-[#F9FAFB] border border-slate-300 text-slate-900'
+            }`}
+          >
+            {/* Top Pass Header */}
+            <div className={`flex items-center justify-between border-b pb-4 ${
+              cardMode === 'dark' ? 'border-white/10' : 'border-slate-200'
+            }`}>
+              <div className="flex items-center gap-3">
+                <img src={srishtiLogo} alt="Srishti Logo" className="w-8 h-8 object-contain" />
+                <div>
+                  <span className={`font-impact font-black text-lg uppercase tracking-tight block ${
+                    cardMode === 'dark' ? 'text-white' : 'text-slate-900'
+                  }`}>
+                    SRISHTI 2.7
+                  </span>
+                  <span className={`text-[10px] font-technical block ${
+                    cardMode === 'dark' ? 'text-white/40' : 'text-slate-500'
+                  }`}>
+                    ST. THOMAS COLLEGE (AUTONOMOUS)
+                  </span>
+                </div>
               </div>
-              <span className="px-3 py-1 text-[10px] font-technical font-bold bg-cyan-400/10 text-cyan-300 border border-cyan-400/30 rounded-full uppercase">
+              <span className={`px-3 py-1 text-[10px] font-technical font-bold rounded-full uppercase ${
+                cardMode === 'dark'
+                  ? 'bg-cyan-400/10 text-cyan-300 border border-cyan-400/30'
+                  : 'bg-slate-900 text-white'
+              }`}>
                 {submittedRecord.paymentStatus}
               </span>
             </div>
 
+            {/* Attendee Identity */}
             <div className="space-y-1">
-              <span className="text-[10px] font-technical text-white/40 uppercase block font-semibold">ATTENDEE NAME</span>
-              <h3 className="font-impact font-black text-2xl text-white uppercase tracking-tight">
+              <span className={`text-[10px] font-technical uppercase block font-semibold ${
+                cardMode === 'dark' ? 'text-white/40' : 'text-slate-400'
+              }`}>
+                DELEGATE ATTENDEE
+              </span>
+              <h3 className={`font-impact font-black text-2xl uppercase tracking-tight ${
+                cardMode === 'dark' ? 'text-white' : 'text-slate-900'
+              }`}>
                 {submittedRecord.fullName}
               </h3>
-              <span className="text-xs font-body text-white/60 block">{submittedRecord.college}</span>
+              <span className={`text-xs font-body block ${
+                cardMode === 'dark' ? 'text-white/60' : 'text-slate-600'
+              }`}>
+                {submittedRecord.college}
+              </span>
             </div>
 
+            {/* Registered Events List */}
             <div className="space-y-2">
-              <span className="text-[10px] font-technical text-cyan-400 uppercase font-bold tracking-wider block">
+              <span className={`text-[10px] font-technical uppercase font-bold tracking-wider block ${
+                cardMode === 'dark' ? 'text-cyan-300' : 'text-slate-900'
+              }`}>
                 REGISTERED EVENTS ({submittedRecord.selectedEventNames.length}):
               </span>
               <div className="space-y-1">
                 {submittedRecord.selectedEventNames.map((name, i) => (
-                  <div key={i} className="text-xs font-body font-medium text-white flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 inline-block" />
+                  <div key={i} className={`text-xs font-body font-medium flex items-center gap-2 ${
+                    cardMode === 'dark' ? 'text-white' : 'text-slate-800'
+                  }`}>
+                    <span className={`w-1.5 h-1.5 rounded-full inline-block ${
+                      cardMode === 'dark' ? 'bg-cyan-400' : 'bg-slate-900'
+                    }`} />
                     <span>{name}</span>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="flex items-center justify-between pt-4 border-t border-white/10">
+            {/* Verification Footer & QR */}
+            <div className={`flex items-center justify-between pt-4 border-t ${
+              cardMode === 'dark' ? 'border-white/10' : 'border-slate-200'
+            }`}>
               <div className="space-y-1">
-                <span className="text-[10px] font-technical text-white/40 block">PASS SERIAL NUMBER</span>
-                <span className="font-technical font-bold text-xs text-cyan-300 block">{submittedRecord.passId}</span>
-                <span className="text-[10px] font-technical text-white/40 block">SECURITY: {submittedRecord.securityHash}</span>
+                <span className={`text-[10px] font-technical block ${
+                  cardMode === 'dark' ? 'text-white/40' : 'text-slate-400'
+                }`}>
+                  SERIAL PASS ID
+                </span>
+                <span className={`font-technical font-bold text-xs block ${
+                  cardMode === 'dark' ? 'text-cyan-300' : 'text-slate-900'
+                }`}>
+                  {submittedRecord.passId}
+                </span>
+                <span className={`text-[9px] font-technical block ${
+                  cardMode === 'dark' ? 'text-white/40' : 'text-slate-400'
+                }`}>
+                  UTR: {submittedRecord.paymentUtr}
+                </span>
               </div>
-              <div className="w-16 h-16 bg-white p-1.5 rounded-xl flex items-center justify-center shrink-0">
+              <div className="w-16 h-16 bg-white p-1.5 rounded-xl flex items-center justify-center shrink-0 shadow-md">
                 <QrCode className="w-full h-full text-black" />
               </div>
             </div>
@@ -591,6 +635,95 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
             </button>
           </div>
         </main>
+      )}
+
+      {/* =============================================
+          PHONEPE / UPI SCANNER POPUP MODAL
+          ============================================= */}
+      {isPaymentModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="max-w-md w-full bg-[#0B0E14] border border-white/15 rounded-2xl p-6 shadow-2xl relative space-y-6">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between border-b border-white/10 pb-4">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="w-5 h-5 text-cyan-400" />
+                <span className="font-impact font-black text-base text-white uppercase tracking-tight">
+                  PHONEPE / UPI PAYMENT GATEWAY
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsPaymentModalOpen(false)}
+                className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-white/60 hover:text-white transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* QR Scanner Area */}
+            <div className="text-center space-y-4">
+              <div className="relative w-48 h-48 bg-white p-3 rounded-2xl mx-auto flex items-center justify-center shadow-xl border-2 border-cyan-400/40 overflow-hidden">
+                {/* Laser Scanning Line Effect */}
+                <div className="absolute left-0 right-0 h-1 bg-cyan-400 shadow-[0_0_12px_#00f0ff] animate-[laserSweep_2s_ease-in-out_infinite]" />
+                
+                {settings.upiQrImage ? (
+                  <img src={settings.upiQrImage} alt="PhonePe UPI QR" className="w-full h-full object-contain" />
+                ) : (
+                  <QrCode className="w-full h-full text-black" />
+                )}
+              </div>
+
+              <div className="space-y-1">
+                <span className="text-xs font-technical text-white/50 uppercase block">TOTAL AMOUNT TO PAY</span>
+                <span className="font-impact font-black text-3xl text-cyan-300">₹{totalFee}</span>
+              </div>
+
+              <div className="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between text-xs font-technical">
+                <span className="text-white/60">UPI ID:</span>
+                <span className="text-cyan-300 font-bold">{settings.upiId || 'srishti@stthomas.upi'}</span>
+                <button
+                  type="button"
+                  onClick={copyUpi}
+                  className="px-2 py-0.5 rounded bg-cyan-400/10 border border-cyan-400/30 text-cyan-300 text-[10px] hover:bg-cyan-400/20 transition-all cursor-pointer"
+                >
+                  {copiedUpi ? 'COPIED' : 'COPY'}
+                </button>
+              </div>
+            </div>
+
+            {/* UTR Input Form inside Popup */}
+            <form onSubmit={handleVerifyAndSubmit} className="space-y-4 pt-2 border-t border-white/10">
+              <div className="space-y-1.5">
+                <label className="text-xs font-body text-cyan-300 font-semibold block">
+                  Enter 12-Digit Transaction UTR / Ref No. *
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. 984210459821"
+                  value={formData.paymentUtr}
+                  onChange={(e) => setFormData({ ...formData, paymentUtr: e.target.value })}
+                  className="w-full px-4 py-3 rounded-lg bg-[#050608] border border-white/20 text-white placeholder-white/20 text-xs font-technical focus:outline-none focus:border-cyan-400 transition-colors"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isVerifying}
+                className="w-full py-3.5 rounded-lg bg-gradient-27 text-white font-impact font-black uppercase text-xs tracking-wider hover:opacity-90 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg"
+              >
+                {isVerifying ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>VERIFYING PHONEPE SETTLEMENT...</span>
+                  </>
+                ) : (
+                  <span>VERIFY PAYMENT & GENERATE PASS →</span>
+                )}
+              </button>
+            </form>
+          </div>
+        </div>
       )}
     </div>
   );
