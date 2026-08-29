@@ -237,7 +237,7 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
   const [copiedUpi, setCopiedUpi] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
-  const [isGeneratingPass, setIsGeneratingPass] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
   const [passImageUrl, setPassImageUrl] = useState<string | null>(null);
   const [isViewPassModalOpen, setIsViewPassModalOpen] = useState(false);
 
@@ -257,7 +257,6 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
   // Capture high-resolution 3x pass image from exact HTML card matching user's design
   useEffect(() => {
     if (submittedRecord) {
-      setIsGeneratingPass(true);
       setTimeout(async () => {
         const cardElement = document.getElementById('printable-pass-card');
         if (cardElement) {
@@ -272,28 +271,56 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
             setPassImageUrl(canvas.toDataURL('image/png'));
           } catch (err) {
             console.error('Error generating pass image:', err);
-          } finally {
-            setIsGeneratingPass(false);
           }
-        } else {
-          setIsGeneratingPass(false);
         }
       }, 150);
     }
   }, [submittedRecord]);
 
-  const handleDownloadPass = () => {
-    if (!passImageUrl || !submittedRecord) return;
-    const link = document.createElement('a');
-    link.href = passImageUrl;
-    link.download = `SRISHTI-2.7-PASS-${submittedRecord.passId}.png`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const getOrGeneratePassCanvasUrl = async (): Promise<string | null> => {
+    if (passImageUrl) return passImageUrl;
+    const cardElement = document.getElementById('printable-pass-card');
+    if (!cardElement) return null;
+    try {
+      const canvas = await html2canvas(cardElement, {
+        scale: 3,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#FFFFFF',
+        logging: false,
+      });
+      const url = canvas.toDataURL('image/png');
+      setPassImageUrl(url);
+      return url;
+    } catch (err) {
+      console.error('Error generating pass image:', err);
+      return null;
+    }
   };
 
-  const handlePrintPassImage = () => {
-    if (!passImageUrl) return;
+  const handleDownloadPass = async () => {
+    setIsDownloading(true);
+    try {
+      const imgUrl = await getOrGeneratePassCanvasUrl();
+      if (imgUrl) {
+        const link = document.createElement('a');
+        link.href = imgUrl;
+        link.download = `SRISHTI-2.7-PASS-${submittedRecord?.passId || 'DELEGATE'}.png`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
+  const handlePrintPassImage = async () => {
+    const imgUrl = await getOrGeneratePassCanvasUrl();
+    if (!imgUrl) {
+      window.print();
+      return;
+    }
     const printWin = window.open('', '_blank');
     if (printWin) {
       printWin.document.write(`
@@ -302,7 +329,7 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
           <head>
             <title>SRISHTI 2.7 DELEGATE PASS - ${submittedRecord?.passId || ''}</title>
             <style>
-              @page { size: landscape; margin: 0; }
+              @page { size: portrait; margin: 0; }
               body, html {
                 margin: 0;
                 padding: 0;
@@ -313,7 +340,7 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
                 min-height: 100vh;
               }
               img {
-                max-width: 95%;
+                max-width: 90%;
                 max-height: 95vh;
                 height: auto;
                 display: block;
@@ -322,11 +349,13 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
             </style>
           </head>
           <body>
-            <img src="${passImageUrl}" onload="window.print(); setTimeout(function(){ window.close(); }, 500);" />
+            <img src="${imgUrl}" onload="window.print(); setTimeout(function(){ window.close(); }, 500);" />
           </body>
         </html>
       `);
       printWin.document.close();
+    } else {
+      window.print();
     }
   };
 
@@ -842,8 +871,7 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
             <button
               onClick={() => setIsViewPassModalOpen(true)}
-              disabled={!passImageUrl || isGeneratingPass}
-              className="w-full sm:w-auto px-8 py-4 rounded-xl bg-white/10 border border-white/20 text-white font-impact font-black text-xs uppercase tracking-wider hover:bg-white/20 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg disabled:opacity-50"
+              className="w-full sm:w-auto px-8 py-4 rounded-xl bg-white/10 border border-white/20 text-white font-impact font-black text-xs uppercase tracking-wider hover:bg-white/20 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg"
             >
               <Eye className="w-4 h-4 text-cyan-400" />
               <span>VIEW PASS</span>
@@ -851,10 +879,10 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
 
             <button
               onClick={handleDownloadPass}
-              disabled={!passImageUrl || isGeneratingPass}
-              className="w-full sm:w-auto px-10 py-4 rounded-xl bg-gradient-27 text-white font-impact font-black text-xs uppercase tracking-wider hover:opacity-90 transition-all flex items-center justify-center gap-2 shadow-2xl cursor-pointer disabled:opacity-50"
+              disabled={isDownloading}
+              className="w-full sm:w-auto px-10 py-4 rounded-xl bg-gradient-27 text-white font-impact font-black text-xs uppercase tracking-wider hover:opacity-90 transition-all flex items-center justify-center gap-2 shadow-2xl cursor-pointer"
             >
-              {isGeneratingPass ? (
+              {isDownloading ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
                   <span>GENERATING PNG...</span>
@@ -869,8 +897,7 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
 
             <button
               onClick={handlePrintPassImage}
-              disabled={!passImageUrl || isGeneratingPass}
-              className="w-full sm:w-auto px-6 py-4 rounded-xl bg-white/5 border border-white/10 text-white/70 hover:text-white font-body text-xs font-semibold uppercase tracking-wider hover:bg-white/10 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+              className="w-full sm:w-auto px-6 py-4 rounded-xl bg-white/5 border border-white/10 text-white/70 hover:text-white font-body text-xs font-semibold uppercase tracking-wider hover:bg-white/10 transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
               <Printer className="w-4 h-4" />
               <span>PRINT PASS</span>
