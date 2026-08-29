@@ -67,7 +67,7 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
         scale: 3, // 3x ultra-sharp resolution
         useCORS: true,
         allowTaint: true,
-        backgroundColor: '#F9FAFB',
+        backgroundColor: '#FFFFFF',
         logging: false,
       });
 
@@ -83,6 +83,61 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
       window.print();
     } finally {
       setIsDownloading(false);
+    }
+  };
+
+  const handlePrintCardOnly = async () => {
+    const cardElement = document.getElementById('printable-pass-card');
+    if (!cardElement) return;
+
+    try {
+      const canvas = await html2canvas(cardElement, {
+        scale: 3,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#FFFFFF',
+        logging: false,
+      });
+
+      const dataUrl = canvas.toDataURL('image/png');
+
+      const printWindow = window.open('', '_blank');
+      if (printWindow) {
+        printWindow.document.write(`
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <title>SRISHTI 2.7 DELEGATE PASS - ${submittedRecord?.fullName || ''}</title>
+              <style>
+                @page { size: portrait; margin: 0; }
+                body, html {
+                  margin: 0;
+                  padding: 0;
+                  background: #ffffff !important;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  min-height: 100vh;
+                }
+                img {
+                  max-width: 360px;
+                  width: 90%;
+                  height: auto;
+                  display: block;
+                  margin: auto;
+                }
+              </style>
+            </head>
+            <body>
+              <img src="${dataUrl}" onload="window.print(); setTimeout(function(){ window.close(); }, 500);" />
+            </body>
+          </html>
+        `);
+        printWindow.document.close();
+      }
+    } catch (err) {
+      console.error('Error rendering print window:', err);
+      window.print();
     }
   };
 
@@ -605,7 +660,7 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
             </button>
 
             <button
-              onClick={() => window.print()}
+              onClick={handlePrintCardOnly}
               className="w-full sm:w-auto px-6 py-3.5 rounded-lg bg-white/10 border border-white/20 text-white font-body text-xs font-semibold uppercase tracking-wider hover:bg-white/20 transition-all cursor-pointer"
             >
               <span>PRINT TICKET</span>
