@@ -106,19 +106,22 @@ export const PhotoGallery: React.FC = () => {
   useEffect(() => {
     if (!containerRef.current) return;
 
+    const isMobile = window.innerWidth < 768;
+    if (isMobile) return;
+
     const ctx = gsap.context(() => {
       gsap.fromTo(
         '.gallery-header-content',
-        { y: 30, opacity: 0 },
+        { y: 20, opacity: 0 },
         {
           y: 0,
           opacity: 1,
-          ease: 'none',
+          duration: 0.6,
+          ease: 'power2.out',
           scrollTrigger: {
-            trigger: containerRef.current,
-            start: 'top 90%',
-            end: 'top 65%',
-            scrub: 0.5,
+            trigger: '.gallery-header-content',
+            start: 'top 92%',
+            toggleActions: 'play none none none',
           },
         }
       );
@@ -157,33 +160,30 @@ export const PhotoGallery: React.FC = () => {
     <section
       id="gallery"
       ref={containerRef}
-      className="relative w-full py-20 sm:py-28 bg-[#050608] text-[#E8E8EC] border-t border-white/[0.08] select-none overflow-hidden"
+      className="relative w-full py-14 sm:py-18 md:py-22 bg-[#050608] text-[#E8E8EC] border-t border-white/[0.08] select-none overflow-hidden"
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
         
         {/* Section Header */}
-        <div className="gallery-header-content flex flex-col md:flex-row md:items-end justify-between gap-6 pb-10 border-b border-white/[0.08]">
+        <div className="gallery-header-content flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-white/[0.08]">
           <div className="space-y-2">
-            <span className="text-[10px] md:text-[11px] font-technical text-white/40 tracking-widest uppercase block font-semibold">
-              03 // PAST EDITIONS GALLERY
+            <span className="text-[10px] md:text-[11px] font-technical text-cyan-400 tracking-widest uppercase block font-bold">
+              03 // FESTIVAL PHOTO & VIDEO ARCHIVES
             </span>
             <h2 className="font-display text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white uppercase leading-[1.05]">
-              Relive The{' '}
-              <span className="font-serif italic font-normal text-gradient-27 lowercase text-3xl sm:text-5xl md:text-7xl block sm:inline">
-                memories
-              </span>
+              SRISHTI <span className="text-gradient-27">GALLERY</span>
             </h2>
-            <p className="text-xs sm:text-sm text-white/50 font-light max-w-lg">
-              Highlights from Srishti 2.5 & Srishti 2.6 — hackathons, cultural nights, workshops, and celebrations.
+            <p className="text-xs sm:text-sm text-white/60 font-body font-light max-w-lg mt-1 leading-relaxed">
+              Relive the energy and excitement from previous editions — hackathons, cultural nights, tech battles, and celebrations.
             </p>
           </div>
 
           <button
             onClick={() => setIsModalOpen(true)}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded bg-white/[0.04] border border-white/[0.12] text-white/80 hover:text-white hover:border-cyan-400/40 text-xs font-body font-semibold uppercase tracking-wider transition-colors cursor-pointer self-start md:self-end"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white/[0.04] border border-white/[0.12] hover:border-cyan-400/50 hover:bg-white/[0.08] text-white text-xs font-body font-semibold uppercase tracking-wider transition-all cursor-pointer self-start md:self-end shadow-sm"
           >
             <span>View All ({GALLERY_PHOTOS.length}) Photos</span>
-            <ArrowUpRight className="w-4 h-4" />
+            <ArrowUpRight className="w-4 h-4 text-cyan-400" />
           </button>
         </div>
 
