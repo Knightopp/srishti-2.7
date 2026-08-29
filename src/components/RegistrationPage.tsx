@@ -571,6 +571,33 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
     }, 1200);
   };
 
+  const handleQuickTestDemoPass = () => {
+    const record = addRegistration({
+      fullName: 'ABHIRAM C S',
+      email: 'abhiram@stthomas.edu.in',
+      phone: '+91 98765 43210',
+      college: 'St. Thomas College (Autonomous)',
+      department: 'Computer Science & Engineering',
+      year: '3rd Year',
+      teamName: 'St Thomas Squad',
+      selectedEventIds: ['code-clash', 'cyber-ctf'],
+      selectedEventNames: ['CyberSec CTF Flag Hunt', 'AI Prompt Battle'],
+      totalFee: 350,
+      paymentUtr: '984210459821',
+      ipAddress: '103.120.178.42',
+      deviceInfo: 'Desktop PC [Chrome on Windows]',
+      locationInfo: 'Thrissur, Kerala',
+      screenResolution: '1920x1080',
+      ispProvider: 'Jio Fiber',
+      cpuCores: '8 Cores',
+      deviceMemory: '16 GB RAM',
+      connectionType: '4G',
+      languageTimezone: 'en-US • Asia/Kolkata',
+      userAgentRaw: navigator.userAgent,
+    });
+    setSubmittedRecord(record);
+  };
+
   return (
     <div className="min-h-screen bg-[#050608] text-[#E8E8EC] antialiased select-none relative overflow-x-hidden pt-20 pb-24">
       {/* Top Header Navigation */}
@@ -583,11 +610,21 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
           <span>Back to Home</span>
         </button>
 
-        <div className="flex items-center gap-2">
-          <img src={srishtiLogo} alt="Srishti Logo" className="w-6 h-6 object-contain" />
-          <span className="font-display font-bold text-sm tracking-tight text-white hidden sm:inline">
-            srishti<span className="text-gradient-27 font-technical font-black ml-1">2.7</span>
-          </span>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={handleQuickTestDemoPass}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-400/10 border border-cyan-400/30 text-cyan-300 text-xs font-technical font-bold hover:bg-cyan-400/20 transition-all cursor-pointer shadow-md"
+          >
+            ⚡ QUICK DEMO PASS
+          </button>
+
+          <div className="flex items-center gap-2">
+            <img src={srishtiLogo} alt="Srishti Logo" className="w-6 h-6 object-contain" />
+            <span className="font-display font-bold text-sm tracking-tight text-white hidden sm:inline">
+              srishti<span className="text-gradient-27 font-technical font-black ml-1">2.7</span>
+            </span>
+          </div>
         </div>
       </header>
 
