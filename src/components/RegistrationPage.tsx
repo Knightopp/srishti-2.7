@@ -1161,25 +1161,25 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
       {/* STATE 2 & STATE 3: PHONEPE / UPI SCANNER POPUP MODAL */}
       {isPaymentModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="max-w-md w-full bg-[#0B0E14] border border-white/15 rounded-2xl p-6 shadow-2xl relative space-y-6 max-h-[90vh] overflow-y-auto">
+          <div className="max-w-md w-full bg-[#0B0E14] border border-white/15 rounded-2xl p-6 shadow-2xl relative space-y-6">
             {/* Modal Header */}
             <div className="flex items-center justify-between border-b border-white/10 pb-4">
               <div className="flex items-center gap-2">
                 <ShieldCheck className="w-5 h-5 text-cyan-400" />
                 <span className="font-impact font-black text-base text-white uppercase tracking-tight">
-                  PHONEPE / UPI AUTOMATED PAYMENT
+                  UPI PAYMENT VERIFICATION
                 </span>
               </div>
               <button
                 type="button"
                 onClick={() => setIsPaymentModalOpen(false)}
-                className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-white/60 hover:text-white transition-colors cursor-pointer"
+                className="p-1 rounded-lg hover:bg-white/10 text-white/70 hover:text-white transition-all cursor-pointer"
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5" />
               </button>
             </div>
 
-            {/* DYNAMIC NPCI COMPLIANT UPI QR & INTENT */}
+            {/* DYNAMIC UPI QR & PAYMENT INSTRUCTIONS */}
             {(() => {
               const upiVpa = settings.upiId || 'abhiramcs2007@oksbi';
               const dynamicUpiUri = `upi://pay?pa=${encodeURIComponent(upiVpa)}&pn=${encodeURIComponent('Abhiram C S')}&am=${totalFee}&cu=INR`;
@@ -1187,10 +1187,7 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
               return (
                 <div className="text-center space-y-4">
                   {/* Dynamic QR Code Box */}
-                  <div className="relative w-48 h-48 bg-white p-2 rounded-2xl mx-auto flex items-center justify-center shadow-xl border-2 border-cyan-400/40 overflow-hidden">
-                    {/* Laser Scanning Line Effect */}
-                    <div className="absolute left-0 right-0 h-1 bg-cyan-400 shadow-[0_0_12px_#00f0ff] animate-[laserSweep_2s_ease-in-out_infinite] z-20 pointer-events-none" />
-                    
+                  <div className="w-48 h-48 bg-white p-3 rounded-2xl mx-auto flex items-center justify-center shadow-xl border border-white/20 overflow-hidden">
                     {settings.upiQrImage ? (
                       <img src={settings.upiQrImage} alt="UPI QR" className="w-full h-full object-contain rounded-lg" />
                     ) : (
@@ -1199,33 +1196,17 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
                   </div>
 
                   <div className="space-y-0.5">
-                    <span className="text-[10px] font-technical text-white/50 uppercase block">AMOUNT TO PAY</span>
-                    <span className="font-impact font-black text-3xl text-cyan-300">₹{totalFee}</span>
-                  </div>
-
-                  {/* 1-Tap Mobile UPI Intent App Launchers */}
-                  <div className="grid grid-cols-2 gap-2 pt-1">
-                    <a
-                      href={dynamicUpiUri}
-                      className="py-2.5 px-3 rounded-xl bg-purple-600/20 border border-purple-500/40 text-purple-300 hover:bg-purple-600/30 text-xs font-technical font-bold flex items-center justify-center gap-1.5 transition-all"
-                    >
-                      <span>⚡ PAY VIA PHONEPE</span>
-                    </a>
-                    <a
-                      href={dynamicUpiUri}
-                      className="py-2.5 px-3 rounded-xl bg-blue-600/20 border border-blue-500/40 text-blue-300 hover:bg-blue-600/30 text-xs font-technical font-bold flex items-center justify-center gap-1.5 transition-all"
-                    >
-                      <span>⚡ PAY VIA GPAY</span>
-                    </a>
+                    <span className="text-[10px] font-technical text-white/50 uppercase block tracking-wider">AMOUNT TO PAY</span>
+                    <span className="font-impact font-black text-3xl text-cyan-400">₹{totalFee}</span>
                   </div>
 
                   <div className="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between text-xs font-technical">
                     <span className="text-white/60">UPI VPA:</span>
-                    <span className="text-cyan-300 font-bold">{upiVpa}</span>
+                    <span className="text-cyan-400 font-mono font-semibold">{upiVpa}</span>
                     <button
                       type="button"
                       onClick={copyUpi}
-                      className="px-2 py-0.5 rounded bg-cyan-400/10 border border-cyan-400/30 text-cyan-300 text-[10px] hover:bg-cyan-400/20 transition-all cursor-pointer"
+                      className="px-2.5 py-1 rounded bg-cyan-400/10 border border-cyan-400/30 text-cyan-300 text-[10px] hover:bg-cyan-400/20 transition-all cursor-pointer font-bold"
                     >
                       {copiedUpi ? 'COPIED' : 'COPY'}
                     </button>
@@ -1234,11 +1215,11 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
               );
             })()}
 
-            {/* UTR Input & Automated Webhook Simulator Form */}
+            {/* UTR Input Form */}
             <form onSubmit={handleVerifyAndSubmit} className="space-y-4 pt-2 border-t border-white/10">
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-body text-cyan-300 font-semibold block">
+                  <label className="text-xs font-body text-white/80 font-semibold block">
                     12-Digit Transaction UTR / Ref No. *
                   </label>
                   <button
@@ -1247,9 +1228,9 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
                       const simulatedUtr = Math.floor(100000000000 + Math.random() * 900000000000).toString();
                       setFormData({ ...formData, paymentUtr: simulatedUtr });
                     }}
-                    className="text-[10px] font-technical text-cyan-400 hover:underline cursor-pointer"
+                    className="text-[10px] font-technical text-cyan-400/80 hover:text-cyan-400 hover:underline cursor-pointer"
                   >
-                    ⚡ AUTO-GENERATE UTR
+                    Auto-fill UTR
                   </button>
                 </div>
                 <input
@@ -1265,12 +1246,12 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
               <button
                 type="submit"
                 disabled={isVerifying}
-                className="w-full py-3.5 rounded-lg bg-gradient-27 text-white font-impact font-black uppercase text-xs tracking-wider hover:opacity-90 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg"
+                className="w-full py-3.5 rounded-lg bg-cyan-400 hover:bg-cyan-300 text-black font-impact font-black uppercase text-xs tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg"
               >
                 {isVerifying ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>VERIFYING PHONEPE SETTLEMENT...</span>
+                    <Loader2 className="w-4 h-4 animate-spin text-black" />
+                    <span>VERIFYING SETTLEMENT...</span>
                   </>
                 ) : (
                   <span>VERIFY PAYMENT & GENERATE PASS →</span>
