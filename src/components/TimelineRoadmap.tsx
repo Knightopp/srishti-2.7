@@ -276,8 +276,8 @@ export const TimelineRoadmap: React.FC<TimelineRoadmapProps> = ({
             <span>02 // OFFICIAL SCHEDULE & VENUE DIRECTORY</span>
           </div>
 
-          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight uppercase leading-tight text-white">
-            SCHEDULE & <span className="text-gradient-27">CAMPUS MAP</span>
+          <h2 className="font-impact font-black text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tight uppercase leading-tight text-white">
+            SCHEDULE & <span className="text-gradient-27 font-impact font-black">CAMPUS MAP</span>
           </h2>
 
           <p className="mt-3 text-xs sm:text-sm md:text-base text-white/60 font-body max-w-xl mx-auto font-light leading-relaxed">

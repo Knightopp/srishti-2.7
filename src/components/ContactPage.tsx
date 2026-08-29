@@ -204,8 +204,8 @@ export const ContactPage: React.FC<ContactPageProps> = ({
             <span>COMMUNICATION & HELPDESK DESK</span>
           </div>
 
-          <h1 className="font-display font-bold text-3xl sm:text-5xl md:text-6xl text-white tracking-tight uppercase leading-tight">
-            GET IN TOUCH WITH <span className="text-gradient-27">SRISHTI 2.7</span>
+          <h1 className="font-impact font-black text-3xl sm:text-5xl md:text-6xl text-white tracking-tight uppercase leading-tight">
+            GET IN TOUCH WITH <span className="text-gradient-27 font-impact font-black">SRISHTI 2.7</span>
           </h1>
 
           <p className="font-body text-sm sm:text-base text-white/60 max-w-2xl mx-auto font-light leading-relaxed">

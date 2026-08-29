@@ -244,8 +244,8 @@ const getDeepDeviceTelemetry = async () => {
               <span className="text-xs font-mono text-[#0077ff] tracking-widest uppercase font-bold block mb-2">
                 07 / OFFICIAL MULTI-EVENT REGISTRATION
               </span>
-              <h1 className="font-syne text-3xl sm:text-5xl font-black uppercase text-white tracking-tight leading-none">
-                Register For <span className="text-[#00e5ff]">Srishti 2.7</span>
+              <h1 className="font-impact font-black text-3xl sm:text-5xl uppercase text-white tracking-tight leading-none">
+                REGISTER FOR <span className="text-gradient-27 font-impact font-black">SRISHTI 2.7</span>
               </h1>
               <p className="text-xs sm:text-sm text-white/60 font-light mt-3 leading-relaxed">
                 Select one or multiple events to build your custom fest pass. Verify your UPI payment UTR reference ID below to generate your cryptographically signed pass.

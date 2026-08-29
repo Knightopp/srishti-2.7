@@ -121,8 +121,8 @@ export const EventsPage: React.FC<EventsPageProps> = ({
             <span>01 // COMPLETE FESTIVAL DIRECTORY</span>
           </div>
 
-          <h1 className="font-display font-bold text-3xl sm:text-5xl md:text-6xl text-white tracking-tight uppercase leading-tight">
-            SRISHTI 2.7 <span className="text-gradient-27">EVENTS HUB</span>
+          <h1 className="font-impact font-black text-3xl sm:text-5xl md:text-6xl text-white tracking-tight uppercase leading-tight">
+            SRISHTI 2.7 <span className="text-gradient-27 font-impact font-black">EVENTS HUB</span>
           </h1>
 
           <p className="font-body text-sm sm:text-base text-white/60 max-w-2xl mx-auto font-light leading-relaxed">

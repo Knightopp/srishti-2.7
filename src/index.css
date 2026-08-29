@@ -4,7 +4,7 @@
   :root {
     /* Typography System */
     --font-impact: 'Montserrat', sans-serif;
-    --font-display: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-display: 'Montserrat', sans-serif;
     --font-technical: 'IBM Plex Mono', monospace;
     --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-serif: 'Instrument Serif', 'Playfair Display', Georgia, serif;
