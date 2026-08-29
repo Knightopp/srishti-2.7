@@ -469,18 +469,20 @@ html.lenis, html.lenis body {
 }
 
 .hero-logo-emblem {
-  filter: drop-shadow(0 0 20px rgba(56, 189, 248, 0.6)) drop-shadow(0 0 40px rgba(37, 99, 235, 0.35));
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 8px rgba(56, 189, 248, 0.25));
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
   transition: transform 0.3s ease, filter 0.3s ease;
 }
 
 .hero-logo-emblem:hover {
-  filter: drop-shadow(0 0 30px rgba(56, 189, 248, 0.85)) drop-shadow(0 0 55px rgba(37, 99, 235, 0.55));
+  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 12px rgba(56, 189, 248, 0.4));
 }
 
 /* Srishti Title & 2.7 Number Impact Gradients (Blue Palette) */
 .srishti-impact-title {
   color: #FFFFFF;
-  text-shadow: 0 2px 25px rgba(0, 0, 0, 0.9), 0 0 35px rgba(37, 99, 235, 0.25);
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.9);
 }
 
 .srishti-impact-number {
@@ -495,7 +497,7 @@ html.lenis, html.lenis body {
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 25px rgba(37, 99, 235, 0.45));
+  filter: drop-shadow(0 2px 12px rgba(37, 99, 235, 0.3));
 }
 
 .srishti-impact-subtitle {
