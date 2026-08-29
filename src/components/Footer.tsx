@@ -29,8 +29,8 @@ export const Footer: React.FC<FooterProps> = ({
               <div className="w-7 h-7 rounded-md bg-gradient-27 flex items-center justify-center text-white font-display font-bold text-xs">
                 S
               </div>
-              <span className="font-impact font-black text-xl tracking-tight text-white uppercase">
-                SRISHTI<span className="text-gradient-27 font-impact font-black ml-1">2.7</span>
+              <span className="font-display font-semibold text-lg tracking-tight text-white/85">
+                srishti<span className="text-gradient-27 font-technical ml-0.5 font-black">2.7</span>
               </span>
             </div>
             <p className="text-xs text-white/40 font-light">

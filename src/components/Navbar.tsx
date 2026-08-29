@@ -138,9 +138,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                 className="w-full h-full object-contain"
               />
             </div>
-            <span className="font-impact font-black text-sm sm:text-base tracking-tight uppercase text-white flex items-center leading-none whitespace-nowrap">
-              SRISHTI
-              <span className="text-gradient-27 font-impact font-black ml-1">2.7</span>
+            <span className="font-display font-bold text-sm tracking-tight text-white flex items-center leading-none whitespace-nowrap">
+              srishti
+              <span className="text-gradient-27 font-technical font-black ml-1">2.7</span>
             </span>
           </a>
 

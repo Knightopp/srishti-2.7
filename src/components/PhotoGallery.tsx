@@ -141,8 +141,8 @@ export const PhotoGallery: React.FC = () => {
             <span className="text-[10px] md:text-[11px] font-technical text-cyan-400 tracking-widest uppercase block font-bold">
               03 // FESTIVAL PHOTO & VIDEO ARCHIVES
             </span>
-            <h2 className="font-impact font-black text-3xl sm:text-5xl md:text-6xl tracking-tight text-white uppercase leading-[0.95]">
-              SRISHTI <span className="text-gradient-27 font-impact font-black">GALLERY</span>
+            <h2 className="font-display text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white uppercase leading-[1.05]">
+              SRISHTI <span className="text-gradient-27">GALLERY</span>
             </h2>
             <p className="text-xs sm:text-sm text-white/60 font-body font-light max-w-lg mt-1 leading-relaxed">
               Relive the energy and excitement from previous editions — hackathons, cultural nights, tech battles, and celebrations.
