@@ -515,55 +515,54 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
             </button>
           </div>
 
-          {/* MINIMALIST & COOL FESTIVAL PASS CARD */}
+          {/* MINIMALIST & COOL VERTICAL FESTIVAL PASS CARD */}
           <div
-            className={`p-8 rounded-2xl shadow-2xl text-left space-y-6 relative overflow-hidden transition-all duration-300 ${
+            id="printable-pass-card"
+            className={`max-w-[340px] w-full mx-auto p-7 rounded-2xl shadow-2xl text-center space-y-5 relative overflow-hidden transition-all duration-300 ${
               cardMode === 'dark'
                 ? 'bg-[#0A0C10] border border-white/15 text-white'
                 : 'bg-[#F9FAFB] border border-slate-300 text-slate-900'
             }`}
           >
-            {/* Top Pass Header */}
-            <div className={`flex items-center justify-between border-b pb-4 ${
-              cardMode === 'dark' ? 'border-white/10' : 'border-slate-200'
-            }`}>
-              <div className="flex items-center gap-3">
-                <img src={srishtiLogo} alt="Srishti Logo" className="w-8 h-8 object-contain" />
-                <div>
-                  <span className={`font-impact font-black text-lg uppercase tracking-tight block ${
-                    cardMode === 'dark' ? 'text-white' : 'text-slate-900'
-                  }`}>
-                    SRISHTI 2.7
-                  </span>
-                  <span className={`text-[10px] font-technical block ${
-                    cardMode === 'dark' ? 'text-white/40' : 'text-slate-500'
-                  }`}>
-                    ST. THOMAS COLLEGE (AUTONOMOUS)
-                  </span>
-                </div>
+            {/* Top Logo & Festival Identity */}
+            <div className="space-y-2 border-b pb-4 border-white/10">
+              <img src={srishtiLogo} alt="Srishti Logo" className="w-10 h-10 object-contain mx-auto" />
+              <div>
+                <span className={`font-impact font-black text-xl uppercase tracking-tight block ${
+                  cardMode === 'dark' ? 'text-white' : 'text-slate-900'
+                }`}>
+                  SRISHTI 2.7
+                </span>
+                <span className={`text-[9px] font-technical block tracking-wider ${
+                  cardMode === 'dark' ? 'text-white/40' : 'text-slate-500'
+                }`}>
+                  ST. THOMAS COLLEGE (AUTONOMOUS)
+                </span>
               </div>
-              <span className={`px-3 py-1 text-[10px] font-technical font-bold rounded-full uppercase ${
-                cardMode === 'dark'
-                  ? 'bg-cyan-400/10 text-cyan-300 border border-cyan-400/30'
-                  : 'bg-slate-900 text-white'
-              }`}>
-                {submittedRecord.paymentStatus}
-              </span>
+              <div className="pt-1">
+                <span className={`inline-block px-3 py-0.5 text-[9px] font-technical font-bold rounded-full uppercase ${
+                  cardMode === 'dark'
+                    ? 'bg-cyan-400/10 text-cyan-300 border border-cyan-400/30'
+                    : 'bg-slate-900 text-white'
+                }`}>
+                  OFFICIAL DELEGATE PASS
+                </span>
+              </div>
             </div>
 
             {/* Attendee Identity */}
-            <div className="space-y-1">
-              <span className={`text-[10px] font-technical uppercase block font-semibold ${
+            <div className="space-y-1 py-1">
+              <span className={`text-[9px] font-technical uppercase block font-semibold tracking-wider ${
                 cardMode === 'dark' ? 'text-white/40' : 'text-slate-400'
               }`}>
-                DELEGATE ATTENDEE
+                ATTENDEE DELEGATE
               </span>
-              <h3 className={`font-impact font-black text-2xl uppercase tracking-tight ${
+              <h3 className={`font-impact font-black text-2xl uppercase tracking-tight leading-tight ${
                 cardMode === 'dark' ? 'text-white' : 'text-slate-900'
               }`}>
                 {submittedRecord.fullName}
               </h3>
-              <span className={`text-xs font-body block ${
+              <span className={`text-xs font-body block font-light ${
                 cardMode === 'dark' ? 'text-white/60' : 'text-slate-600'
               }`}>
                 {submittedRecord.college}
@@ -571,8 +570,8 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
             </div>
 
             {/* Registered Events List */}
-            <div className="space-y-2">
-              <span className={`text-[10px] font-technical uppercase font-bold tracking-wider block ${
+            <div className="space-y-1.5 py-1 text-left bg-white/5 p-3 rounded-xl border border-white/5">
+              <span className={`text-[9px] font-technical uppercase font-bold tracking-wider block ${
                 cardMode === 'dark' ? 'text-cyan-300' : 'text-slate-900'
               }`}>
                 REGISTERED EVENTS ({submittedRecord.selectedEventNames.length}):
@@ -580,40 +579,34 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
               <div className="space-y-1">
                 {submittedRecord.selectedEventNames.map((name, i) => (
                   <div key={i} className={`text-xs font-body font-medium flex items-center gap-2 ${
-                    cardMode === 'dark' ? 'text-white' : 'text-slate-800'
+                    cardMode === 'dark' ? 'text-white/90' : 'text-slate-800'
                   }`}>
-                    <span className={`w-1.5 h-1.5 rounded-full inline-block ${
+                    <span className={`w-1.5 h-1.5 rounded-full inline-block shrink-0 ${
                       cardMode === 'dark' ? 'bg-cyan-400' : 'bg-slate-900'
                     }`} />
-                    <span>{name}</span>
+                    <span className="truncate">{name}</span>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Verification Footer & QR */}
-            <div className={`flex items-center justify-between pt-4 border-t ${
-              cardMode === 'dark' ? 'border-white/10' : 'border-slate-200'
-            }`}>
-              <div className="space-y-1">
-                <span className={`text-[10px] font-technical block ${
+            {/* QR Code & Pass Credentials */}
+            <div className="space-y-3 pt-2 border-t border-white/10">
+              <div className="w-20 h-20 bg-white p-1.5 rounded-xl mx-auto flex items-center justify-center shrink-0 shadow-md">
+                <QrCode className="w-full h-full text-black" />
+              </div>
+
+              <div className="space-y-0.5">
+                <span className={`text-[9px] font-technical block ${
                   cardMode === 'dark' ? 'text-white/40' : 'text-slate-400'
                 }`}>
-                  SERIAL PASS ID
-                </span>
-                <span className={`font-technical font-bold text-xs block ${
-                  cardMode === 'dark' ? 'text-cyan-300' : 'text-slate-900'
-                }`}>
-                  {submittedRecord.passId}
+                  SERIAL PASS ID: <strong className={cardMode === 'dark' ? 'text-cyan-300 font-bold' : 'text-slate-900 font-bold'}>{submittedRecord.passId}</strong>
                 </span>
                 <span className={`text-[9px] font-technical block ${
                   cardMode === 'dark' ? 'text-white/40' : 'text-slate-400'
                 }`}>
                   UTR: {submittedRecord.paymentUtr}
                 </span>
-              </div>
-              <div className="w-16 h-16 bg-white p-1.5 rounded-xl flex items-center justify-center shrink-0 shadow-md">
-                <QrCode className="w-full h-full text-black" />
               </div>
             </div>
           </div>
