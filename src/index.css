@@ -583,7 +583,11 @@ html.lenis, html.lenis body {
   body,
   #root,
   main,
-  div {
+  div,
+  section,
+  article,
+  .min-h-screen,
+  [class*="bg-"] {
     background: #ffffff !important;
     background-color: #ffffff !important;
     color: #0f172a !important;
@@ -612,13 +616,13 @@ html.lenis, html.lenis body {
     left: 50% !important;
     top: 50% !important;
     transform: translate(-50%, -50%) !important;
-    width: 380px !important;
+    width: 360px !important;
     max-width: 90% !important;
     margin: 0 !important;
-    padding: 32px 28px !important;
+    padding: 28px 24px !important;
     box-shadow: none !important;
     border: 2px solid #0f172a !important;
-    border-radius: 24px !important;
+    border-radius: 20px !important;
     page-break-inside: avoid !important;
     background-color: #ffffff !important;
     color: #0f172a !important;

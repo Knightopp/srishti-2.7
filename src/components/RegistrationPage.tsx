@@ -258,7 +258,7 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-[#050608] text-[#E8E8EC] antialiased select-none relative overflow-x-hidden pt-20 pb-24">
+    <div className="min-h-screen bg-[#050608] print:bg-white text-[#E8E8EC] print:text-slate-900 antialiased select-none relative overflow-x-hidden pt-20 pb-24">
       {/* Top Header Navigation */}
       <header className="sticky top-0 z-50 bg-[#050608]/90 backdrop-blur-md border-b border-white/10 px-4 sm:px-8 py-4 flex items-center justify-between mb-8">
         <button
@@ -545,7 +545,7 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
               <span className="text-[9px] font-technical text-slate-400 uppercase block font-semibold tracking-wider">
                 ATTENDEE DELEGATE
               </span>
-              <h3 className="font-impact font-black text-2xl text-slate-900 uppercase tracking-tight leading-tight">
+              <h3 className="font-impact font-black text-xl sm:text-2xl text-slate-900 uppercase tracking-tight leading-tight break-words max-w-full overflow-hidden text-ellipsis">
                 {submittedRecord.fullName}
               </h3>
               <span className="text-xs font-body text-slate-600 block font-light">
