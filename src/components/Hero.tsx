@@ -104,8 +104,6 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateToRegister }) => {
           pin: true,
           pinSpacing: true,
           scrub: 0.5,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
         },
       });
 

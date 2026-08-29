@@ -35,14 +35,11 @@ export const Navbar: React.FC<NavbarProps> = ({
     if (window.innerWidth < 768) return;
 
     const ctx = gsap.context(() => {
-      // Create master scrub timeline synced to the 1200px Hero zoom
       const tl = gsap.timeline({
         scrollTrigger: {
-          trigger: document.body,
           start: 'top top',
-          end: '+=1200',
+          end: '+=800',
           scrub: 0.3,
-          invalidateOnRefresh: true,
         },
       });
 

@@ -1,9 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { X, ChevronLeft, ChevronRight, Maximize2, ArrowUpRight } from 'lucide-react';
-
-gsap.registerPlugin(ScrollTrigger);
 
 export interface GalleryPhoto {
   id: string;
@@ -103,32 +99,7 @@ export const PhotoGallery: React.FC = () => {
     ? GALLERY_PHOTOS
     : GALLERY_PHOTOS.filter((p) => p.category === filterCategory);
 
-  useEffect(() => {
-    if (!containerRef.current) return;
 
-    const isMobile = window.innerWidth < 768;
-    if (isMobile) return;
-
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        '.gallery-header-content',
-        { y: 20, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.6,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: '.gallery-header-content',
-            start: 'top 92%',
-            toggleActions: 'play none none none',
-          },
-        }
-      );
-    }, containerRef);
-
-    return () => ctx.revert();
-  }, []);
 
   useEffect(() => {
     if (!isModalOpen) return;

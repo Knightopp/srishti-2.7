@@ -1,45 +1,14 @@
-import React, { useRef, useEffect } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Globe } from 'lucide-react';
 import { useFest } from '../context/FestContext';
 
-gsap.registerPlugin(ScrollTrigger);
-
 export const SponsorsTicker: React.FC = () => {
   const { sponsors } = useFest();
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!containerRef.current) return;
-
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        '.sponsors-header-content',
-        { y: 30, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: 'top 90%',
-            end: 'top 65%',
-            scrub: 0.5,
-          },
-        }
-      );
-    }, containerRef);
-
-    return () => ctx.revert();
-  }, []);
 
   // Double the sponsors list for seamless loop
   const marqueeItems = sponsors.length > 0 ? [...sponsors, ...sponsors] : [];
 
   return (
     <section
-      ref={containerRef}
       className="relative w-full py-14 bg-[#050608] border-t border-b border-white/[0.06] overflow-hidden select-none"
     >
       {/* Header — plain text, no pill */}
