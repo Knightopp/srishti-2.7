@@ -158,47 +158,38 @@ export const TimelineRoadmap: React.FC<TimelineRoadmapProps> = ({
     return roadmapEvents.filter((ev) => ev.locationId === activeMapPinId);
   }, [roadmapEvents, activeMapPinId]);
 
-  // Mathematical scroll tracking: line grows exactly as cards scroll, activating nodes upon contact
+  // Mathematical scroll tracking: line grows smoothly in direct proportion to container scroll position
   useEffect(() => {
     if (viewMode !== 'timeline') return;
 
-    // Reset card refs
-    cardsRef.current = [];
-
     const handleScroll = () => {
-      const validCards = cardsRef.current.filter(Boolean) as HTMLDivElement[];
-      if (validCards.length === 0) return;
+      const listEl = eventsListRef.current;
+      if (!listEl) return;
 
+      const rect = listEl.getBoundingClientRect();
       const windowH = window.innerHeight;
-      const triggerY = windowH * 0.70;
+      const triggerLineY = windowH * 0.65; // Eye-level activation line
 
-      const firstCard = validCards[0];
-      const lastCard = validCards[validCards.length - 1];
+      // Distance from top of timeline list to trigger line
+      const relativeTop = triggerLineY - rect.top;
+      const totalHeight = rect.height;
 
-      const startY = firstCard.getBoundingClientRect().top + 28;
-      const endY = lastCard.getBoundingClientRect().top + 28;
+      if (totalHeight <= 0) return;
 
-      // Expand total scroll span so line drawing is smooth, gradual, and easy to follow
-      const lineLength = Math.max(1, endY - startY);
-      const totalScrollSpan = lineLength + (windowH * 0.45);
-      const currentScrolled = triggerY - startY;
+      // 0% when above timeline, 100% when fully scrolled through
+      const rawProgress = relativeTop / totalHeight;
+      const clampedProgress = Math.max(0, Math.min(1, rawProgress));
+      
+      setLaserHeightPercent(clampedProgress * 100);
 
-      let progress = 0;
-      if (validCards.length === 1) {
-        progress = startY <= triggerY ? 1 : 0;
-      } else {
-        progress = Math.max(0, Math.min(1, currentScrolled / totalScrollSpan));
-      }
-
-      const percent = progress * 100;
-      setLaserHeightPercent(percent);
-
-      // Light up each node when the laser line tip reaches it
+      // Light up nodes seamlessly as the laser line tip reaches each node position
+      const validCards = cardsRef.current.filter(Boolean) as HTMLDivElement[];
       const reached: number[] = [];
+      
       validCards.forEach((card, idx) => {
         const cRect = card.getBoundingClientRect();
-        const nodeY = cRect.top + 28;
-        if (nodeY <= triggerY) {
+        const nodeCenterY = cRect.top + 28;
+        if (nodeCenterY <= triggerLineY + 15) {
           reached.push(idx);
         }
       });
@@ -542,7 +533,7 @@ export const TimelineRoadmap: React.FC<TimelineRoadmapProps> = ({
                 
                 {/* Active Glowing Laser Spine Fill */}
                 <div
-                  className="w-full timeline-deep-glow-line origin-top transition-all duration-300 ease-out"
+                  className="w-full timeline-deep-glow-line origin-top transition-[height] duration-150 ease-linear"
                   style={{ height: `${laserHeightPercent}%` }}
                 />
               </div>
