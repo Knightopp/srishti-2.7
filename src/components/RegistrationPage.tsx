@@ -24,6 +24,101 @@ interface RegistrationPageProps {
 }
 
 /**
+ * Custom Branded Srishti QR Code Component
+ * Renders High Error Correction ('H') QR matrix with the Srishti Logo emblem in the center.
+ */
+export const CustomSrishtiQR: React.FC<{ value: string; size?: number }> = ({ value, size = 160 }) => {
+  const [qrSrc, setQrSrc] = useState<string>('');
+
+  useEffect(() => {
+    let isMounted = true;
+    const generateCustomQR = async () => {
+      try {
+        const canvas = document.createElement('canvas');
+        const dpr = 3;
+        canvas.width = size * dpr;
+        canvas.height = size * dpr;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        // Level 'H' Error Correction (30% redundancy capacity)
+        const qrDataUrl = await QRCode.toDataURL(value, {
+          errorCorrectionLevel: 'H',
+          width: size * dpr,
+          margin: 1,
+          color: {
+            dark: '#0F172A',
+            light: '#FFFFFF',
+          },
+        });
+
+        const qrImg = new Image();
+        qrImg.src = qrDataUrl;
+        await new Promise((resolve) => {
+          qrImg.onload = resolve;
+          qrImg.onerror = resolve;
+        });
+
+        ctx.drawImage(qrImg, 0, 0, size * dpr, size * dpr);
+
+        // Center Logo Circle Badge (24% of QR size)
+        const logoDiameter = (size * dpr) * 0.24;
+        const centerPos = (size * dpr) / 2;
+
+        ctx.fillStyle = '#FFFFFF';
+        ctx.beginPath();
+        ctx.arc(centerPos, centerPos, logoDiameter / 2 + 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = '#CBD5E1';
+        ctx.stroke();
+
+        const logoImg = new Image();
+        logoImg.src = srishtiLogo;
+        await new Promise((resolve) => {
+          logoImg.onload = resolve;
+          logoImg.onerror = resolve;
+        });
+
+        if (logoImg.complete && logoImg.naturalWidth > 0) {
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(centerPos, centerPos, logoDiameter / 2, 0, Math.PI * 2);
+          ctx.clip();
+          ctx.drawImage(
+            logoImg, 
+            centerPos - logoDiameter / 2, 
+            centerPos - logoDiameter / 2, 
+            logoDiameter, 
+            logoDiameter
+          );
+          ctx.restore();
+        }
+
+        if (isMounted) {
+          setQrSrc(canvas.toDataURL('image/png'));
+        }
+      } catch (err) {
+        console.error('Custom QR generation error:', err);
+      }
+    };
+
+    generateCustomQR();
+    return () => { isMounted = false; };
+  }, [value, size]);
+
+  return (
+    <div className="w-full h-full flex items-center justify-center">
+      {qrSrc ? (
+        <img src={qrSrc} alt="Custom Srishti QR" className="w-full h-full object-contain rounded-lg shadow-sm" />
+      ) : (
+        <QrCode className="w-full h-full text-black animate-pulse" />
+      )}
+    </div>
+  );
+};
+
+/**
  * High-Resolution (1000 x 1400 px) Minimal Off-White Paper Vertical Lanyard Pass Generator
  * Generates the clean, minimal off-white festival pass credential.
  */
@@ -971,8 +1066,8 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
 
               {/* QR Code & Pass Credentials */}
               <div className="space-y-3 pt-2 border-t border-slate-200">
-                <div className="w-20 h-20 bg-white p-1.5 rounded-xl mx-auto flex items-center justify-center shrink-0 shadow-sm border border-slate-200">
-                  <QrCode className="w-full h-full text-black" />
+                <div className="w-20 h-20 bg-white p-1 rounded-xl mx-auto flex items-center justify-center shrink-0 shadow-sm border border-slate-200">
+                  <CustomSrishtiQR value={`SRISHTI-2.7|PASS:${submittedRecord.passId}|NAME:${submittedRecord.fullName}|COLLEGE:${submittedRecord.college}|UTR:${submittedRecord.paymentUtr}`} size={160} />
                 </div>
 
                 <div className="space-y-0.5">
