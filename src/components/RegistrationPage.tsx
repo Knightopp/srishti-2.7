@@ -124,22 +124,21 @@ export const CustomSrishtiQR: React.FC<{ value: string; size?: number }> = ({ va
  */
 export const generatePassImage = async (record: RegistrationRecord): Promise<string> => {
   const canvas = document.createElement('canvas');
-  canvas.width = 1000;
-  canvas.height = 1400;
+  canvas.width = 900;
+  canvas.height = 1300;
   const ctx = canvas.getContext('2d');
   if (!ctx) throw new Error('Canvas context unavailable');
 
-  // Pure White Outer Canvas Background (#FFFFFF)
-  ctx.fillStyle = '#FFFFFF';
-  ctx.fillRect(0, 0, 1000, 1400);
+  // Clear canvas (transparent background so corners are rounded, NO sharp outer white box!)
+  ctx.clearRect(0, 0, 900, 1300);
 
-  // Card Body — Minimal Off-White Paper Finish (#F9FAFB)
+  // Card Body — Minimal Off-White Paper Finish (#F9FAFB) with Smooth Rounded Corners (44px)
   ctx.fillStyle = '#F9FAFB';
   ctx.beginPath();
   if (ctx.roundRect) {
-    ctx.roundRect(50, 50, 900, 1300, 36);
+    ctx.roundRect(6, 6, 888, 1288, 44);
   } else {
-    ctx.rect(50, 50, 900, 1300);
+    ctx.rect(6, 6, 888, 1288);
   }
   ctx.fill();
 
@@ -157,7 +156,7 @@ export const generatePassImage = async (record: RegistrationRecord): Promise<str
       logoImg.onerror = resolve;
     });
     if (logoImg.complete && logoImg.naturalWidth > 0) {
-      ctx.drawImage(logoImg, 450, 90, 100, 100);
+      ctx.drawImage(logoImg, 400, 70, 100, 100);
     }
   } catch (err) {
     console.error('Logo render error:', err);
@@ -167,50 +166,50 @@ export const generatePassImage = async (record: RegistrationRecord): Promise<str
   ctx.textAlign = 'center';
   ctx.fillStyle = '#0F172A';
   ctx.font = '900 46px "Montserrat", sans-serif, Arial';
-  ctx.fillText('SRISHTI 2.7', 500, 235);
+  ctx.fillText('SRISHTI 2.7', 450, 215);
 
   ctx.fillStyle = '#64748B';
   ctx.font = '600 18px "Inter", sans-serif, Arial';
-  ctx.fillText('ST. THOMAS COLLEGE (AUTONOMOUS)', 500, 270);
+  ctx.fillText('ST. THOMAS COLLEGE (AUTONOMOUS)', 450, 250);
 
   // Delegate Pass Badge Capsule
   ctx.fillStyle = '#0F172A';
   ctx.beginPath();
   if (ctx.roundRect) {
-    ctx.roundRect(330, 295, 340, 44, 22);
+    ctx.roundRect(280, 275, 340, 44, 22);
   } else {
-    ctx.rect(330, 295, 340, 44);
+    ctx.rect(280, 275, 340, 44);
   }
   ctx.fill();
 
   ctx.fillStyle = '#FFFFFF';
-  ctx.font = '900 16px "Montserrat", sans-serif, Arial';
-  ctx.fillText('OFFICIAL DELEGATE PASS', 500, 323);
+  ctx.font = '800 17px "Montserrat", sans-serif, Arial';
+  ctx.fillText('OFFICIAL DELEGATE PASS', 450, 303);
 
   // Divider Line
   ctx.strokeStyle = '#E2E8F0';
-  ctx.lineWidth = 2;
+  ctx.lineWidth = 1.5;
   ctx.beginPath();
-  ctx.moveTo(100, 370);
-  ctx.lineTo(900, 370);
+  ctx.moveTo(80, 350);
+  ctx.lineTo(820, 350);
   ctx.stroke();
 
-  // Attendee Section
+  // Attendee Identity
   ctx.fillStyle = '#94A3B8';
   ctx.font = '700 16px "Inter", sans-serif, Arial';
-  ctx.fillText('ATTENDEE DELEGATE', 500, 415);
+  ctx.fillText('ATTENDEE DELEGATE', 450, 395);
 
   ctx.fillStyle = '#0F172A';
   ctx.font = '900 42px "Montserrat", sans-serif, Arial';
   let displayName = record.fullName.toUpperCase();
   if (displayName.length > 24) displayName = displayName.substring(0, 22) + '...';
-  ctx.fillText(displayName, 500, 470);
+  ctx.fillText(displayName, 450, 450);
 
   ctx.fillStyle = '#475569';
   ctx.font = '500 22px "Inter", sans-serif, Arial';
   let displayCollege = record.college;
   if (displayCollege.length > 36) displayCollege = displayCollege.substring(0, 34) + '...';
-  ctx.fillText(displayCollege, 500, 510);
+  ctx.fillText(displayCollege, 450, 490);
 
   // Registered Events Section (Light Gray Box)
   const eventsCount = record.selectedEventNames.length;
@@ -218,9 +217,9 @@ export const generatePassImage = async (record: RegistrationRecord): Promise<str
   ctx.fillStyle = '#F1F5F9';
   ctx.beginPath();
   if (ctx.roundRect) {
-    ctx.roundRect(100, 545, 800, eventsBoxHeight, 20);
+    ctx.roundRect(80, 525, 740, eventsBoxHeight, 20);
   } else {
-    ctx.rect(100, 545, 800, eventsBoxHeight);
+    ctx.rect(80, 525, 740, eventsBoxHeight);
   }
   ctx.fill();
   ctx.strokeStyle = '#E2E8F0';
@@ -230,37 +229,39 @@ export const generatePassImage = async (record: RegistrationRecord): Promise<str
   ctx.textAlign = 'left';
   ctx.fillStyle = '#0F172A';
   ctx.font = '800 17px "Inter", sans-serif, Arial';
-  ctx.fillText(`REGISTERED EVENTS (${eventsCount}):`, 130, 585);
+  ctx.fillText(`REGISTERED EVENTS (${eventsCount}):`, 110, 565);
 
-  let eventY = 625;
+  let eventY = 605;
   record.selectedEventNames.forEach((evtName) => {
     ctx.fillStyle = '#0F172A';
     ctx.beginPath();
-    ctx.arc(145, eventY - 6, 5, 0, Math.PI * 2);
+    ctx.arc(125, eventY - 6, 5, 0, Math.PI * 2);
     ctx.fill();
 
     ctx.fillStyle = '#1E293B';
     ctx.font = '600 20px "Inter", sans-serif, Arial';
     let title = evtName;
     if (title.length > 40) title = title.substring(0, 37) + '...';
-    ctx.fillText(title, 165, eventY);
+    ctx.fillText(title, 145, eventY);
     eventY += 45;
   });
 
-  // Footer & Scannable QR Code Section
-  const qrSectionY = 575 + eventsBoxHeight + 25;
+  // Footer Divider & Scannable Custom QR Code Section
+  const qrSectionY = 550 + eventsBoxHeight + 25;
 
   ctx.strokeStyle = '#E2E8F0';
   ctx.lineWidth = 2;
   ctx.beginPath();
-  ctx.moveTo(100, qrSectionY);
-  ctx.lineTo(900, qrSectionY);
+  ctx.moveTo(80, qrSectionY);
+  ctx.lineTo(820, qrSectionY);
   ctx.stroke();
 
   const qrPayload = `SRISHTI-2.7|PASS:${record.passId}|NAME:${record.fullName}|COLLEGE:${record.college}|UTR:${record.paymentUtr}`;
   try {
+    // Generate QR with Level 'H' Error Correction
     const qrDataUrl = await QRCode.toDataURL(qrPayload, {
-      width: 220,
+      errorCorrectionLevel: 'H',
+      width: 240,
       margin: 1,
       color: {
         dark: '#0F172A',
@@ -279,16 +280,48 @@ export const generatePassImage = async (record: RegistrationRecord): Promise<str
     ctx.fillStyle = '#FFFFFF';
     ctx.beginPath();
     if (ctx.roundRect) {
-      ctx.roundRect(380, qrSectionY + 25, 240, 240, 16);
+      ctx.roundRect(330, qrSectionY + 25, 240, 240, 16);
     } else {
-      ctx.rect(380, qrSectionY + 25, 240, 240);
+      ctx.rect(330, qrSectionY + 25, 240, 240);
     }
     ctx.fill();
     ctx.strokeStyle = '#CBD5E1';
     ctx.lineWidth = 1;
     ctx.stroke();
 
-    ctx.drawImage(qrImg, 390, qrSectionY + 35, 220, 220);
+    ctx.drawImage(qrImg, 330, qrSectionY + 25, 240, 240);
+
+    // Center Logo Emblem Badge over QR
+    const centerLogoSize = 56;
+    ctx.fillStyle = '#FFFFFF';
+    ctx.beginPath();
+    ctx.arc(450, qrSectionY + 145, centerLogoSize / 2 + 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#CBD5E1';
+    ctx.stroke();
+
+    const logoCenterImg = new Image();
+    logoCenterImg.src = srishtiLogo;
+    await new Promise((resolve) => {
+      logoCenterImg.onload = resolve;
+      logoCenterImg.onerror = resolve;
+    });
+
+    if (logoCenterImg.complete && logoCenterImg.naturalWidth > 0) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(450, qrSectionY + 145, centerLogoSize / 2, 0, Math.PI * 2);
+      ctx.clip();
+      ctx.drawImage(
+        logoCenterImg, 
+        450 - centerLogoSize / 2, 
+        qrSectionY + 145 - centerLogoSize / 2, 
+        centerLogoSize, 
+        centerLogoSize
+      );
+      ctx.restore();
+    }
   } catch (err) {
     console.error('QR code generation error:', err);
   }
@@ -297,15 +330,15 @@ export const generatePassImage = async (record: RegistrationRecord): Promise<str
   ctx.textAlign = 'center';
   ctx.fillStyle = '#64748B';
   ctx.font = '600 17px "Inter", sans-serif, Arial';
-  ctx.fillText('SERIAL PASS ID:', 500, qrSectionY + 300);
+  ctx.fillText('SERIAL PASS ID:', 450, qrSectionY + 300);
 
   ctx.fillStyle = '#0F172A';
   ctx.font = '900 24px "Montserrat", sans-serif, Arial';
-  ctx.fillText(record.passId, 500, 335 + qrSectionY);
+  ctx.fillText(record.passId, 450, 335 + qrSectionY);
 
   ctx.fillStyle = '#64748B';
   ctx.font = '600 17px "Inter", sans-serif, Arial';
-  ctx.fillText(`UTR: ${record.paymentUtr}`, 500, 370 + qrSectionY);
+  ctx.fillText(`UTR: ${record.paymentUtr}`, 450, 370 + qrSectionY);
 
   return canvas.toDataURL('image/png');
 };
@@ -426,7 +459,7 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
           scale: 3,
           useCORS: true,
           allowTaint: true,
-          backgroundColor: '#FFFFFF',
+          backgroundColor: null,
           logging: false,
         });
         const url = canvas.toDataURL('image/png');
