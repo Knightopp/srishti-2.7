@@ -2,8 +2,8 @@
 
 @layer base {
   :root {
-    /* Typography System: Clean, Modern Grotesk */
-    --font-impact: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    /* Typography System */
+    --font-impact: 'Montserrat', sans-serif;
     --font-display: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-technical: 'IBM Plex Mono', monospace;
     --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
