@@ -10,6 +10,7 @@ import {
   Loader2,
   ShieldCheck
 } from 'lucide-react';
+import html2canvas from 'html2canvas';
 import { useFest, type RegistrationRecord } from '../context/FestContext';
 import srishtiLogo from '../assets/images/srishti-logo.png';
 
@@ -41,6 +42,7 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
   const [copiedUpi, setCopiedUpi] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   const [formData, setFormData] = useState({
     fullName: '',
@@ -54,6 +56,35 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
   });
 
   const [submittedRecord, setSubmittedRecord] = useState<RegistrationRecord | null>(null);
+
+  const handleDownloadPassImage = async () => {
+    const cardElement = document.getElementById('printable-pass-card');
+    if (!cardElement) return;
+
+    setIsDownloading(true);
+    try {
+      const canvas = await html2canvas(cardElement, {
+        scale: 3, // 3x ultra-sharp resolution
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#F9FAFB',
+        logging: false,
+      });
+
+      const image = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.href = image;
+      link.download = `SRISHTI_2.7_PASS_${submittedRecord?.passId || 'DELEGATE'}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (err) {
+      console.error('Error downloading pass PNG:', err);
+      window.print();
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   const copyUpi = () => {
     navigator.clipboard.writeText(settings.upiId || 'srishti@stthomas.upi');
@@ -554,20 +585,37 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4">
+            <button
+              onClick={handleDownloadPassImage}
+              disabled={isDownloading}
+              className="w-full sm:w-auto px-7 py-3.5 rounded-lg bg-gradient-27 text-white font-impact font-black text-xs uppercase tracking-wider hover:opacity-90 transition-all flex items-center justify-center gap-2 shadow-xl cursor-pointer"
+            >
+              {isDownloading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>GENERATING PNG...</span>
+                </>
+              ) : (
+                <>
+                  <Download className="w-4 h-4" />
+                  <span>DOWNLOAD PASS IMAGE (PNG)</span>
+                </>
+              )}
+            </button>
+
             <button
               onClick={() => window.print()}
-              className="w-full sm:w-auto px-8 py-3.5 rounded-lg bg-gradient-27 text-white font-impact font-black text-xs uppercase tracking-wider hover:opacity-90 transition-all flex items-center justify-center gap-2 shadow-xl cursor-pointer"
+              className="w-full sm:w-auto px-6 py-3.5 rounded-lg bg-white/10 border border-white/20 text-white font-body text-xs font-semibold uppercase tracking-wider hover:bg-white/20 transition-all cursor-pointer"
             >
-              <Download className="w-4 h-4" />
-              <span>PRINT / SAVE DIGITAL PASS</span>
+              <span>PRINT TICKET</span>
             </button>
 
             <button
               onClick={onBackToHome}
-              className="w-full sm:w-auto px-8 py-3.5 rounded-lg bg-white/5 border border-white/15 text-white/80 hover:text-white font-body text-xs font-semibold uppercase tracking-wider hover:bg-white/10 transition-all cursor-pointer"
+              className="w-full sm:w-auto px-6 py-3.5 rounded-lg bg-white/5 border border-white/10 text-white/60 hover:text-white font-body text-xs font-semibold uppercase tracking-wider hover:bg-white/10 transition-all cursor-pointer"
             >
-              <span>Return to Homepage</span>
+              <span>RETURN HOME</span>
             </button>
           </div>
         </main>
