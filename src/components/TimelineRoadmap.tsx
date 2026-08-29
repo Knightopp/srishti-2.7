@@ -106,7 +106,10 @@ export const TimelineRoadmap: React.FC<TimelineRoadmapProps> = ({
   const [activeMapPinId, setActiveMapPinId] = useState<string>('main-auditorium');
 
   const [activeReachedIndices, setActiveReachedIndices] = useState<number[]>([]);
-  const [laserHeightPercent, setLaserHeightPercent] = useState<number>(0);
+  const laserFillRef = useRef<HTMLDivElement>(null);
+  const targetPercentRef = useRef<number>(0);
+  const currentPercentRef = useRef<number>(0);
+  const animFrameIdRef = useRef<number | null>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const eventsListRef = useRef<HTMLDivElement>(null);
@@ -158,9 +161,30 @@ export const TimelineRoadmap: React.FC<TimelineRoadmapProps> = ({
     return roadmapEvents.filter((ev) => ev.locationId === activeMapPinId);
   }, [roadmapEvents, activeMapPinId]);
 
-  // Mathematical scroll tracking: line grows smoothly in direct proportion to container scroll position
+  // Mathematical scroll tracking: silky smooth 60fps physics LERP animation loop
   useEffect(() => {
     if (viewMode !== 'timeline') return;
+
+    // Continuous frame loop for buttery smooth liquid motion
+    const physicsLoop = () => {
+      const target = targetPercentRef.current;
+      const current = currentPercentRef.current;
+      const diff = target - current;
+
+      if (Math.abs(diff) > 0.01) {
+        currentPercentRef.current = current + diff * 0.10;
+      } else {
+        currentPercentRef.current = target;
+      }
+
+      if (laserFillRef.current) {
+        laserFillRef.current.style.height = `${currentPercentRef.current}%`;
+      }
+
+      animFrameIdRef.current = requestAnimationFrame(physicsLoop);
+    };
+
+    animFrameIdRef.current = requestAnimationFrame(physicsLoop);
 
     const handleScroll = () => {
       const listEl = eventsListRef.current;
@@ -180,7 +204,7 @@ export const TimelineRoadmap: React.FC<TimelineRoadmapProps> = ({
       const rawProgress = relativeTop / totalHeight;
       const clampedProgress = Math.max(0, Math.min(1, rawProgress));
       
-      setLaserHeightPercent(clampedProgress * 100);
+      targetPercentRef.current = clampedProgress * 100;
 
       // Light up nodes seamlessly as the laser line tip reaches each node position
       const validCards = cardsRef.current.filter(Boolean) as HTMLDivElement[];
@@ -202,6 +226,9 @@ export const TimelineRoadmap: React.FC<TimelineRoadmapProps> = ({
     handleScroll();
 
     return () => {
+      if (animFrameIdRef.current) {
+        cancelAnimationFrame(animFrameIdRef.current);
+      }
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleScroll);
     };
@@ -533,8 +560,9 @@ export const TimelineRoadmap: React.FC<TimelineRoadmapProps> = ({
                 
                 {/* Active Glowing Laser Spine Fill */}
                 <div
-                  className="w-full timeline-deep-glow-line origin-top transition-[height] duration-150 ease-linear"
-                  style={{ height: `${laserHeightPercent}%` }}
+                  ref={laserFillRef}
+                  className="w-full timeline-deep-glow-line origin-top"
+                  style={{ height: '0%' }}
                 />
               </div>
             </div>
