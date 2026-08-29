@@ -105,11 +105,12 @@ export const TimelineRoadmap: React.FC<TimelineRoadmapProps> = ({
   const [expandedCardId, setExpandedCardId] = useState<string | null>(null);
   const [activeMapPinId, setActiveMapPinId] = useState<string>('main-auditorium');
 
+  const [activeReachedIndices, setActiveReachedIndices] = useState<number[]>([]);
+  const [laserHeightPercent, setLaserHeightPercent] = useState<number>(0);
+
   const containerRef = useRef<HTMLDivElement>(null);
   const eventsListRef = useRef<HTMLDivElement>(null);
-  const lineFillRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
-  const nodeDotsRef = useRef<(HTMLDivElement | null)[]>([]);
 
   // Stable memoized roadmap events
   const roadmapEvents: TimelineEvent[] = useMemo(() => {
@@ -157,45 +158,55 @@ export const TimelineRoadmap: React.FC<TimelineRoadmapProps> = ({
     return roadmapEvents.filter((ev) => ev.locationId === activeMapPinId);
   }, [roadmapEvents, activeMapPinId]);
 
-  // Robust real-time scroll synchronization without flicker or disappearing elements
+  // Mathematical scroll tracking: line grows exactly as cards scroll, activating nodes upon contact
   useEffect(() => {
     if (viewMode !== 'timeline') return;
 
+    // Reset card refs
+    cardsRef.current = [];
+
     const handleScroll = () => {
-      if (!eventsListRef.current) return;
-      const rect = eventsListRef.current.getBoundingClientRect();
+      const validCards = cardsRef.current.filter(Boolean) as HTMLDivElement[];
+      if (validCards.length === 0) return;
+
       const windowH = window.innerHeight;
+      const targetActivationY = windowH * 0.60;
 
-      // Start drawing laser line when top of list reaches 65% down viewport
-      // Complete laser line when bottom of list reaches 50% down viewport
-      const startThreshold = windowH * 0.65;
-      const endThreshold = windowH * 0.45;
+      const firstCard = validCards[0];
+      const lastCard = validCards[validCards.length - 1];
 
-      const totalTravel = Math.max(1, rect.height + (startThreshold - endThreshold));
-      const currentTravel = startThreshold - rect.top;
+      const firstRect = firstCard.getBoundingClientRect();
+      const lastRect = lastCard.getBoundingClientRect();
 
-      const progress = Math.max(0, Math.min(1, currentTravel / totalTravel));
+      // Start line at vertical center of first card
+      const startPointY = firstRect.top + 28;
+      // End line at vertical center of last card
+      const endPointY = lastRect.top + 28;
 
-      if (lineFillRef.current) {
-        lineFillRef.current.style.transform = `scaleY(${progress})`;
+      const totalSpan = Math.max(1, endPointY - startPointY);
+      const scrolledDist = targetActivationY - startPointY;
+
+      // Calculate exact progress (0% when before first card, 100% when at or past last card)
+      let progress = 0;
+      if (validCards.length === 1) {
+        progress = startPointY <= targetActivationY ? 1 : 0;
+      } else {
+        progress = Math.max(0, Math.min(1, scrolledDist / totalSpan));
       }
 
-      // Synchronize node dots: light up when scroll/line reaches that card
-      cardsRef.current.forEach((card, idx) => {
-        if (!card) return;
-        const cardRect = card.getBoundingClientRect();
-        const dot = nodeDotsRef.current[idx];
-        if (!dot) return;
+      setLaserHeightPercent(progress * 100);
 
-        const isReached = cardRect.top <= windowH * 0.68;
-        if (isReached) {
-          dot.style.transform = 'scale(1)';
-          dot.style.opacity = '1';
-        } else {
-          dot.style.transform = 'scale(0.55)';
-          dot.style.opacity = '0.2';
+      // Light up only cards that have crossed the line's reach
+      const reached: number[] = [];
+      validCards.forEach((card, idx) => {
+        const cRect = card.getBoundingClientRect();
+        const nodeY = cRect.top + 28;
+        if (nodeY <= targetActivationY) {
+          reached.push(idx);
         }
       });
+
+      setActiveReachedIndices(reached);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -206,7 +217,7 @@ export const TimelineRoadmap: React.FC<TimelineRoadmapProps> = ({
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleScroll);
     };
-  }, [viewMode, selectedDay, filteredEvents.length]);
+  }, [viewMode, selectedDay, filteredEvents]);
 
   const toggleExpand = (id: string) => {
     setExpandedCardId(expandedCardId === id ? null : id);
@@ -376,7 +387,7 @@ export const TimelineRoadmap: React.FC<TimelineRoadmapProps> = ({
               <div className="relative w-full h-[460px] sm:h-[520px] rounded-xl overflow-hidden border border-white/[0.12] bg-[#07090E] shadow-2xl">
                 <iframe
                   title="St. Thomas College Thrissur Google Map"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3928.563964950444!2d76.2166589758784!3d10.523673289610214!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba7ee4bf854649f%3A0xd4b05e53a9abdc9c!2sSt.%20Thomas%20College%20(Autonomous)%2C%20Thrissur!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3928.563964950444!2d76.2166589758784!3d10.523673289610214!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba7ee4bf854649f%3A0xd4b05e53a9abdc9c!2sSt.%20Thomas%20College%20(Autonomous)%2C%20Thrissur!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin!4v1700000000000"
                   width="100%"
                   height="100%"
                   style={{ border: 0, filter: 'invert(90%) hue-rotate(180deg) brightness(95%) contrast(90%)' }}
@@ -519,31 +530,28 @@ export const TimelineRoadmap: React.FC<TimelineRoadmapProps> = ({
           </div>
         ) : (
           /* =============================================
-             TIMELINE VIEW — ACCURATE SCROLL-LINKED LASER SPINE
+             TIMELINE VIEW — EXACT SCROLL-LINKED LASER SPINE
              ============================================= */
           <div ref={eventsListRef} className="relative mt-8 sm:mt-10">
 
             {/* Central Vertical Laser Line Track */}
-            {/* Anchored strictly from top node to bottom node */}
-            <div className="absolute left-4 md:left-1/2 top-4 bottom-4 -translate-x-1/2 z-0 pointer-events-none flex flex-col items-center">
-              
-              {/* Outer ambient soft glow aura */}
-              <div className="absolute inset-y-0 w-10 -left-4.5 bg-cyan-500/[0.12] blur-md rounded-full pointer-events-none" />
+            {/* Anchored strictly from vertical center of first node to last node */}
+            <div 
+              className="absolute left-4 md:left-1/2 -translate-x-1/2 z-0 pointer-events-none"
+              style={{ top: '28px', bottom: '28px' }}
+            >
+              {/* Soft ambient aura */}
+              <div className="absolute inset-y-0 w-8 -left-3.5 bg-cyan-500/[0.10] blur-md rounded-full pointer-events-none" />
 
-              {/* Inactive Line Backbone */}
-              <div className="w-[3px] h-full bg-cyan-950/50 rounded-full relative overflow-hidden">
+              {/* Inactive Line Backbone (2px clean rail) */}
+              <div className="w-[2px] h-full bg-white/[0.08] relative overflow-hidden rounded-full">
                 
-                {/* Active Glowing Laser Spine Fill (Dynamically driven by real scroll) */}
+                {/* Active Glowing Laser Spine Fill */}
                 <div
-                  ref={lineFillRef}
-                  className="w-full h-full timeline-deep-glow-line origin-top transition-transform duration-75 ease-out"
-                  style={{ transform: 'scaleY(0)' }}
+                  className="w-full timeline-deep-glow-line origin-top transition-all duration-100 ease-out"
+                  style={{ height: `${laserHeightPercent}%` }}
                 />
               </div>
-
-              {/* Glowing Top & Bottom Terminators */}
-              <div className="absolute -top-1 w-2.5 h-2.5 rounded-full bg-cyan-300 shadow-[0_0_12px_#00f0ff]" />
-              <div className="absolute -bottom-1 w-2.5 h-2.5 rounded-full bg-blue-400 shadow-[0_0_12px_#38bdf8]" />
             </div>
 
             {/* Timeline Events List */}
@@ -552,6 +560,7 @@ export const TimelineRoadmap: React.FC<TimelineRoadmapProps> = ({
                 const isLeft = event.side === 'left';
                 const isExpanded = expandedCardId === event.id;
                 const isFirstOfDay = index === 0 || filteredEvents[index - 1].day !== event.day;
+                const isNodeActive = activeReachedIndices.includes(index);
 
                 return (
                   <React.Fragment key={event.id}>
@@ -565,26 +574,40 @@ export const TimelineRoadmap: React.FC<TimelineRoadmapProps> = ({
                       </div>
                     )}
 
-                    {/* EVENT ITEM ROW (Always visible, solid, zero flicker) */}
+                    {/* EVENT ITEM ROW */}
                     <div
-                      className={`relative flex flex-col md:flex-row items-center ${
+                      ref={(el) => {
+                        cardsRef.current[index] = el;
+                      }}
+                      className={`relative flex flex-col md:flex-row items-start md:items-center ${
                         isLeft ? 'md:flex-row-reverse' : ''
                       }`}
                     >
-                      {/* Node Marker with Deep Halo (Dormant -> Lights up when scroll reaches) */}
+                      {/* Node Marker — exactly at top 28px center of card */}
                       <div
-                        ref={(el) => {
-                          nodeDotsRef.current[index] = el;
-                        }}
-                        className="absolute left-4 md:left-1/2 -translate-x-1/2 z-20 flex items-center justify-center pointer-events-none transition-all duration-300 ease-out"
-                        style={{ transform: 'scale(0.55)', opacity: 0.2 }}
+                        className="absolute left-4 md:left-1/2 -translate-x-1/2 z-20 flex items-center justify-center pointer-events-none"
+                        style={{ top: '28px' }}
                       >
-                        {/* Radar Pulse Ring */}
-                        <div className="absolute w-6 h-6 rounded-full bg-cyan-400/30 animate-node-ping pointer-events-none" />
+                        {/* Radar Pulse Ring (ONLY active when reached by laser line) */}
+                        {isNodeActive && (
+                          <div className="absolute w-7 h-7 rounded-full bg-cyan-400/25 animate-node-ping pointer-events-none" />
+                        )}
 
-                        {/* Core Glowing Node */}
-                        <div className="w-4 h-4 rounded-full bg-[#050608] border-2 border-cyan-400 timeline-node-active-ring flex items-center justify-center">
-                          <div className="w-1.5 h-1.5 rounded-full bg-cyan-300 shadow-[0_0_8px_#00f0ff]" />
+                        {/* Core Node Dot: Dark dormant when unreached, neon cyan when active */}
+                        <div
+                          className={`w-4 h-4 rounded-full flex items-center justify-center transition-all duration-300 ${
+                            isNodeActive
+                              ? 'bg-[#050608] border-2 border-cyan-400 timeline-node-active-ring scale-110'
+                              : 'bg-[#0E121A] border-2 border-white/20 scale-90'
+                          }`}
+                        >
+                          <div
+                            className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                              isNodeActive
+                                ? 'bg-cyan-300 shadow-[0_0_8px_#00f0ff]'
+                                : 'bg-white/30'
+                            }`}
+                          />
                         </div>
                       </div>
 
@@ -593,9 +616,6 @@ export const TimelineRoadmap: React.FC<TimelineRoadmapProps> = ({
 
                       {/* EVENT CARD */}
                       <div
-                        ref={(el) => {
-                          cardsRef.current[index] = el;
-                        }}
                         data-side={isLeft ? 'left' : 'right'}
                         className={`w-full md:w-1/2 pl-12 md:pl-0 ${
                           isLeft ? 'md:pr-8 lg:pr-12' : 'md:pl-8 lg:pl-12'
