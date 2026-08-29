@@ -101,7 +101,7 @@ interface FestContextType {
 }
 
 const DEFAULT_SETTINGS: SystemSettings = {
-  upiId: 'srishti@stthomas.upi',
+  upiId: 'abhiramcs2007@oksbi',
   upiQrImage: '',
   contactEmail: 'srishti@stthomas.ac.in',
   contactPhone: '+91 98765 43210',

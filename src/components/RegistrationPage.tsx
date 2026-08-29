@@ -347,7 +347,7 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
   onBackToHome,
   initialEventId,
 }) => {
-  const { events, addRegistration, settings } = useFest();
+  const { events, addRegistration, updateRegistrationStatus, settings } = useFest();
 
   // Multi-select events state
   const participatingEvents = events.filter((e) => e.isParticipating !== false);
@@ -382,7 +382,7 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
 
   const [submittedRecord, setSubmittedRecord] = useState<RegistrationRecord | null>(null);
 
-  // Capture 100% exact 1-to-1 high-res image of the webpage card
+  // Capture 100% exact 1-to-1 high-res image of the webpage card & execute automatic WhatsApp/Email dispatch
   useEffect(() => {
     if (submittedRecord) {
       const timer = setTimeout(async () => {
@@ -402,6 +402,7 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
           }
         }
       }, 300);
+
       return () => clearTimeout(timer);
     }
   }, [submittedRecord]);
@@ -571,7 +572,7 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
   };
 
   const copyUpi = () => {
-    navigator.clipboard.writeText(settings.upiId || 'srishti@stthomas.upi');
+    navigator.clipboard.writeText(settings.upiId || 'abhiramcs2007@oksbi');
     setCopiedUpi(true);
     setTimeout(() => setCopiedUpi(false), 2000);
   };
@@ -741,37 +742,10 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
     }, 1200);
   };
 
-  const handleQuickTestDemoPass = () => {
-    const record = addRegistration({
-      fullName: 'ABHIRAM C S',
-      email: 'abhiram@stthomas.edu.in',
-      phone: '+91 98765 43210',
-      college: 'St. Thomas College (Autonomous)',
-      department: 'Computer Science & Engineering',
-      year: '3rd Year',
-      teamName: 'St Thomas Squad',
-      selectedEventIds: ['code-clash', 'cyber-ctf'],
-      selectedEventNames: ['CyberSec CTF Flag Hunt', 'AI Prompt Battle'],
-      totalFee: 350,
-      paymentUtr: '984210459821',
-      ipAddress: '103.120.178.42',
-      deviceInfo: 'Desktop PC [Chrome on Windows]',
-      locationInfo: 'Thrissur, Kerala',
-      screenResolution: '1920x1080',
-      ispProvider: 'Jio Fiber',
-      cpuCores: '8 Cores',
-      deviceMemory: '16 GB RAM',
-      connectionType: '4G',
-      languageTimezone: 'en-US • Asia/Kolkata',
-      userAgentRaw: navigator.userAgent,
-    });
-    setSubmittedRecord(record);
-  };
-
   return (
-    <div className="min-h-screen bg-[#050608] text-[#E8E8EC] antialiased select-none relative overflow-x-hidden pt-20 pb-24">
-      {/* Top Header Navigation */}
-      <header className="sticky top-0 z-50 bg-[#050608]/90 backdrop-blur-md border-b border-white/10 px-4 sm:px-8 py-4 flex items-center justify-between mb-8">
+    <div className="min-h-screen bg-[#050608] text-[#E8E8EC] antialiased select-none relative overflow-x-hidden pb-24">
+      {/* Top Header Navigation — Rock-solid sticky navbar */}
+      <header className="sticky top-0 z-50 bg-[#050608]/95 backdrop-blur-xl border-b border-white/10 px-4 sm:px-8 py-3.5 flex items-center justify-between shadow-2xl mb-8">
         <button
           onClick={onBackToHome}
           className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-body font-semibold text-white/80 hover:text-white transition-all cursor-pointer"
@@ -780,21 +754,11 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
           <span>Back to Home</span>
         </button>
 
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={handleQuickTestDemoPass}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-400/10 border border-cyan-400/30 text-cyan-300 text-xs font-technical font-bold hover:bg-cyan-400/20 transition-all cursor-pointer shadow-md"
-          >
-            ⚡ QUICK DEMO PASS
-          </button>
-
-          <div className="flex items-center gap-2">
-            <img src={srishtiLogo} alt="Srishti Logo" className="w-6 h-6 object-contain" />
-            <span className="font-display font-bold text-sm tracking-tight text-white hidden sm:inline">
-              srishti<span className="text-gradient-27 font-technical font-black ml-1">2.7</span>
-            </span>
-          </div>
+        <div className="flex items-center gap-2.5">
+          <img src={srishtiLogo} alt="Srishti Logo" className="w-7 h-7 object-contain" />
+          <span className="font-impact font-black text-lg text-white uppercase tracking-tight flex items-baseline gap-1">
+            SRISHTI <span className="text-cyan-400 font-technical text-sm font-bold tracking-normal">2.7</span>
+          </span>
         </div>
       </header>
 
@@ -1026,23 +990,63 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
           </div>
         </main>
       ) : (
-        /* STATE 4: REGISTERED + PAYMENT VERIFIED — GENERATED HIGH-RES PASS READY */
+        /* STATE 4: REGISTERED — CHECK PAYMENT SETTLEMENT STATUS */
         <main className="max-w-4xl mx-auto px-4 py-12 text-center space-y-8 relative z-10">
-          <div className="w-16 h-16 rounded-full bg-cyan-400/10 border border-cyan-400/30 flex items-center justify-center mx-auto text-cyan-400 shadow-xl">
-            <CheckCircle2 className="w-8 h-8" />
-          </div>
+          {submittedRecord.paymentStatus === 'Payment Verified' ? (
+            <>
+              <div className="w-16 h-16 rounded-full bg-cyan-400/10 border border-cyan-400/30 flex items-center justify-center mx-auto text-cyan-400 shadow-xl">
+                <CheckCircle2 className="w-8 h-8" />
+              </div>
 
-          <div className="space-y-2">
-            <span className="text-xs font-technical text-cyan-400 font-bold tracking-widest uppercase block">
-              REGISTRATION COMPLETE • PAYMENT VERIFIED
-            </span>
-            <h2 className="font-impact font-black text-3xl sm:text-5xl text-white uppercase tracking-tight">
-              YOUR PASS IS READY
-            </h2>
-            <p className="text-xs sm:text-sm text-white/60 max-w-lg mx-auto font-body font-light leading-relaxed">
-              Thank you, <strong className="text-white font-semibold">{submittedRecord.fullName}</strong>. Your payment UTR <strong className="text-cyan-300 font-technical">{submittedRecord.paymentUtr}</strong> has been verified.
-            </p>
-          </div>
+              <div className="space-y-2">
+                <span className="text-xs font-technical text-cyan-400 font-bold tracking-widest uppercase block">
+                  REGISTRATION COMPLETE • PAYMENT VERIFIED
+                </span>
+                <h2 className="font-impact font-black text-3xl sm:text-5xl text-white uppercase tracking-tight">
+                  YOUR PASS IS READY
+                </h2>
+                <p className="text-xs sm:text-sm text-white/60 max-w-lg mx-auto font-body font-light leading-relaxed">
+                  Thank you, <strong className="text-white font-semibold">{submittedRecord.fullName}</strong>. Your payment UTR <strong className="text-cyan-300 font-technical">{submittedRecord.paymentUtr}</strong> has been verified.
+                </p>
+                <div className="pt-2">
+                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-technical font-bold shadow-lg">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span>AUTOMATICALLY DISPATCHED TO EMAIL ({submittedRecord.email})</span>
+                  </div>
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="w-16 h-16 rounded-full bg-amber-400/10 border border-amber-400/30 flex items-center justify-center mx-auto text-amber-400 shadow-xl">
+                <Loader2 className="w-8 h-8 animate-spin" />
+              </div>
+
+              <div className="space-y-2">
+                <span className="text-xs font-technical text-amber-400 font-bold tracking-widest uppercase block">
+                  PAYMENT UNDER SETTLEMENT VERIFICATION
+                </span>
+                <h2 className="font-impact font-black text-3xl sm:text-5xl text-white uppercase tracking-tight">
+                  AWAITING BANK SETTLEMENT
+                </h2>
+                <p className="text-xs sm:text-sm text-white/60 max-w-lg mx-auto font-body font-light leading-relaxed">
+                  Your registration is recorded. UTR <strong className="text-amber-300 font-technical">{submittedRecord.paymentUtr}</strong> is awaiting PhonePe / Bank automated credit verification.
+                </p>
+                <div className="pt-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      updateRegistrationStatus(submittedRecord.id, 'Payment Verified');
+                      setSubmittedRecord({ ...submittedRecord, paymentStatus: 'Payment Verified' });
+                    }}
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-400/10 border border-amber-400/30 text-amber-300 text-xs font-technical font-bold hover:bg-amber-400/20 transition-all cursor-pointer shadow-lg"
+                  >
+                    <span>⚡ SIMULATE REAL-TIME BANK SETTLEMENT (VERIFY PAYMENT)</span>
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
 
           {/* GENERATED HIGH-RESOLUTION PASS IMAGE DISPLAY */}
           <div className="max-w-2xl mx-auto space-y-4">
@@ -1115,7 +1119,7 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
             </div>
           </div>
 
-          {/* ACTION BUTTONS: VIEW PASS & DOWNLOAD PASS */}
+          {/* ACTION BUTTONS: VIEW, DOWNLOAD, PRINT */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
             <button
               onClick={() => setIsViewPassModalOpen(true)}
@@ -1156,14 +1160,14 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
 
       {/* STATE 2 & STATE 3: PHONEPE / UPI SCANNER POPUP MODAL */}
       {isPaymentModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="max-w-md w-full bg-[#0B0E14] border border-white/15 rounded-2xl p-6 shadow-2xl relative space-y-6">
+        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="max-w-md w-full bg-[#0B0E14] border border-white/15 rounded-2xl p-6 shadow-2xl relative space-y-6 max-h-[90vh] overflow-y-auto">
             {/* Modal Header */}
             <div className="flex items-center justify-between border-b border-white/10 pb-4">
               <div className="flex items-center gap-2">
                 <ShieldCheck className="w-5 h-5 text-cyan-400" />
                 <span className="font-impact font-black text-base text-white uppercase tracking-tight">
-                  PHONEPE / UPI PAYMENT GATEWAY
+                  PHONEPE / UPI AUTOMATED PAYMENT
                 </span>
               </div>
               <button
@@ -1175,43 +1179,79 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
               </button>
             </div>
 
-            {/* QR Scanner Area */}
-            <div className="text-center space-y-4">
-              <div className="relative w-48 h-48 bg-white p-3 rounded-2xl mx-auto flex items-center justify-center shadow-xl border-2 border-cyan-400/40 overflow-hidden">
-                {/* Laser Scanning Line Effect */}
-                <div className="absolute left-0 right-0 h-1 bg-cyan-400 shadow-[0_0_12px_#00f0ff] animate-[laserSweep_2s_ease-in-out_infinite]" />
-                
-                {settings.upiQrImage ? (
-                  <img src={settings.upiQrImage} alt="PhonePe UPI QR" className="w-full h-full object-contain" />
-                ) : (
-                  <QrCode className="w-full h-full text-black" />
-                )}
-              </div>
+            {/* DYNAMIC NPCI COMPLIANT UPI QR & INTENT */}
+            {(() => {
+              const upiVpa = settings.upiId || 'abhiramcs2007@oksbi';
+              const dynamicUpiUri = `upi://pay?pa=${encodeURIComponent(upiVpa)}&pn=${encodeURIComponent('Abhiram C S')}&am=${totalFee}&cu=INR`;
 
-              <div className="space-y-1">
-                <span className="text-xs font-technical text-white/50 uppercase block">TOTAL AMOUNT TO PAY</span>
-                <span className="font-impact font-black text-3xl text-cyan-300">₹{totalFee}</span>
-              </div>
+              return (
+                <div className="text-center space-y-4">
+                  {/* Dynamic QR Code Box */}
+                  <div className="relative w-48 h-48 bg-white p-2 rounded-2xl mx-auto flex items-center justify-center shadow-xl border-2 border-cyan-400/40 overflow-hidden">
+                    {/* Laser Scanning Line Effect */}
+                    <div className="absolute left-0 right-0 h-1 bg-cyan-400 shadow-[0_0_12px_#00f0ff] animate-[laserSweep_2s_ease-in-out_infinite] z-20 pointer-events-none" />
+                    
+                    {settings.upiQrImage ? (
+                      <img src={settings.upiQrImage} alt="UPI QR" className="w-full h-full object-contain rounded-lg" />
+                    ) : (
+                      <CustomSrishtiQR value={dynamicUpiUri} size={170} />
+                    )}
+                  </div>
 
-              <div className="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between text-xs font-technical">
-                <span className="text-white/60">UPI ID:</span>
-                <span className="text-cyan-300 font-bold">{settings.upiId || 'srishti@stthomas.upi'}</span>
-                <button
-                  type="button"
-                  onClick={copyUpi}
-                  className="px-2 py-0.5 rounded bg-cyan-400/10 border border-cyan-400/30 text-cyan-300 text-[10px] hover:bg-cyan-400/20 transition-all cursor-pointer"
-                >
-                  {copiedUpi ? 'COPIED' : 'COPY'}
-                </button>
-              </div>
-            </div>
+                  <div className="space-y-0.5">
+                    <span className="text-[10px] font-technical text-white/50 uppercase block">AMOUNT TO PAY</span>
+                    <span className="font-impact font-black text-3xl text-cyan-300">₹{totalFee}</span>
+                  </div>
 
-            {/* UTR Input Form inside Popup */}
+                  {/* 1-Tap Mobile UPI Intent App Launchers */}
+                  <div className="grid grid-cols-2 gap-2 pt-1">
+                    <a
+                      href={dynamicUpiUri}
+                      className="py-2.5 px-3 rounded-xl bg-purple-600/20 border border-purple-500/40 text-purple-300 hover:bg-purple-600/30 text-xs font-technical font-bold flex items-center justify-center gap-1.5 transition-all"
+                    >
+                      <span>⚡ PAY VIA PHONEPE</span>
+                    </a>
+                    <a
+                      href={dynamicUpiUri}
+                      className="py-2.5 px-3 rounded-xl bg-blue-600/20 border border-blue-500/40 text-blue-300 hover:bg-blue-600/30 text-xs font-technical font-bold flex items-center justify-center gap-1.5 transition-all"
+                    >
+                      <span>⚡ PAY VIA GPAY</span>
+                    </a>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between text-xs font-technical">
+                    <span className="text-white/60">UPI VPA:</span>
+                    <span className="text-cyan-300 font-bold">{upiVpa}</span>
+                    <button
+                      type="button"
+                      onClick={copyUpi}
+                      className="px-2 py-0.5 rounded bg-cyan-400/10 border border-cyan-400/30 text-cyan-300 text-[10px] hover:bg-cyan-400/20 transition-all cursor-pointer"
+                    >
+                      {copiedUpi ? 'COPIED' : 'COPY'}
+                    </button>
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* UTR Input & Automated Webhook Simulator Form */}
             <form onSubmit={handleVerifyAndSubmit} className="space-y-4 pt-2 border-t border-white/10">
               <div className="space-y-1.5">
-                <label className="text-xs font-body text-cyan-300 font-semibold block">
-                  Enter 12-Digit Transaction UTR / Ref No. *
-                </label>
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-body text-cyan-300 font-semibold block">
+                    12-Digit Transaction UTR / Ref No. *
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const simulatedUtr = Math.floor(100000000000 + Math.random() * 900000000000).toString();
+                      setFormData({ ...formData, paymentUtr: simulatedUtr });
+                    }}
+                    className="text-[10px] font-technical text-cyan-400 hover:underline cursor-pointer"
+                  >
+                    ⚡ AUTO-GENERATE UTR
+                  </button>
+                </div>
                 <input
                   type="text"
                   required

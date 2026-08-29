@@ -7,7 +7,7 @@ import {
   CheckCircle2, 
   AlertTriangle, 
   Share2, 
-  Check 
+  Check
 } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import { useFest, type RegistrationRecord } from '../context/FestContext';
