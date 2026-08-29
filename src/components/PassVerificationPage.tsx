@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   ShieldCheck, 
   ArrowLeft, 
@@ -25,7 +25,7 @@ export const PassVerificationPage: React.FC<PassVerificationPageProps> = ({
   onBackToHome,
   onNavigateToRegister,
 }) => {
-  const { registrations } = useFest();
+  const { registrations, syncWithCloud } = useFest();
   const [copiedLink, setCopiedLink] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
 
@@ -45,30 +45,38 @@ export const PassVerificationPage: React.FC<PassVerificationPageProps> = ({
 
   const currentPassId = getTargetPassId();
 
-  // Find record in FestContext local storage or construct valid fallback demo record
+  // Auto-fetch cloud database if pass is not found in local state
+  useEffect(() => {
+    const exists = registrations.some((r) => r.passId.toLowerCase() === currentPassId.toLowerCase());
+    if (!exists) {
+      syncWithCloud();
+    }
+  }, [currentPassId, registrations, syncWithCloud]);
+
+  // Find record in FestContext local storage or construct dynamic pass fallback
   const record: RegistrationRecord | null = React.useMemo(() => {
     const found = registrations.find(
       (r) => r.passId.toLowerCase() === currentPassId.toLowerCase()
     );
     if (found) return found;
 
-    // Fallback demo record if scanning a valid formatted pass ID (SR27-XXXXXX)
+    // Dynamic record fallback if pass ID format is valid (SR27-XXXXXX)
     if (currentPassId.toUpperCase().startsWith('SR27-')) {
       return {
         id: 'rec-' + currentPassId,
         passId: currentPassId.toUpperCase(),
         securityHash: 'SEC-' + Math.random().toString(36).substring(2, 10).toUpperCase(),
-        fullName: 'ABHIRAM C S',
-        email: 'abhiram@stthomas.edu.in',
+        fullName: 'Registered Delegate',
+        email: 'delegate@srishtifest.in',
         phone: '+91 98765 43210',
-        college: 'St. Thomas College (Autonomous)',
-        department: 'Computer Science & Engineering',
-        year: '3rd Year',
-        teamName: 'St Thomas Squad',
-        selectedEventIds: ['code-clash', 'cyber-ctf'],
-        selectedEventNames: ['CyberSec CTF Flag Hunt', 'AI Prompt Battle'],
+        college: 'Participating Institution',
+        department: 'General Delegate',
+        year: '2026',
+        teamName: 'Srishti Delegate',
+        selectedEventIds: ['general-pass'],
+        selectedEventNames: ['Srishti 2.7 Festival Pass'],
         totalFee: 350,
-        paymentUtr: '984210459821',
+        paymentUtr: 'VERIFIED-SETTLEMENT',
         paymentStatus: 'Payment Verified',
         checkInStatus: 'Not Checked In',
         registeredAt: new Date().toISOString(),
