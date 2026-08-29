@@ -4,6 +4,7 @@ import {
   CheckCircle2, 
   Download, 
   Check,
+  Ticket,
   X,
   Loader2,
   ShieldCheck,
@@ -763,66 +764,71 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
 
       {/* STATE 1 & STATE 2: NOT REGISTERED / FORM IN PROGRESS */}
       {!submittedRecord ? (
-        <main className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10 space-y-12">
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 relative z-10 space-y-16">
           {/* Header Banner */}
-          <div className="max-w-2xl space-y-2">
+          <div className="max-w-3xl space-y-4">
             <span className="text-xs font-technical text-cyan-400 font-bold tracking-widest uppercase block">
-              REGISTRATION & DELEGATE PASS
+              FESTIVAL PASS REGISTRATION
             </span>
-            <h1 className="font-impact font-black text-3xl sm:text-5xl text-white uppercase tracking-tight">
-              REGISTER FOR <span className="text-cyan-400 font-impact font-black">SRISHTI 2.7</span>
+            <h1 className="font-impact font-black text-4xl sm:text-6xl text-white uppercase tracking-tight leading-[0.92]">
+              REGISTER FOR <span className="text-gradient-27 font-impact font-black">SRISHTI 2.7</span>
             </h1>
-            <p className="text-xs sm:text-sm text-white/60 font-body font-light leading-relaxed">
-              Select your events, fill in your delegate information, complete payment, and receive your official pass.
+            <p className="text-sm sm:text-base text-white/60 font-body font-light leading-relaxed max-w-xl">
+              Choose your events, enter your details, scan to pay via PhonePe / UPI, and instantly receive your official Srishti pass.
             </p>
           </div>
 
           {/* Main 2-Column Composition */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
             {/* Left Column: Events & Personal Form */}
-            <form onSubmit={handleOpenPaymentModal} className="lg:col-span-7 space-y-10">
+            <form onSubmit={handleOpenPaymentModal} className="lg:col-span-7 space-y-14">
               {/* STEP 01 — SELECT EVENTS */}
-              <section className="space-y-4">
-                <div className="flex items-baseline justify-between border-b border-white/10 pb-2.5">
-                  <h2 className="font-impact font-black text-xl text-white uppercase tracking-tight">
-                    1. SELECT EVENTS
-                  </h2>
+              <section className="space-y-6">
+                <div className="flex items-baseline justify-between border-b border-white/10 pb-3">
+                  <div>
+                    <span className="text-xs font-technical text-cyan-400 font-bold uppercase tracking-wider block mb-1">
+                      STEP 01
+                    </span>
+                    <h2 className="font-impact font-black text-2xl text-white uppercase tracking-tight">
+                      SELECT EVENTS
+                    </h2>
+                  </div>
                   <span className="text-xs font-body text-white/50">
                     {selectedEventIds.length} Selected
                   </span>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                   {registerableList.map((evt) => {
                     const isSelected = selectedEventIds.includes(evt.id);
                     return (
                       <div
                         key={evt.id}
                         onClick={() => toggleEventSelection(evt.id)}
-                        className={`p-3.5 rounded-xl border cursor-pointer transition-all duration-200 flex flex-col justify-between space-y-2.5 ${
+                        className={`p-4 rounded-xl border cursor-pointer transition-all duration-200 flex flex-col justify-between space-y-3 ${
                           isSelected
-                            ? 'bg-[#0E1422] border-cyan-400/80'
-                            : 'bg-[#0A0D14] border-white/10 hover:border-white/20'
+                            ? 'bg-[#0E1422] border-cyan-400/80 shadow-[0_0_20px_rgba(0,240,255,0.12)]'
+                            : 'bg-[#0A0D14] border-white/10 hover:border-white/20 hover:bg-[#0D1018]'
                         }`}
                       >
                         <div className="flex items-start justify-between gap-2">
-                          <div className="space-y-0.5">
+                          <div className="space-y-1">
                             <span className="text-[10px] font-technical font-bold text-cyan-400 uppercase tracking-wider block">
                               {evt.category}
                             </span>
-                            <h3 className="font-impact font-black text-sm text-white tracking-tight leading-snug">
+                            <h3 className="font-impact font-black text-base text-white tracking-tight leading-snug">
                               {evt.title}
                             </h3>
                           </div>
-                          <div className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-colors ${
+                          <div className={`w-5 h-5 rounded border flex items-center justify-center shrink-0 transition-colors ${
                             isSelected ? 'bg-cyan-400 border-cyan-400 text-black' : 'border-white/30 bg-transparent'
                           }`}>
-                            {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
+                            {isSelected && <Check className="w-3.5 h-3.5 stroke-[3]" />}
                           </div>
                         </div>
 
                         <div className="pt-2 border-t border-white/5 flex items-center justify-between text-xs font-body">
-                          <span className="text-white/50 font-light">{evt.time || 'DEC 4-5'}</span>
+                          <span className="text-white/60 font-light">{evt.time || 'DEC 4-5'}</span>
                           <span className="font-technical font-bold text-cyan-300">
                             {evt.fee > 0 ? `₹${evt.fee}` : 'FREE ENTRY'}
                           </span>
@@ -833,38 +839,41 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
                 </div>
 
                 {/* Subtotal Display */}
-                <div className="p-3.5 rounded-xl bg-[#0A0D14] border border-white/10 flex items-center justify-between">
+                <div className="p-4 rounded-xl bg-[#0A0D14] border border-white/10 flex items-center justify-between">
                   <span className="text-xs font-technical text-white/60 uppercase font-semibold">
-                    TOTAL AMOUNT
+                    TOTAL PAYABLE AMOUNT
                   </span>
-                  <span className="font-impact font-black text-xl text-cyan-400 tracking-tight">
+                  <span className="font-impact font-black text-2xl text-cyan-300 tracking-tight">
                     ₹{totalFee}
                   </span>
                 </div>
               </section>
 
               {/* STEP 02 — YOUR DETAILS */}
-              <section className="space-y-4">
-                <div className="border-b border-white/10 pb-2.5">
-                  <h2 className="font-impact font-black text-xl text-white uppercase tracking-tight">
-                    2. DELEGATE INFORMATION
+              <section className="space-y-6">
+                <div className="border-b border-white/10 pb-3">
+                  <span className="text-xs font-technical text-cyan-400 font-bold uppercase tracking-wider block mb-1">
+                    STEP 02
+                  </span>
+                  <h2 className="font-impact font-black text-2xl text-white uppercase tracking-tight">
+                    YOUR DETAILS
                   </h2>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                  <div className="space-y-1">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
                     <label className="text-xs font-body text-white/70 font-medium">Full Name *</label>
                     <input
                       type="text"
                       required
-                      placeholder="e.g. Abhiram C S"
+                      placeholder="John Doe"
                       value={formData.fullName}
                       onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-lg bg-[#0A0D14] border border-white/15 text-white placeholder-white/20 text-xs font-body focus:outline-none focus:border-cyan-400 transition-colors"
+                      className="w-full px-4 py-3 rounded-lg bg-[#0A0D14] border border-white/15 text-white placeholder-white/20 text-xs font-body focus:outline-none focus:border-cyan-400 transition-colors"
                     />
                   </div>
 
-                  <div className="space-y-1">
+                  <div className="space-y-1.5">
                     <label className="text-xs font-body text-white/70 font-medium">Email Address *</label>
                     <input
                       type="email"
@@ -872,11 +881,11 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
                       placeholder="student@college.edu"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-lg bg-[#0A0D14] border border-white/15 text-white placeholder-white/20 text-xs font-body focus:outline-none focus:border-cyan-400 transition-colors"
+                      className="w-full px-4 py-3 rounded-lg bg-[#0A0D14] border border-white/15 text-white placeholder-white/20 text-xs font-body focus:outline-none focus:border-cyan-400 transition-colors"
                     />
                   </div>
 
-                  <div className="space-y-1">
+                  <div className="space-y-1.5">
                     <label className="text-xs font-body text-white/70 font-medium">Phone Number *</label>
                     <input
                       type="tel"
@@ -884,11 +893,11 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
                       placeholder="+91 98765 43210"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-lg bg-[#0A0D14] border border-white/15 text-white placeholder-white/20 text-xs font-body focus:outline-none focus:border-cyan-400 transition-colors"
+                      className="w-full px-4 py-3 rounded-lg bg-[#0A0D14] border border-white/15 text-white placeholder-white/20 text-xs font-body focus:outline-none focus:border-cyan-400 transition-colors"
                     />
                   </div>
 
-                  <div className="space-y-1">
+                  <div className="space-y-1.5">
                     <label className="text-xs font-body text-white/70 font-medium">College / Institution *</label>
                     <input
                       type="text"
@@ -896,16 +905,16 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
                       placeholder="St. Thomas College"
                       value={formData.college}
                       onChange={(e) => setFormData({ ...formData, college: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-lg bg-[#0A0D14] border border-white/15 text-white placeholder-white/20 text-xs font-body focus:outline-none focus:border-cyan-400 transition-colors"
+                      className="w-full px-4 py-3 rounded-lg bg-[#0A0D14] border border-white/15 text-white placeholder-white/20 text-xs font-body focus:outline-none focus:border-cyan-400 transition-colors"
                     />
                   </div>
 
-                  <div className="space-y-1">
+                  <div className="space-y-1.5">
                     <label className="text-xs font-body text-white/70 font-medium">Department</label>
                     <select
                       value={formData.department}
                       onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-lg bg-[#0A0D14] border border-white/15 text-white text-xs font-body focus:outline-none focus:border-cyan-400 transition-colors"
+                      className="w-full px-4 py-3 rounded-lg bg-[#0A0D14] border border-white/15 text-white text-xs font-body focus:outline-none focus:border-cyan-400 transition-colors"
                     >
                       <option value="Computer Science & Engineering">Computer Science & Engineering</option>
                       <option value="Information Technology">Information Technology</option>
@@ -916,12 +925,12 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
                     </select>
                   </div>
 
-                  <div className="space-y-1">
+                  <div className="space-y-1.5">
                     <label className="text-xs font-body text-white/70 font-medium">Year of Study</label>
                     <select
                       value={formData.year}
                       onChange={(e) => setFormData({ ...formData, year: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-lg bg-[#0A0D14] border border-white/15 text-white text-xs font-body focus:outline-none focus:border-cyan-400 transition-colors"
+                      className="w-full px-4 py-3 rounded-lg bg-[#0A0D14] border border-white/15 text-white text-xs font-body focus:outline-none focus:border-cyan-400 transition-colors"
                     >
                       <option value="1st Year">1st Year</option>
                       <option value="2nd Year">2nd Year</option>
@@ -934,47 +943,48 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
 
                 <button
                   type="submit"
-                  className="w-full py-3.5 rounded-lg bg-cyan-400 hover:bg-cyan-300 text-black font-impact font-black uppercase text-xs tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg mt-4"
+                  className="w-full py-4 rounded-lg bg-gradient-27 text-white font-impact font-black uppercase text-sm tracking-wider hover:opacity-90 active:scale-[0.99] transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg"
                 >
                   <span>PROCEED TO PAYMENT (₹{totalFee}) →</span>
                 </button>
               </section>
             </form>
 
-            {/* SIDEBAR ORDER SUMMARY */}
-            <aside className="lg:col-span-5 sticky top-24 space-y-4">
-              <div className="p-6 rounded-2xl bg-[#090C12] border border-white/10 space-y-4 shadow-xl">
-                <div className="border-b border-white/10 pb-3">
+            {/* STATE 1 / STATE 2 SIDEBAR PASS NOTICE (STRICT SECURITY: NO PASS EXISTS BEFORE PAYMENT) */}
+            <aside className="lg:col-span-5 sticky top-28 space-y-4">
+              <div className="p-8 rounded-2xl bg-[#090C12] border border-white/10 text-center space-y-5 shadow-2xl">
+                <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto text-cyan-400 shadow-inner">
+                  <Ticket className="w-7 h-7" />
+                </div>
+
+                <div className="space-y-2">
                   <span className="text-[10px] font-technical text-cyan-400 font-bold uppercase tracking-widest block">
-                    SUMMARY
+                    STATE 1 • REGISTRATION IN PROGRESS
                   </span>
-                  <h3 className="font-impact font-black text-xl text-white uppercase tracking-tight">
-                    PASS SUMMARY
+                  <h3 className="font-impact font-black text-2xl text-white uppercase tracking-tight">
+                    YOUR SRISHTI PASS
                   </h3>
                 </div>
 
-                <div className="space-y-2 text-xs font-body text-white/70">
-                  <div className="flex justify-between items-center py-1 border-b border-white/5">
+                <div className="p-4 rounded-xl bg-white/5 border border-white/10 text-left space-y-2 text-xs font-body">
+                  <p className="text-white/80 font-medium text-center">
+                    Complete registration and payment to generate your official pass.
+                  </p>
+                  <p className="text-white/40 text-[11px] text-center leading-relaxed font-light">
+                    Official pass image, serial pass ID, and scannable QR code are generated only after backend settlement verification.
+                  </p>
+                </div>
+
+                <div className="pt-3 border-t border-white/5 text-left text-xs font-body space-y-2 text-white/50">
+                  <div className="flex justify-between items-center">
                     <span>Events Selected:</span>
                     <span className="text-white font-bold">{selectedEvents.length}</span>
                   </div>
-                  <div className="space-y-1 py-1">
-                    {selectedEvents.map((evt) => (
-                      <div key={evt.id} className="flex justify-between text-[11px]">
-                        <span className="text-white/60 truncate max-w-[200px]">• {evt.title}</span>
-                        <span className="font-mono text-cyan-300">₹{evt.fee}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="flex justify-between items-center pt-2 border-t border-white/10">
-                    <span className="font-bold text-white">Total Payable Amount:</span>
-                    <span className="text-cyan-400 font-mono font-bold text-base">₹{totalFee}</span>
+                  <div className="flex justify-between items-center">
+                    <span>Total Amount Payable:</span>
+                    <span className="text-cyan-300 font-technical font-bold text-sm">₹{totalFee}</span>
                   </div>
                 </div>
-
-                <p className="text-[11px] text-white/40 leading-relaxed font-light text-center pt-2 border-t border-white/5">
-                  Official pass image and serial pass ID are generated immediately upon completing payment.
-                </p>
               </div>
             </aside>
           </div>
@@ -990,13 +1000,13 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
 
               <div className="space-y-2">
                 <span className="text-xs font-technical text-cyan-400 font-bold tracking-widest uppercase block">
-                  REGISTRATION COMPLETE • PASS CONFIRMED
+                  REGISTRATION COMPLETE • PAYMENT VERIFIED
                 </span>
                 <h2 className="font-impact font-black text-3xl sm:text-5xl text-white uppercase tracking-tight">
                   YOUR PASS IS READY
                 </h2>
                 <p className="text-xs sm:text-sm text-white/60 max-w-lg mx-auto font-body font-light leading-relaxed">
-                  Thank you, <strong className="text-white font-semibold">{submittedRecord.fullName}</strong>. Your pass has been generated.
+                  Thank you, <strong className="text-white font-semibold">{submittedRecord.fullName}</strong>. Your payment UTR <strong className="text-cyan-300 font-technical">{submittedRecord.paymentUtr}</strong> has been verified.
                 </p>
                 <div className="pt-2">
                   <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-technical font-bold shadow-lg">
@@ -1014,13 +1024,13 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
 
               <div className="space-y-2">
                 <span className="text-xs font-technical text-amber-400 font-bold tracking-widest uppercase block">
-                  SETTLEMENT VERIFICATION IN PROGRESS
+                  PAYMENT UNDER SETTLEMENT VERIFICATION
                 </span>
                 <h2 className="font-impact font-black text-3xl sm:text-5xl text-white uppercase tracking-tight">
-                  AWAITING PAYMENT SETTLEMENT
+                  AWAITING BANK SETTLEMENT
                 </h2>
                 <p className="text-xs sm:text-sm text-white/60 max-w-lg mx-auto font-body font-light leading-relaxed">
-                  Your registration is recorded. UTR <strong className="text-amber-300 font-technical">{submittedRecord.paymentUtr}</strong> is awaiting verification.
+                  Your registration is recorded. UTR <strong className="text-amber-300 font-technical">{submittedRecord.paymentUtr}</strong> is awaiting PhonePe / Bank automated credit verification.
                 </p>
                 <div className="pt-2">
                   <button
@@ -1031,7 +1041,7 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
                     }}
                     className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-400/10 border border-amber-400/30 text-amber-300 text-xs font-technical font-bold hover:bg-amber-400/20 transition-all cursor-pointer shadow-lg"
                   >
-                    <span>Verify Settlement Now</span>
+                    <span>⚡ SIMULATE REAL-TIME BANK SETTLEMENT (VERIFY PAYMENT)</span>
                   </button>
                 </div>
               </div>
