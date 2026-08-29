@@ -13,6 +13,7 @@ import {
   QrCode
 } from 'lucide-react';
 import QRCode from 'qrcode';
+import html2canvas from 'html2canvas';
 import { useFest, type RegistrationRecord } from '../context/FestContext';
 import srishtiLogo from '../assets/images/srishti-logo.png';
 
@@ -253,16 +254,31 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
 
   const [submittedRecord, setSubmittedRecord] = useState<RegistrationRecord | null>(null);
 
-  // Generate high-resolution pass image when registration record is verified
+  // Capture high-resolution 3x pass image from exact HTML card matching user's design
   useEffect(() => {
     if (submittedRecord) {
       setIsGeneratingPass(true);
-      generatePassImage(submittedRecord)
-        .then((url) => {
-          setPassImageUrl(url);
-        })
-        .catch((err) => console.error('Pass image generation failed:', err))
-        .finally(() => setIsGeneratingPass(false));
+      setTimeout(async () => {
+        const cardElement = document.getElementById('printable-pass-card');
+        if (cardElement) {
+          try {
+            const canvas = await html2canvas(cardElement, {
+              scale: 3,
+              useCORS: true,
+              allowTaint: true,
+              backgroundColor: '#FFFFFF',
+              logging: false,
+            });
+            setPassImageUrl(canvas.toDataURL('image/png'));
+          } catch (err) {
+            console.error('Error generating pass image:', err);
+          } finally {
+            setIsGeneratingPass(false);
+          }
+        } else {
+          setIsGeneratingPass(false);
+        }
+      }, 150);
     }
   }, [submittedRecord]);
 
@@ -753,29 +769,80 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
 
           {/* GENERATED HIGH-RESOLUTION PASS IMAGE DISPLAY */}
           <div className="max-w-2xl mx-auto space-y-4">
-            {isGeneratingPass || !passImageUrl ? (
-              <div className="w-full aspect-[16/10] bg-[#0A0D14] border border-white/10 rounded-2xl flex flex-col items-center justify-center space-y-3 shadow-2xl">
-                <Loader2 className="w-8 h-8 text-cyan-400 animate-spin" />
-                <span className="text-xs font-technical text-cyan-300 font-bold tracking-widest uppercase">
-                  GENERATING HIGH-RES PASS IMAGE...
+            {/* MINIMALIST VERTICAL FESTIVAL PASS CARD (EXACTLY MATCHING USER SCREENSHOT) */}
+            <div
+              id="printable-pass-card"
+              className="max-w-[340px] w-full mx-auto p-7 rounded-2xl bg-[#F9FAFB] border border-slate-300 text-slate-900 shadow-2xl text-center space-y-5 relative overflow-hidden transition-all duration-300"
+            >
+              {/* Top Logo & Festival Identity */}
+              <div className="space-y-2 border-b border-slate-200 pb-4">
+                <img src={srishtiLogo} alt="Srishti Logo" className="w-10 h-10 object-contain mx-auto" />
+                <div>
+                  <span className="font-impact font-black text-xl text-slate-900 uppercase tracking-tight block">
+                    SRISHTI 2.7
+                  </span>
+                  <span className="text-[9px] font-technical text-slate-500 block tracking-wider">
+                    ST. THOMAS COLLEGE (AUTONOMOUS)
+                  </span>
+                </div>
+                <div className="pt-1">
+                  <span className="inline-block px-3 py-0.5 text-[9px] font-technical font-bold rounded-full uppercase bg-slate-900 text-white">
+                    OFFICIAL DELEGATE PASS
+                  </span>
+                </div>
+              </div>
+
+              {/* Attendee Identity */}
+              <div className="space-y-1 py-1">
+                <span className="text-[9px] font-technical text-slate-400 uppercase block font-semibold tracking-wider">
+                  ATTENDEE DELEGATE
+                </span>
+                <h3 className="font-impact font-black text-2xl text-slate-900 uppercase tracking-tight leading-tight break-words max-w-full overflow-hidden text-ellipsis">
+                  {submittedRecord.fullName}
+                </h3>
+                <span className="text-xs font-body text-slate-600 block font-light">
+                  {submittedRecord.college}
                 </span>
               </div>
-            ) : (
-              <div className="relative group rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.8)] border border-white/15 bg-[#0A0D14] p-2">
-                <img
-                  src={passImageUrl}
-                  alt={`SRISHTI 2.7 Pass for ${submittedRecord.fullName}`}
-                  className="w-full h-auto rounded-xl object-contain transition-transform duration-300"
-                />
+
+              {/* Registered Events List */}
+              <div className="space-y-1.5 py-1 text-left bg-slate-100/70 p-3 rounded-xl border border-slate-200">
+                <span className="text-[9px] font-technical uppercase font-bold tracking-wider block text-slate-900">
+                  REGISTERED EVENTS ({submittedRecord.selectedEventNames.length}):
+                </span>
+                <div className="space-y-1">
+                  {submittedRecord.selectedEventNames.map((name, i) => (
+                    <div key={i} className="text-xs font-body font-medium text-slate-800 flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-slate-900 inline-block shrink-0" />
+                      <span className="truncate">{name}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-            )}
+
+              {/* QR Code & Pass Credentials */}
+              <div className="space-y-3 pt-2 border-t border-slate-200">
+                <div className="w-20 h-20 bg-white p-1.5 rounded-xl mx-auto flex items-center justify-center shrink-0 shadow-sm border border-slate-200">
+                  <QrCode className="w-full h-full text-black" />
+                </div>
+
+                <div className="space-y-0.5">
+                  <span className="text-[9px] font-technical text-slate-500 block">
+                    SERIAL PASS ID: <strong className="text-slate-900 font-bold">{submittedRecord.passId}</strong>
+                  </span>
+                  <span className="text-[9px] font-technical text-slate-500 block">
+                    UTR: {submittedRecord.paymentUtr}
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* ACTION BUTTONS: VIEW PASS & DOWNLOAD PASS */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
             <button
               onClick={() => setIsViewPassModalOpen(true)}
-              disabled={!passImageUrl}
+              disabled={!passImageUrl || isGeneratingPass}
               className="w-full sm:w-auto px-8 py-4 rounded-xl bg-white/10 border border-white/20 text-white font-impact font-black text-xs uppercase tracking-wider hover:bg-white/20 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg disabled:opacity-50"
             >
               <Eye className="w-4 h-4 text-cyan-400" />
@@ -784,16 +851,25 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
 
             <button
               onClick={handleDownloadPass}
-              disabled={!passImageUrl}
+              disabled={!passImageUrl || isGeneratingPass}
               className="w-full sm:w-auto px-10 py-4 rounded-xl bg-gradient-27 text-white font-impact font-black text-xs uppercase tracking-wider hover:opacity-90 transition-all flex items-center justify-center gap-2 shadow-2xl cursor-pointer disabled:opacity-50"
             >
-              <Download className="w-4 h-4" />
-              <span>DOWNLOAD PASS</span>
+              {isGeneratingPass ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>GENERATING PNG...</span>
+                </>
+              ) : (
+                <>
+                  <Download className="w-4 h-4" />
+                  <span>DOWNLOAD PASS</span>
+                </>
+              )}
             </button>
 
             <button
               onClick={handlePrintPassImage}
-              disabled={!passImageUrl}
+              disabled={!passImageUrl || isGeneratingPass}
               className="w-full sm:w-auto px-6 py-4 rounded-xl bg-white/5 border border-white/10 text-white/70 hover:text-white font-body text-xs font-semibold uppercase tracking-wider hover:bg-white/10 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
             >
               <Printer className="w-4 h-4" />
