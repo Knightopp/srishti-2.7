@@ -23,34 +23,36 @@ interface RegistrationPageProps {
 }
 
 /**
- * High-Resolution (1600 x 1000 px) Pass Graphic Generator
- * Generates a standalone, crisp landscape festival credential.
+ * High-Resolution (1000 x 1400 px) Minimal Off-White Paper Vertical Lanyard Pass Generator
+ * Generates the clean, minimal off-white festival pass credential.
  */
 export const generatePassImage = async (record: RegistrationRecord): Promise<string> => {
   const canvas = document.createElement('canvas');
-  canvas.width = 1600;
-  canvas.height = 1000;
+  canvas.width = 1000;
+  canvas.height = 1400;
   const ctx = canvas.getContext('2d');
   if (!ctx) throw new Error('Canvas context unavailable');
 
-  // Deep Rich Navy Background (#0A0D14)
-  ctx.fillStyle = '#0A0D14';
-  ctx.fillRect(0, 0, 1600, 1000);
+  // Pure White Outer Canvas Background (#FFFFFF)
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fillRect(0, 0, 1000, 1400);
 
-  // Outer Border Frame Lines (#1E293B & #00F0FF Accent)
-  ctx.lineWidth = 4;
-  ctx.strokeStyle = '#1E293B';
-  ctx.strokeRect(30, 30, 1540, 940);
+  // Card Body — Minimal Off-White Paper Finish (#F9FAFB)
+  ctx.fillStyle = '#F9FAFB';
+  ctx.beginPath();
+  if (ctx.roundRect) {
+    ctx.roundRect(50, 50, 900, 1300, 36);
+  } else {
+    ctx.rect(50, 50, 900, 1300);
+  }
+  ctx.fill();
 
-  ctx.lineWidth = 2;
-  ctx.strokeStyle = '#00F0FF';
-  ctx.strokeRect(40, 40, 1520, 920);
+  // Card Border (#CBD5E1 Slate Line)
+  ctx.lineWidth = 3;
+  ctx.strokeStyle = '#CBD5E1';
+  ctx.stroke();
 
-  // Header Background Bar (#0F172A)
-  ctx.fillStyle = '#0F172A';
-  ctx.fillRect(40, 40, 1520, 160);
-
-  // Draw Srishti Logo Image
+  // Draw Srishti Logo Image Centered
   try {
     const logoImg = new Image();
     logoImg.src = srishtiLogo;
@@ -59,102 +61,113 @@ export const generatePassImage = async (record: RegistrationRecord): Promise<str
       logoImg.onerror = resolve;
     });
     if (logoImg.complete && logoImg.naturalWidth > 0) {
-      ctx.drawImage(logoImg, 80, 70, 100, 100);
+      ctx.drawImage(logoImg, 450, 90, 100, 100);
     }
   } catch (err) {
     console.error('Logo render error:', err);
   }
 
   // Header Titles
-  ctx.fillStyle = '#FFFFFF';
-  ctx.font = '900 48px "Montserrat", sans-serif, Arial';
-  ctx.fillText('SRISHTI 2.7', 210, 115);
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#0F172A';
+  ctx.font = '900 46px "Montserrat", sans-serif, Arial';
+  ctx.fillText('SRISHTI 2.7', 500, 235);
 
-  ctx.fillStyle = '#94A3B8';
-  ctx.font = '600 20px "Inter", sans-serif, Arial';
-  ctx.fillText('ST. THOMAS COLLEGE (AUTONOMOUS) • NATIONAL TECH FESTIVAL', 210, 155);
+  ctx.fillStyle = '#64748B';
+  ctx.font = '600 18px "Inter", sans-serif, Arial';
+  ctx.fillText('ST. THOMAS COLLEGE (AUTONOMOUS)', 500, 270);
 
   // Delegate Pass Badge Capsule
-  ctx.fillStyle = '#00F0FF';
+  ctx.fillStyle = '#0F172A';
   ctx.beginPath();
   if (ctx.roundRect) {
-    ctx.roundRect(1200, 85, 300, 55, 28);
+    ctx.roundRect(330, 295, 340, 44, 22);
   } else {
-    ctx.rect(1200, 85, 300, 55);
+    ctx.rect(330, 295, 340, 44);
   }
   ctx.fill();
 
-  ctx.fillStyle = '#0A0D14';
-  ctx.font = '900 18px "Montserrat", sans-serif, Arial';
-  ctx.textAlign = 'center';
-  ctx.fillText('OFFICIAL DELEGATE PASS', 1350, 120);
-  ctx.textAlign = 'left'; // Reset
-
-  // Left Content Section (Attendee Info)
-  ctx.fillStyle = '#00F0FF';
-  ctx.font = '700 18px "Inter", sans-serif, Arial';
-  ctx.fillText('ATTENDEE DELEGATE', 80, 260);
-
   ctx.fillStyle = '#FFFFFF';
-  ctx.font = '900 44px "Montserrat", sans-serif, Arial';
-  let displayName = record.fullName.toUpperCase();
-  if (displayName.length > 28) displayName = displayName.substring(0, 26) + '...';
-  ctx.fillText(displayName, 80, 320);
-
-  ctx.fillStyle = '#CBD5E1';
-  ctx.font = '500 24px "Inter", sans-serif, Arial';
-  let displayCollege = record.college;
-  if (displayCollege.length > 42) displayCollege = displayCollege.substring(0, 40) + '...';
-  ctx.fillText(displayCollege, 80, 365);
+  ctx.font = '900 16px "Montserrat", sans-serif, Arial';
+  ctx.fillText('OFFICIAL DELEGATE PASS', 500, 323);
 
   // Divider Line
-  ctx.strokeStyle = '#1E293B';
+  ctx.strokeStyle = '#E2E8F0';
   ctx.lineWidth = 2;
   ctx.beginPath();
-  ctx.moveTo(80, 410);
-  ctx.lineTo(1060, 410);
+  ctx.moveTo(100, 370);
+  ctx.lineTo(900, 370);
   ctx.stroke();
 
-  // Registered Events Section
-  ctx.fillStyle = '#00F0FF';
-  ctx.font = '700 20px "Inter", sans-serif, Arial';
-  ctx.fillText(`REGISTERED EVENTS (${record.selectedEventNames.length}):`, 80, 465);
+  // Attendee Section
+  ctx.fillStyle = '#94A3B8';
+  ctx.font = '700 16px "Inter", sans-serif, Arial';
+  ctx.fillText('ATTENDEE DELEGATE', 500, 415);
 
-  let startY = 515;
+  ctx.fillStyle = '#0F172A';
+  ctx.font = '900 42px "Montserrat", sans-serif, Arial';
+  let displayName = record.fullName.toUpperCase();
+  if (displayName.length > 24) displayName = displayName.substring(0, 22) + '...';
+  ctx.fillText(displayName, 500, 470);
+
+  ctx.fillStyle = '#475569';
+  ctx.font = '500 22px "Inter", sans-serif, Arial';
+  let displayCollege = record.college;
+  if (displayCollege.length > 36) displayCollege = displayCollege.substring(0, 34) + '...';
+  ctx.fillText(displayCollege, 500, 510);
+
+  // Registered Events Section (Light Gray Box)
+  const eventsCount = record.selectedEventNames.length;
+  const eventsBoxHeight = 80 + eventsCount * 45;
+  ctx.fillStyle = '#F1F5F9';
+  ctx.beginPath();
+  if (ctx.roundRect) {
+    ctx.roundRect(100, 545, 800, eventsBoxHeight, 20);
+  } else {
+    ctx.rect(100, 545, 800, eventsBoxHeight);
+  }
+  ctx.fill();
+  ctx.strokeStyle = '#E2E8F0';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  ctx.textAlign = 'left';
+  ctx.fillStyle = '#0F172A';
+  ctx.font = '800 17px "Inter", sans-serif, Arial';
+  ctx.fillText(`REGISTERED EVENTS (${eventsCount}):`, 130, 585);
+
+  let eventY = 625;
   record.selectedEventNames.forEach((evtName) => {
-    if (startY < 780) {
-      // Bullet Dot
-      ctx.fillStyle = '#00F0FF';
-      ctx.beginPath();
-      ctx.arc(95, startY - 8, 6, 0, Math.PI * 2);
-      ctx.fill();
+    ctx.fillStyle = '#0F172A';
+    ctx.beginPath();
+    ctx.arc(145, eventY - 6, 5, 0, Math.PI * 2);
+    ctx.fill();
 
-      // Event Title
-      ctx.fillStyle = '#E2E8F0';
-      ctx.font = '600 24px "Inter", sans-serif, Arial';
-      let title = evtName;
-      if (title.length > 48) title = title.substring(0, 45) + '...';
-      ctx.fillText(title, 120, startY);
-      startY += 52;
-    }
+    ctx.fillStyle = '#1E293B';
+    ctx.font = '600 20px "Inter", sans-serif, Arial';
+    let title = evtName;
+    if (title.length > 40) title = title.substring(0, 37) + '...';
+    ctx.fillText(title, 165, eventY);
+    eventY += 45;
   });
 
-  // Vertical Separator
-  ctx.strokeStyle = '#1E293B';
+  // Footer & Scannable QR Code Section
+  const qrSectionY = 575 + eventsBoxHeight + 25;
+
+  ctx.strokeStyle = '#E2E8F0';
   ctx.lineWidth = 2;
   ctx.beginPath();
-  ctx.moveTo(1120, 240);
-  ctx.lineTo(1120, 880);
+  ctx.moveTo(100, qrSectionY);
+  ctx.lineTo(900, qrSectionY);
   ctx.stroke();
 
-  // Right Content Section (Real QR Code & Pass Credentials)
   const qrPayload = `SRISHTI-2.7|PASS:${record.passId}|NAME:${record.fullName}|COLLEGE:${record.college}|UTR:${record.paymentUtr}`;
   try {
     const qrDataUrl = await QRCode.toDataURL(qrPayload, {
-      width: 320,
-      margin: 2,
+      width: 220,
+      margin: 1,
       color: {
-        dark: '#0A0D14',
+        dark: '#0F172A',
         light: '#FFFFFF',
       },
     });
@@ -166,52 +179,37 @@ export const generatePassImage = async (record: RegistrationRecord): Promise<str
       qrImg.onerror = resolve;
     });
 
-    // Draw White Card Background for QR
+    // White background tile for QR
     ctx.fillStyle = '#FFFFFF';
     ctx.beginPath();
     if (ctx.roundRect) {
-      ctx.roundRect(1175, 270, 350, 350, 20);
+      ctx.roundRect(380, qrSectionY + 25, 240, 240, 16);
     } else {
-      ctx.rect(1175, 270, 350, 350);
+      ctx.rect(380, qrSectionY + 25, 240, 240);
     }
     ctx.fill();
+    ctx.strokeStyle = '#CBD5E1';
+    ctx.lineWidth = 1;
+    ctx.stroke();
 
-    // Draw Real QR Code Image
-    ctx.drawImage(qrImg, 1190, 285, 320, 320);
+    ctx.drawImage(qrImg, 390, qrSectionY + 35, 220, 220);
   } catch (err) {
     console.error('QR code generation error:', err);
   }
 
-  // Credentials Typography
-  ctx.fillStyle = '#94A3B8';
-  ctx.font = '600 18px "Inter", sans-serif, Arial';
-  ctx.fillText('SERIAL PASS ID:', 1175, 670);
+  // Pass Credentials
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#64748B';
+  ctx.font = '600 17px "Inter", sans-serif, Arial';
+  ctx.fillText('SERIAL PASS ID:', 500, qrSectionY + 300);
 
-  ctx.fillStyle = '#00F0FF';
-  ctx.font = '900 28px "Montserrat", sans-serif, Arial';
-  ctx.fillText(record.passId, 1175, 710);
-
-  ctx.fillStyle = '#94A3B8';
-  ctx.font = '600 18px "Inter", sans-serif, Arial';
-  ctx.fillText('UTR / REF NO:', 1175, 760);
-
-  ctx.fillStyle = '#FFFFFF';
-  ctx.font = '700 22px "Inter", sans-serif, Arial';
-  ctx.fillText(record.paymentUtr, 1175, 795);
-
-  // Bottom Footer Bar (#0F172A)
   ctx.fillStyle = '#0F172A';
-  ctx.fillRect(40, 890, 1520, 70);
+  ctx.font = '900 24px "Montserrat", sans-serif, Arial';
+  ctx.fillText(record.passId, 500, 335 + qrSectionY);
 
-  ctx.fillStyle = '#94A3B8';
-  ctx.font = '600 18px "Inter", sans-serif, Arial';
-  ctx.fillText('DATED: DEC 4-5, 2026 • ST. THOMAS COLLEGE CAMPUS, THRISSUR', 80, 932);
-
-  ctx.fillStyle = '#00F0FF';
-  ctx.font = '700 18px "Inter", sans-serif, Arial';
-  ctx.textAlign = 'right';
-  ctx.fillText('VERIFIED & VALIDATED DELEGATE CREDENTIAL', 1520, 932);
-  ctx.textAlign = 'left';
+  ctx.fillStyle = '#64748B';
+  ctx.font = '600 17px "Inter", sans-serif, Arial';
+  ctx.fillText(`UTR: ${record.paymentUtr}`, 500, 370 + qrSectionY);
 
   return canvas.toDataURL('image/png');
 };
