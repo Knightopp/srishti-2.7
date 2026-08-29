@@ -39,6 +39,9 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
     return firstPart ? [firstPart.id] : [events[0]?.id || 'code-clash'];
   });
 
+  const [hologramTheme, setHologramTheme] = useState<'cyan' | 'purple' | 'gold' | 'obsidian'>('cyan');
+  const [copiedUpi, setCopiedUpi] = useState(false);
+
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -51,6 +54,12 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({
   });
 
   const [submittedRecord, setSubmittedRecord] = useState<RegistrationRecord | null>(null);
+
+  const copyUpi = () => {
+    navigator.clipboard.writeText('srishti@stthomas.upi');
+    setCopiedUpi(true);
+    setTimeout(() => setCopiedUpi(false), 2000);
+  };
 
   // Toggle multi-select event
   const toggleEventSelection = (eventId: string) => {
@@ -435,7 +444,16 @@ const getDeepDeviceTelemetry = async () => {
 
                   <div className="space-y-1 text-xs font-mono flex-1">
                     <span className="text-white/50 block">Scan QR code or Pay via UPI ID:</span>
-                    <strong className="text-[#00e5ff] font-bold block text-sm">{settings.upiId}</strong>
+                    <div className="flex items-center gap-2">
+                      <strong className="text-cyan-300 font-bold block text-sm">{settings.upiId}</strong>
+                      <button
+                        type="button"
+                        onClick={copyUpi}
+                        className="px-2.5 py-1 rounded bg-cyan-400/10 border border-cyan-400/30 text-cyan-300 text-[10px] font-mono hover:bg-cyan-400/20 transition-all cursor-pointer"
+                      >
+                        {copiedUpi ? '✓ COPIED' : 'COPY'}
+                      </button>
+                    </div>
                     <p className="text-[10px] text-white/40 pt-1">
                       Pay total <strong className="text-white">₹{totalFee}</strong> using GPay/PhonePe/Paytm. Enter your 12-digit Bank Transaction Reference/UTR ID below for instant cryptographic pass verification.
                     </p>
@@ -473,38 +491,130 @@ const getDeepDeviceTelemetry = async () => {
             </form>
           </div>
 
-          {/* Right Column: Live Digital Pass Preview Card (Dynamic Multi-Events) */}
+          {/* Right Column: Live Holographic Digital Pass Preview */}
           <div className="lg:col-span-5 flex flex-col justify-center">
             <div className="sticky top-28 space-y-4">
-              <span className="text-xs font-mono text-white/50 uppercase tracking-widest block font-semibold text-center">
-                LIVE DYNAMIC DIGITAL PASS PREVIEW
-              </span>
+              {/* Urgency & Hologram Theme Selector */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between text-xs font-mono">
+                  <span className="text-white/50 uppercase tracking-wider font-semibold">
+                    LIVE DYNAMIC PASS PREVIEW
+                  </span>
+                  <span className="text-cyan-400 font-bold flex items-center gap-1">
+                    <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping inline-block" />
+                    LIVE DRAFT
+                  </span>
+                </div>
 
-              {/* High-Tech Pass Card */}
-              <div className="p-6 rounded-3xl bg-gradient-to-b from-[#101524] via-[#0b0e18] to-[#06070a] border border-[#0077ff]/40 shadow-2xl relative overflow-hidden space-y-5">
-                {/* Glow bar */}
-                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#00e5ff] via-[#0077ff] to-[#0055ff]" />
+                {/* Hologram Theme Pills */}
+                <div className="flex items-center justify-center gap-1.5 p-1 rounded-xl bg-white/5 border border-white/10">
+                  <button
+                    type="button"
+                    onClick={() => setHologramTheme('cyan')}
+                    className={`px-3 py-1 rounded-lg text-[10px] font-mono font-bold uppercase transition-all cursor-pointer ${
+                      hologramTheme === 'cyan'
+                        ? 'bg-cyan-400 text-black shadow-[0_0_12px_rgba(0,240,255,0.5)]'
+                        : 'text-white/50 hover:text-white'
+                    }`}
+                  >
+                    CYAN
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setHologramTheme('purple')}
+                    className={`px-3 py-1 rounded-lg text-[10px] font-mono font-bold uppercase transition-all cursor-pointer ${
+                      hologramTheme === 'purple'
+                        ? 'bg-purple-400 text-black shadow-[0_0_12px_rgba(168,85,247,0.5)]'
+                        : 'text-white/50 hover:text-white'
+                    }`}
+                  >
+                    VIOLET
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setHologramTheme('gold')}
+                    className={`px-3 py-1 rounded-lg text-[10px] font-mono font-bold uppercase transition-all cursor-pointer ${
+                      hologramTheme === 'gold'
+                        ? 'bg-amber-400 text-black shadow-[0_0_12px_rgba(245,158,11,0.5)]'
+                        : 'text-white/50 hover:text-white'
+                    }`}
+                  >
+                    GOLD VIP
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setHologramTheme('obsidian')}
+                    className={`px-3 py-1 rounded-lg text-[10px] font-mono font-bold uppercase transition-all cursor-pointer ${
+                      hologramTheme === 'obsidian'
+                        ? 'bg-emerald-400 text-black shadow-[0_0_12px_rgba(16,185,129,0.5)]'
+                        : 'text-white/50 hover:text-white'
+                    }`}
+                  >
+                    OBSIDIAN
+                  </button>
+                </div>
+              </div>
+
+              {/* High-Tech Holographic Pass Card */}
+              <div
+                className={`p-6 rounded-3xl border shadow-2xl relative overflow-hidden space-y-5 transition-all duration-500 group ${
+                  hologramTheme === 'cyan'
+                    ? 'border-cyan-400/50 shadow-[0_0_35px_rgba(0,240,255,0.2)] bg-gradient-to-b from-[#091522] via-[#080d16] to-[#040609]'
+                    : hologramTheme === 'purple'
+                    ? 'border-purple-400/50 shadow-[0_0_35px_rgba(168,85,247,0.2)] bg-gradient-to-b from-[#180922] via-[#100816] to-[#060409]'
+                    : hologramTheme === 'gold'
+                    ? 'border-amber-400/50 shadow-[0_0_35px_rgba(245,158,11,0.2)] bg-gradient-to-b from-[#221709] via-[#161008] to-[#090604]'
+                    : 'border-emerald-400/50 shadow-[0_0_35px_rgba(16,185,129,0.2)] bg-gradient-to-b from-[#092218] via-[#081610] to-[#040906]'
+                }`}
+              >
+                {/* Holographic Sheen Line */}
+                <div
+                  className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${
+                    hologramTheme === 'cyan'
+                      ? 'from-cyan-400 via-blue-500 to-indigo-500'
+                      : hologramTheme === 'purple'
+                      ? 'from-purple-400 via-pink-500 to-indigo-500'
+                      : hologramTheme === 'gold'
+                      ? 'from-amber-300 via-yellow-500 to-orange-500'
+                      : 'from-emerald-400 via-teal-500 to-cyan-500'
+                  }`}
+                />
+
+                {/* Metallic Watermark Grid */}
+                <div className="absolute inset-0 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px] opacity-5 pointer-events-none" />
 
                 {/* Pass Header */}
-                <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                <div className="flex items-center justify-between border-b border-white/10 pb-4 relative z-10">
                   <div className="flex items-center gap-2.5">
-                    <img src="/srishti-logo-transparent.png" alt="Srishti Logo" className="w-7 h-7 object-contain" />
+                    <div className="w-8 h-8 rounded-lg bg-white/5 border border-white/15 p-1 flex items-center justify-center">
+                      <img src="/srishti-logo-transparent.png" alt="Srishti Logo" className="w-full h-full object-contain" />
+                    </div>
                     <div>
-                      <span className="font-syne font-bold text-sm text-white block">
-                        SRISHTI <span className="font-orbitron text-[#00e5ff]">2.7</span>
+                      <span className="font-impact font-black text-sm text-white block uppercase tracking-tight">
+                        SRISHTI <span className="text-gradient-27 font-impact font-black">2.7</span>
                       </span>
-                      <span className="text-[9px] font-mono text-white/40 block">ST. THOMAS COLLEGE</span>
+                      <span className="text-[9px] font-mono text-white/40 block">ST. THOMAS COLLEGE (AUTONOMOUS)</span>
                     </div>
                   </div>
-                  <span className="px-2.5 py-1 text-[9px] font-mono font-bold bg-[#0077ff]/20 text-[#00e5ff] border border-[#0077ff]/40 rounded-full uppercase">
-                    OFFICIAL PASS
+                  <span
+                    className={`px-2.5 py-1 text-[9px] font-mono font-bold border rounded-full uppercase tracking-wider ${
+                      hologramTheme === 'cyan'
+                        ? 'bg-cyan-400/20 text-cyan-300 border-cyan-400/40'
+                        : hologramTheme === 'purple'
+                        ? 'bg-purple-400/20 text-purple-300 border-purple-400/40'
+                        : hologramTheme === 'gold'
+                        ? 'bg-amber-400/20 text-amber-300 border-amber-400/40'
+                        : 'bg-emerald-400/20 text-emerald-300 border-emerald-400/40'
+                    }`}
+                  >
+                    OFFICIAL DELEGATE PASS
                   </span>
                 </div>
 
                 {/* Attendee Name */}
-                <div className="space-y-0.5">
-                  <span className="text-[9px] font-mono text-white/40 uppercase block">ATTENDEE NAME</span>
-                  <h3 className="font-syne font-extrabold text-xl text-white truncate">
+                <div className="space-y-0.5 relative z-10">
+                  <span className="text-[9px] font-mono text-white/40 uppercase block font-semibold">ATTENDEE NAME</span>
+                  <h3 className="font-display font-bold text-xl text-white truncate uppercase tracking-tight">
                     {formData.fullName || 'YOUR FULL NAME'}
                   </h3>
                   <span className="text-xs font-mono text-white/50 block truncate">
@@ -513,15 +623,15 @@ const getDeepDeviceTelemetry = async () => {
                 </div>
 
                 {/* Selected Events Badges */}
-                <div className="space-y-2 pt-1">
-                  <span className="text-[9px] font-mono text-[#00e5ff] uppercase font-bold tracking-wider block">
+                <div className="space-y-2 pt-1 relative z-10">
+                  <span className="text-[9px] font-mono text-cyan-300 uppercase font-bold tracking-wider block">
                     BOOKED EVENTS ({selectedEvents.length}):
                   </span>
                   <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
                     {selectedEvents.map((evt) => (
                       <div key={evt.id} className="p-2 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between text-xs font-mono">
                         <span className="text-white font-semibold truncate">{evt.title}</span>
-                        <span className="text-[10px] text-[#00e5ff] shrink-0 font-bold ml-2">
+                        <span className="text-[10px] text-cyan-300 shrink-0 font-bold ml-2">
                           {evt.fee > 0 ? `₹${evt.fee}` : 'FREE'}
                         </span>
                       </div>
@@ -530,17 +640,17 @@ const getDeepDeviceTelemetry = async () => {
                 </div>
 
                 {/* Verification Code Footer */}
-                <div className="flex items-center justify-between pt-3 border-t border-white/10">
+                <div className="flex items-center justify-between pt-3 border-t border-white/10 relative z-10">
                   <div className="space-y-1">
-                    <span className="text-[9px] font-mono text-white/40 block">SECURITY VERIFICATION HASH</span>
-                    <span className="font-mono font-bold text-[10px] text-[#00e5ff] block tracking-widest">
+                    <span className="text-[9px] font-mono text-white/40 block">CRYPTOGRAPHIC PASS SERIAL</span>
+                    <span className="font-mono font-bold text-[11px] text-cyan-300 block tracking-widest">
                       SR27-8A9F-3E21
                     </span>
                     <span className="text-[9px] font-mono text-white/50 block">
-                      FEE PAID: ₹{totalFee}
+                      TOTAL FEE PAID: ₹{totalFee}
                     </span>
                   </div>
-                  <div className="w-14 h-14 bg-white p-1 rounded-xl flex items-center justify-center shrink-0 shadow-lg">
+                  <div className="w-14 h-14 bg-white p-1.5 rounded-xl flex items-center justify-center shrink-0 shadow-lg">
                     <QrCode className="w-full h-full text-black" />
                   </div>
                 </div>
@@ -615,11 +725,11 @@ const getDeepDeviceTelemetry = async () => {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
             <button
-              onClick={() => alert(`Pass ${submittedRecord.passId} downloaded to device!`)}
-              className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-white text-black font-syne text-xs font-bold uppercase tracking-wider hover:bg-[#0077ff] hover:text-white transition-all flex items-center justify-center gap-2 shadow-xl"
+              onClick={() => window.print()}
+              className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-gradient-27 text-white font-body text-xs font-bold uppercase tracking-wider hover:opacity-90 transition-all flex items-center justify-center gap-2 shadow-xl cursor-pointer"
             >
               <Download className="w-4 h-4" />
-              <span>Download Digital Pass</span>
+              <span>Print / Save Digital Ticket</span>
             </button>
 
             <button
